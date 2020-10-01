@@ -37,6 +37,9 @@ before_install:
   - npm install -g npm
   - node -v
   - npm -v
+  - docker build -t tillias/microcatalog .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push
 install:
   - npm install
 script:
@@ -45,7 +48,6 @@ script:
   - ./mvnw -ntp clean verify
   - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
   - ./mvnw -ntp verify -Pdev-DskipTests
-  - ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pdev -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog
 notifications:
   webhooks:
     on_success: change # options: [always|never|change] default: always
