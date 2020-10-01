@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/tillias/microservice-catalog.svg?branch=master)](https://travis-ci.org/tillias/microservice-catalog)
-[![Docker Version]( https://img.shields.io/docker/v/tillias/microcatalog)](https://img.shields.io/docker/v/tillias/microcatalog)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/tillias/microcatalog)
 
 # microcatalog
 
