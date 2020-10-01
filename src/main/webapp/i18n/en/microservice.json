@@ -1,0 +1,27 @@
+{
+  "microcatalogApp": {
+    "microservice": {
+      "home": {
+        "title": "Microservices",
+        "createLabel": "Create a new Microservice",
+        "createOrEditLabel": "Create or edit a Microservice",
+        "notFound": "No Microservices found"
+      },
+      "created": "A new Microservice is created with identifier {{ param }}",
+      "updated": "A Microservice is updated with identifier {{ param }}",
+      "deleted": "A Microservice is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Microservice {{ id }}?"
+      },
+      "detail": {
+        "title": "Microservice"
+      },
+      "name": "Name",
+      "description": "Description",
+      "imageUrl": "Image Url",
+      "swaggerUrl": "Swagger Url",
+      "gitUrl": "Git Url",
+      "team": "Team"
+    }
+  }
+}

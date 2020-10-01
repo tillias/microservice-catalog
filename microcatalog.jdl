@@ -1,0 +1,17 @@
+entity Microservice {
+	name String,
+    description String,
+    imageUrl String,
+    swaggerUrl String,
+    gitUrl String,
+}
+
+entity Team {
+	name String,
+    itProductOwner String,
+    productOwner String
+}
+
+relationship ManyToOne {
+	Microservice{team} to Team
+}

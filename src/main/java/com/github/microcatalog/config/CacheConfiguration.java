@@ -48,6 +48,8 @@ public class CacheConfiguration {
             createCache(cm, com.github.microcatalog.domain.User.class.getName());
             createCache(cm, com.github.microcatalog.domain.Authority.class.getName());
             createCache(cm, com.github.microcatalog.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.github.microcatalog.domain.Microservice.class.getName());
+            createCache(cm, com.github.microcatalog.domain.Team.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -1,0 +1,24 @@
+{
+  "microcatalogApp": {
+    "team": {
+      "home": {
+        "title": "Teams",
+        "createLabel": "Team erstellen",
+        "createOrEditLabel": "Team erstellen oder bearbeiten",
+        "notFound": "No Teams found"
+      },
+      "created": "Team erstellt mit ID {{ param }}",
+      "updated": "Team aktualisiert mit ID {{ param }}",
+      "deleted": "Team gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Team {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Team"
+      },
+      "name": "Name",
+      "itProductOwner": "It Product Owner",
+      "productOwner": "Product Owner"
+    }
+  }
+}

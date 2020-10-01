@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="microservice">
+            <h2><span jhiTranslate="microcatalogApp.microservice.detail.title">Microservice</span> {{ microservice.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="microcatalogApp.microservice.name">Name</span></dt>
+                <dd>
+                    <span>{{ microservice.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.microservice.description">Description</span></dt>
+                <dd>
+                    <span>{{ microservice.description }}</span>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.microservice.imageUrl">Image Url</span></dt>
+                <dd>
+                    <span>{{ microservice.imageUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.microservice.swaggerUrl">Swagger Url</span></dt>
+                <dd>
+                    <span>{{ microservice.swaggerUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.microservice.gitUrl">Git Url</span></dt>
+                <dd>
+                    <span>{{ microservice.gitUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.microservice.team">Team</span></dt>
+                <dd>
+                    <div *ngIf="microservice.team">
+                        <a [routerLink]="['/team', microservice.team?.id, 'view']">{{ microservice.team?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/microservice', microservice.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
