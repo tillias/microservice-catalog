@@ -1,7 +1,7 @@
 {
   "home": {
     "title": "Welcome, Java Hipster!",
-    "subtitle": "This is your homepage",
+    "subtitle": "Here is microservices catalog",
     "logged": {
       "message": "You are logged in as user \"{{username}}\"."
     },

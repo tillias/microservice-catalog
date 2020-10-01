@@ -45,7 +45,7 @@
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.team" for="field_team">Team</label>
                     <select class="form-control" id="field_team" name="team" formControlName="team">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="teamOption.id === editForm.get('team')!.value?.id ? editForm.get('team')!.value : teamOption" *ngFor="let teamOption of teams; trackBy: trackById">{{ teamOption.id }}</option>
+                        <option [ngValue]="teamOption.id === editForm.get('team')!.value?.id ? editForm.get('team')!.value : teamOption" *ngFor="let teamOption of teams; trackBy: trackById">{{ teamOption.name }}</option>
                     </select>
                 </div>
             </div>
