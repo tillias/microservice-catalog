@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tillias/microservice-catalog.svg?branch=master)](https://travis-ci.org/tillias/microservice-catalog)
+
 # microcatalog
 
 This application was generated using JHipster 6.10.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.3](https://www.jhipster.tech/documentation-archive/v6.10.3).
