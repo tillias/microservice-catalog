@@ -20,12 +20,12 @@ export class MicroserviceUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    name: [],
-    description: [],
-    imageUrl: [],
-    swaggerUrl: [],
-    gitUrl: [],
-    team: [],
+    name: [null, [Validators.required]],
+    description: [null, [Validators.required]],
+    imageUrl: [null, [Validators.required]],
+    swaggerUrl: [null, [Validators.required]],
+    gitUrl: [null, [Validators.required]],
+    team: [null, Validators.required],
   });
 
   constructor(

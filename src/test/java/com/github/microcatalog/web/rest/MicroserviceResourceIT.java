@@ -2,6 +2,7 @@ package com.github.microcatalog.web.rest;
 
 import com.github.microcatalog.MicrocatalogApp;
 import com.github.microcatalog.domain.Microservice;
+import com.github.microcatalog.domain.Team;
 import com.github.microcatalog.repository.MicroserviceRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -68,6 +69,16 @@ public class MicroserviceResourceIT {
             .imageUrl(DEFAULT_IMAGE_URL)
             .swaggerUrl(DEFAULT_SWAGGER_URL)
             .gitUrl(DEFAULT_GIT_URL);
+        // Add required entity
+        Team team;
+        if (TestUtil.findAll(em, Team.class).isEmpty()) {
+            team = TeamResourceIT.createEntity(em);
+            em.persist(team);
+            em.flush();
+        } else {
+            team = TestUtil.findAll(em, Team.class).get(0);
+        }
+        microservice.setTeam(team);
         return microservice;
     }
     /**
@@ -83,6 +94,16 @@ public class MicroserviceResourceIT {
             .imageUrl(UPDATED_IMAGE_URL)
             .swaggerUrl(UPDATED_SWAGGER_URL)
             .gitUrl(UPDATED_GIT_URL);
+        // Add required entity
+        Team team;
+        if (TestUtil.findAll(em, Team.class).isEmpty()) {
+            team = TeamResourceIT.createUpdatedEntity(em);
+            em.persist(team);
+            em.flush();
+        } else {
+            team = TestUtil.findAll(em, Team.class).get(0);
+        }
+        microservice.setTeam(team);
         return microservice;
     }
 
@@ -131,6 +152,101 @@ public class MicroserviceResourceIT {
         assertThat(microserviceList).hasSize(databaseSizeBeforeCreate);
     }
 
+
+    @Test
+    @Transactional
+    public void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = microserviceRepository.findAll().size();
+        // set the field null
+        microservice.setName(null);
+
+        // Create the Microservice, which fails.
+
+
+        restMicroserviceMockMvc.perform(post("/api/microservices")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(microservice)))
+            .andExpect(status().isBadRequest());
+
+        List<Microservice> microserviceList = microserviceRepository.findAll();
+        assertThat(microserviceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkDescriptionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = microserviceRepository.findAll().size();
+        // set the field null
+        microservice.setDescription(null);
+
+        // Create the Microservice, which fails.
+
+
+        restMicroserviceMockMvc.perform(post("/api/microservices")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(microservice)))
+            .andExpect(status().isBadRequest());
+
+        List<Microservice> microserviceList = microserviceRepository.findAll();
+        assertThat(microserviceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkImageUrlIsRequired() throws Exception {
+        int databaseSizeBeforeTest = microserviceRepository.findAll().size();
+        // set the field null
+        microservice.setImageUrl(null);
+
+        // Create the Microservice, which fails.
+
+
+        restMicroserviceMockMvc.perform(post("/api/microservices")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(microservice)))
+            .andExpect(status().isBadRequest());
+
+        List<Microservice> microserviceList = microserviceRepository.findAll();
+        assertThat(microserviceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkSwaggerUrlIsRequired() throws Exception {
+        int databaseSizeBeforeTest = microserviceRepository.findAll().size();
+        // set the field null
+        microservice.setSwaggerUrl(null);
+
+        // Create the Microservice, which fails.
+
+
+        restMicroserviceMockMvc.perform(post("/api/microservices")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(microservice)))
+            .andExpect(status().isBadRequest());
+
+        List<Microservice> microserviceList = microserviceRepository.findAll();
+        assertThat(microserviceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkGitUrlIsRequired() throws Exception {
+        int databaseSizeBeforeTest = microserviceRepository.findAll().size();
+        // set the field null
+        microservice.setGitUrl(null);
+
+        // Create the Microservice, which fails.
+
+
+        restMicroserviceMockMvc.perform(post("/api/microservices")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(microservice)))
+            .andExpect(status().isBadRequest());
+
+        List<Microservice> microserviceList = microserviceRepository.findAll();
+        assertThat(microserviceList).hasSize(databaseSizeBeforeTest);
+    }
 
     @Test
     @Transactional

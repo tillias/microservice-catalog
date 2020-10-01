@@ -55,7 +55,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            itProductOwner: 'BBBBBB',
+            teamLead: 'BBBBBB',
             productOwner: 'BBBBBB',
           },
           elemDefault
@@ -74,7 +74,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            itProductOwner: 'BBBBBB',
+            teamLead: 'BBBBBB',
             productOwner: 'BBBBBB',
           },
           elemDefault

@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 
@@ -22,13 +23,16 @@ public class Team implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "name")
+    @NotNull
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "it_product_owner")
-    private String itProductOwner;
+    @NotNull
+    @Column(name = "team_lead", nullable = false)
+    private String teamLead;
 
-    @Column(name = "product_owner")
+    @NotNull
+    @Column(name = "product_owner", nullable = false)
     private String productOwner;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -53,17 +57,17 @@ public class Team implements Serializable {
         this.name = name;
     }
 
-    public String getItProductOwner() {
-        return itProductOwner;
+    public String getTeamLead() {
+        return teamLead;
     }
 
-    public Team itProductOwner(String itProductOwner) {
-        this.itProductOwner = itProductOwner;
+    public Team teamLead(String teamLead) {
+        this.teamLead = teamLead;
         return this;
     }
 
-    public void setItProductOwner(String itProductOwner) {
-        this.itProductOwner = itProductOwner;
+    public void setTeamLead(String teamLead) {
+        this.teamLead = teamLead;
     }
 
     public String getProductOwner() {
@@ -102,7 +106,7 @@ public class Team implements Serializable {
         return "Team{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", itProductOwner='" + getItProductOwner() + "'" +
+            ", teamLead='" + getTeamLead() + "'" +
             ", productOwner='" + getProductOwner() + "'" +
             "}";
     }

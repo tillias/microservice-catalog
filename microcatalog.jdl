@@ -1,17 +1,17 @@
-entity Microservice {
-	name String,
-    description String,
-    imageUrl String,
-    swaggerUrl String,
-    gitUrl String,
+entity Team {
+	name String required,
+    teamLead String required,
+    productOwner String required
 }
 
-entity Team {
-	name String,
-    itProductOwner String,
-    productOwner String
+entity Microservice {
+	name String required,
+    description String required,
+    imageUrl String required,
+    swaggerUrl String required,
+    gitUrl String required
 }
 
 relationship ManyToOne {
-	Microservice{team} to Team
+	Microservice{team required} to Team
 }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 
@@ -23,22 +24,28 @@ public class Microservice implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
-    @Column(name = "name")
+    @NotNull
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @NotNull
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "image_url")
+    @NotNull
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @Column(name = "swagger_url")
+    @NotNull
+    @Column(name = "swagger_url", nullable = false)
     private String swaggerUrl;
 
-    @Column(name = "git_url")
+    @NotNull
+    @Column(name = "git_url", nullable = false)
     private String gitUrl;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = "microservices", allowSetters = true)
     private Team team;
 

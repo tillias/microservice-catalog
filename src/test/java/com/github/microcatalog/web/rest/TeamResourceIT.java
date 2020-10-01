@@ -32,8 +32,8 @@ public class TeamResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_IT_PRODUCT_OWNER = "AAAAAAAAAA";
-    private static final String UPDATED_IT_PRODUCT_OWNER = "BBBBBBBBBB";
+    private static final String DEFAULT_TEAM_LEAD = "AAAAAAAAAA";
+    private static final String UPDATED_TEAM_LEAD = "BBBBBBBBBB";
 
     private static final String DEFAULT_PRODUCT_OWNER = "AAAAAAAAAA";
     private static final String UPDATED_PRODUCT_OWNER = "BBBBBBBBBB";
@@ -58,7 +58,7 @@ public class TeamResourceIT {
     public static Team createEntity(EntityManager em) {
         Team team = new Team()
             .name(DEFAULT_NAME)
-            .itProductOwner(DEFAULT_IT_PRODUCT_OWNER)
+            .teamLead(DEFAULT_TEAM_LEAD)
             .productOwner(DEFAULT_PRODUCT_OWNER);
         return team;
     }
@@ -71,7 +71,7 @@ public class TeamResourceIT {
     public static Team createUpdatedEntity(EntityManager em) {
         Team team = new Team()
             .name(UPDATED_NAME)
-            .itProductOwner(UPDATED_IT_PRODUCT_OWNER)
+            .teamLead(UPDATED_TEAM_LEAD)
             .productOwner(UPDATED_PRODUCT_OWNER);
         return team;
     }
@@ -96,7 +96,7 @@ public class TeamResourceIT {
         assertThat(teamList).hasSize(databaseSizeBeforeCreate + 1);
         Team testTeam = teamList.get(teamList.size() - 1);
         assertThat(testTeam.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testTeam.getItProductOwner()).isEqualTo(DEFAULT_IT_PRODUCT_OWNER);
+        assertThat(testTeam.getTeamLead()).isEqualTo(DEFAULT_TEAM_LEAD);
         assertThat(testTeam.getProductOwner()).isEqualTo(DEFAULT_PRODUCT_OWNER);
     }
 
@@ -122,6 +122,63 @@ public class TeamResourceIT {
 
     @Test
     @Transactional
+    public void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = teamRepository.findAll().size();
+        // set the field null
+        team.setName(null);
+
+        // Create the Team, which fails.
+
+
+        restTeamMockMvc.perform(post("/api/teams")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(team)))
+            .andExpect(status().isBadRequest());
+
+        List<Team> teamList = teamRepository.findAll();
+        assertThat(teamList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkTeamLeadIsRequired() throws Exception {
+        int databaseSizeBeforeTest = teamRepository.findAll().size();
+        // set the field null
+        team.setTeamLead(null);
+
+        // Create the Team, which fails.
+
+
+        restTeamMockMvc.perform(post("/api/teams")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(team)))
+            .andExpect(status().isBadRequest());
+
+        List<Team> teamList = teamRepository.findAll();
+        assertThat(teamList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkProductOwnerIsRequired() throws Exception {
+        int databaseSizeBeforeTest = teamRepository.findAll().size();
+        // set the field null
+        team.setProductOwner(null);
+
+        // Create the Team, which fails.
+
+
+        restTeamMockMvc.perform(post("/api/teams")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(team)))
+            .andExpect(status().isBadRequest());
+
+        List<Team> teamList = teamRepository.findAll();
+        assertThat(teamList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllTeams() throws Exception {
         // Initialize the database
         teamRepository.saveAndFlush(team);
@@ -132,7 +189,7 @@ public class TeamResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(team.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].itProductOwner").value(hasItem(DEFAULT_IT_PRODUCT_OWNER)))
+            .andExpect(jsonPath("$.[*].teamLead").value(hasItem(DEFAULT_TEAM_LEAD)))
             .andExpect(jsonPath("$.[*].productOwner").value(hasItem(DEFAULT_PRODUCT_OWNER)));
     }
     
@@ -148,7 +205,7 @@ public class TeamResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(team.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.itProductOwner").value(DEFAULT_IT_PRODUCT_OWNER))
+            .andExpect(jsonPath("$.teamLead").value(DEFAULT_TEAM_LEAD))
             .andExpect(jsonPath("$.productOwner").value(DEFAULT_PRODUCT_OWNER));
     }
     @Test
@@ -173,7 +230,7 @@ public class TeamResourceIT {
         em.detach(updatedTeam);
         updatedTeam
             .name(UPDATED_NAME)
-            .itProductOwner(UPDATED_IT_PRODUCT_OWNER)
+            .teamLead(UPDATED_TEAM_LEAD)
             .productOwner(UPDATED_PRODUCT_OWNER);
 
         restTeamMockMvc.perform(put("/api/teams")
@@ -186,7 +243,7 @@ public class TeamResourceIT {
         assertThat(teamList).hasSize(databaseSizeBeforeUpdate);
         Team testTeam = teamList.get(teamList.size() - 1);
         assertThat(testTeam.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testTeam.getItProductOwner()).isEqualTo(UPDATED_IT_PRODUCT_OWNER);
+        assertThat(testTeam.getTeamLead()).isEqualTo(UPDATED_TEAM_LEAD);
         assertThat(testTeam.getProductOwner()).isEqualTo(UPDATED_PRODUCT_OWNER);
     }
 

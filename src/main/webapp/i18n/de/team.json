@@ -17,7 +17,7 @@
         "title": "Team"
       },
       "name": "Name",
-      "itProductOwner": "It Product Owner",
+      "teamLead": "Team Lead",
       "productOwner": "Product Owner"
     }
   }

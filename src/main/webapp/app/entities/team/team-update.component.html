@@ -15,18 +15,36 @@
                     <label class="form-control-label" jhiTranslate="microcatalogApp.team.name" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
                            formControlName="name"/>
+                    <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="microcatalogApp.team.itProductOwner" for="field_itProductOwner">It Product Owner</label>
-                    <input type="text" class="form-control" name="itProductOwner" id="field_itProductOwner"
-                           formControlName="itProductOwner"/>
+                    <label class="form-control-label" jhiTranslate="microcatalogApp.team.teamLead" for="field_teamLead">Team Lead</label>
+                    <input type="text" class="form-control" name="teamLead" id="field_teamLead"
+                           formControlName="teamLead"/>
+                    <div *ngIf="editForm.get('teamLead')!.invalid && (editForm.get('teamLead')!.dirty || editForm.get('teamLead')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('teamLead')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="microcatalogApp.team.productOwner" for="field_productOwner">Product Owner</label>
                     <input type="text" class="form-control" name="productOwner" id="field_productOwner"
                            formControlName="productOwner"/>
+                    <div *ngIf="editForm.get('productOwner')!.invalid && (editForm.get('productOwner')!.dirty || editForm.get('productOwner')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('productOwner')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
             </div>
 

@@ -24,7 +24,7 @@
                 <tr>
                     <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
                     <th scope="col" ><span jhiTranslate="microcatalogApp.team.name">Name</span></th>
-                    <th scope="col" ><span jhiTranslate="microcatalogApp.team.itProductOwner">It Product Owner</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.team.teamLead">Team Lead</span></th>
                     <th scope="col" ><span jhiTranslate="microcatalogApp.team.productOwner">Product Owner</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -33,7 +33,7 @@
                 <tr *ngFor="let team of teams ;trackBy: trackId">
                     <td><a [routerLink]="['/team', team.id, 'view']">{{ team.id }}</a></td>
                     <td>{{ team.name }}</td>
-                    <td>{{ team.itProductOwner }}</td>
+                    <td>{{ team.teamLead }}</td>
                     <td>{{ team.productOwner }}</td>
                     <td class="text-right">
                         <div class="btn-group">

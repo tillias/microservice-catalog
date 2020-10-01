@@ -15,38 +15,74 @@
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.name" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
                            formControlName="name"/>
+                    <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.description" for="field_description">Description</label>
                     <input type="text" class="form-control" name="description" id="field_description"
                            formControlName="description"/>
+                    <div *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('description')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.imageUrl" for="field_imageUrl">Image Url</label>
                     <input type="text" class="form-control" name="imageUrl" id="field_imageUrl"
                            formControlName="imageUrl"/>
+                    <div *ngIf="editForm.get('imageUrl')!.invalid && (editForm.get('imageUrl')!.dirty || editForm.get('imageUrl')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('imageUrl')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.swaggerUrl" for="field_swaggerUrl">Swagger Url</label>
                     <input type="text" class="form-control" name="swaggerUrl" id="field_swaggerUrl"
                            formControlName="swaggerUrl"/>
+                    <div *ngIf="editForm.get('swaggerUrl')!.invalid && (editForm.get('swaggerUrl')!.dirty || editForm.get('swaggerUrl')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('swaggerUrl')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.gitUrl" for="field_gitUrl">Git Url</label>
                     <input type="text" class="form-control" name="gitUrl" id="field_gitUrl"
                            formControlName="gitUrl"/>
+                    <div *ngIf="editForm.get('gitUrl')!.invalid && (editForm.get('gitUrl')!.dirty || editForm.get('gitUrl')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('gitUrl')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.team" for="field_team">Team</label>
                     <select class="form-control" id="field_team" name="team" formControlName="team">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="teamOption.id === editForm.get('team')!.value?.id ? editForm.get('team')!.value : teamOption" *ngFor="let teamOption of teams; trackBy: trackById">{{ teamOption.name }}</option>
+                        <option *ngIf="!editForm.get('team')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="teamOption.id === editForm.get('team')!.value?.id ? editForm.get('team')!.value : teamOption" *ngFor="let teamOption of teams; trackBy: trackById">{{ teamOption.id }}</option>
                     </select>
+                </div>
+                <div *ngIf="editForm.get('team')!.invalid && (editForm.get('team')!.dirty || editForm.get('team')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('team')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
                 </div>
             </div>
 
