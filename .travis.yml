@@ -18,7 +18,6 @@ env:
     - JHI_DISABLE_WEBPACK_LOGS=true
     - NG_CLI_ANALYTICS="false"
     - MAVEN_USER_HOME=$HOME/.m2/repository/
-    - HEROKU_API_KEY=
 before_install:
   - |
     if [[ $JHI_JDK = '8' ]]; then
