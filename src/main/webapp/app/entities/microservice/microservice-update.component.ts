@@ -4,9 +4,11 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
 
 import { IMicroservice, Microservice } from 'app/shared/model/microservice.model';
 import { MicroserviceService } from './microservice.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
 import { ITeam } from 'app/shared/model/team.model';
 import { TeamService } from 'app/entities/team/team.service';
 
@@ -29,6 +31,8 @@ export class MicroserviceUpdateComponent implements OnInit {
   });
 
   constructor(
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
     protected microserviceService: MicroserviceService,
     protected teamService: TeamService,
     protected activatedRoute: ActivatedRoute,
@@ -52,6 +56,22 @@ export class MicroserviceUpdateComponent implements OnInit {
       swaggerUrl: microservice.swaggerUrl,
       gitUrl: microservice.gitUrl,
       team: microservice.team,
+    });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType: string, base64String: string): void {
+    this.dataUtils.openFile(contentType, base64String);
+  }
+
+  setFileData(event: any, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
+      this.eventManager.broadcast(
+        new JhiEventWithContent<AlertError>('microcatalogApp.error', { ...err, key: 'error.file.' + err.key })
+      );
     });
   }
 

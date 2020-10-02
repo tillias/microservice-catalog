@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -174,25 +175,6 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void checkDescriptionIsRequired() throws Exception {
-        int databaseSizeBeforeTest = microserviceRepository.findAll().size();
-        // set the field null
-        microservice.setDescription(null);
-
-        // Create the Microservice, which fails.
-
-
-        restMicroserviceMockMvc.perform(post("/api/microservices")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(microservice)))
-            .andExpect(status().isBadRequest());
-
-        List<Microservice> microserviceList = microserviceRepository.findAll();
-        assertThat(microserviceList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void checkImageUrlIsRequired() throws Exception {
         int databaseSizeBeforeTest = microserviceRepository.findAll().size();
         // set the field null
@@ -260,7 +242,7 @@ public class MicroserviceResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(microservice.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)))
             .andExpect(jsonPath("$.[*].swaggerUrl").value(hasItem(DEFAULT_SWAGGER_URL)))
             .andExpect(jsonPath("$.[*].gitUrl").value(hasItem(DEFAULT_GIT_URL)));
@@ -278,7 +260,7 @@ public class MicroserviceResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(microservice.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGE_URL))
             .andExpect(jsonPath("$.swaggerUrl").value(DEFAULT_SWAGGER_URL))
             .andExpect(jsonPath("$.gitUrl").value(DEFAULT_GIT_URL));

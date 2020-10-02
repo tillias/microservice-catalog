@@ -3,7 +3,7 @@ import { ITeam } from 'app/shared/model/team.model';
 export interface IMicroservice {
   id?: number;
   name?: string;
-  description?: string;
+  description?: any;
   imageUrl?: string;
   swaggerUrl?: string;
   gitUrl?: string;
@@ -14,7 +14,7 @@ export class Microservice implements IMicroservice {
   constructor(
     public id?: number,
     public name?: string,
-    public description?: string,
+    public description?: any,
     public imageUrl?: string,
     public swaggerUrl?: string,
     public gitUrl?: string,

@@ -3,6 +3,7 @@ package com.github.microcatalog.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -28,7 +29,9 @@ public class Microservice implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
+    
+    @Lob
+    @Type(type = "org.hibernate.type.TextType")
     @Column(name = "description", nullable = false)
     private String description;
 

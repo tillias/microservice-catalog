@@ -18,7 +18,7 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="description" type="${clobType}">
                 <constraints nullable="false" />
             </column>
             <column name="image_url" type="varchar(255)">
@@ -57,7 +57,7 @@
                   tableName="microservice">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
-            <column name="description" type="string"/>
+            <column name="description" type="clob"/>
             <column name="image_url" type="string"/>
             <column name="swagger_url" type="string"/>
             <column name="git_url" type="string"/>

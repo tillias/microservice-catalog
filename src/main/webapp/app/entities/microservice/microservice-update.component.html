@@ -25,8 +25,8 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.description" for="field_description">Description</label>
-                    <input type="text" class="form-control" name="description" id="field_description"
-                           formControlName="description"/>
+                    <textarea class="form-control" name="description" id="field_description"
+                              formControlName="description"></textarea>
                     <div *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('description')?.errors?.required" jhiTranslate="entity.validation.required">

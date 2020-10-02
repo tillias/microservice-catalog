@@ -6,7 +6,7 @@ entity Team {
 
 entity Microservice {
 	name String required,
-    description String required,
+    description TextBlob required,
     imageUrl String required,
     swaggerUrl String required,
     gitUrl String required
