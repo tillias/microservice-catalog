@@ -44,7 +44,7 @@ script:
   - ./mvnw -ntp checkstyle:check
   - ./mvnw -ntp clean verify
   - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
-  - ./mvnw -ntp verify -Pdev-DskipTests
+  - ./mvnw -ntp verify -Pprod -DskipTests
   - docker build -t tillias/microcatalog .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push tillias/microcatalog
