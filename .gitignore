@@ -146,3 +146,5 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+/env.list
+/src/main/resources/config/liquibase/elephantsql.properties

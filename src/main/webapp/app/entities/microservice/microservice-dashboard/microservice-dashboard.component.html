@@ -3,9 +3,9 @@
         <h4 class="card-header border-0">{{microservice.name}}</h4>
         <div class="card-body">
             <div class="d-flex flex-row mb-3">
-                <img src="{{microservice.imageUrl}}" width="70"  alt="IMAGE">
+                <img [src]="microservice.imageUrl" onerror="this.src='../../../../content/images/jhipster_family_member_1.svg';"  width="70" alt="IMAGE"/>
                 <div class="d-flex flex-column ml-2">
-                    <span class="font-weight-bold" >Team: {{microservice.team?.name}}</span>
+                    <span class="font-weight-bold">Team: {{microservice.team?.name}}</span>
                     <span class="text-black-50">{{microservice.team?.productOwner}} (PO)</span>
                     <span class="text-black-50">{{microservice.team?.teamLead}} (TL)</span>
                 </div>
@@ -13,7 +13,8 @@
             <h6>{{microservice.description}}</h6>
             <div class="d-flex justify-content-between install mt-3">
                 <span>Git: <a href="{{microservice.gitUrl}}">{{microservice.gitUrl}}</a> </span>
-                <span class="text-primary"><a href="{{microservice.swaggerUrl}}">API</a><i class="fa fa-angle-right"></i></span>
+                <span class="text-primary"><a href="{{microservice.swaggerUrl}}">API</a><i
+                    class="fa fa-angle-right"></i></span>
             </div>
         </div>
     </div>
