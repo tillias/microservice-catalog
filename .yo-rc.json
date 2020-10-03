@@ -38,6 +38,9 @@
     "enableTranslation": true,
     "nativeLanguage": "en",
     "languages": ["en", "de"],
-    "blueprints": []
+    "blueprints": [],
+    "herokuAppName": "microcatalog",
+    "herokuDeployType": "jar",
+    "herokuJavaVersion": "11"
   }
 }

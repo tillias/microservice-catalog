@@ -20,7 +20,6 @@ export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
     this.loadAll();
     this.registerChangeInMicroservices();
   }
-
   ngOnDestroy(): void {
     if (this.eventSubscriber) {
       this.eventManager.destroy(this.eventSubscriber);
