@@ -84,6 +84,20 @@
                         This field is required.
                     </small>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.status" for="field_status">Status</label>
+                    <select class="form-control" id="field_status" name="status" formControlName="status">
+                        <option *ngIf="!editForm.get('status')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="statusOption.id === editForm.get('status')!.value?.id ? editForm.get('status')!.value : statusOption" *ngFor="let statusOption of statuses; trackBy: trackById">{{ statusOption.id }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('status')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
             </div>
 
             <div>

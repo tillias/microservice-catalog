@@ -1,4 +1,5 @@
 import { ITeam } from 'app/shared/model/team.model';
+import { IStatus } from 'app/shared/model/status.model';
 
 export interface IMicroservice {
   id?: number;
@@ -8,6 +9,7 @@ export interface IMicroservice {
   swaggerUrl?: string;
   gitUrl?: string;
   team?: ITeam;
+  status?: IStatus;
 }
 
 export class Microservice implements IMicroservice {
@@ -18,6 +20,7 @@ export class Microservice implements IMicroservice {
     public imageUrl?: string,
     public swaggerUrl?: string,
     public gitUrl?: string,
-    public team?: ITeam
+    public team?: ITeam,
+    public status?: IStatus
   ) {}
 }

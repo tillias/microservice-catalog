@@ -52,6 +52,11 @@ public class Microservice implements Serializable {
     @JsonIgnoreProperties(value = "microservices", allowSetters = true)
     private Team team;
 
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "microservices", allowSetters = true)
+    private Status status;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -137,6 +142,19 @@ public class Microservice implements Serializable {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public Microservice status(Status status) {
+        this.status = status;
+        return this;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

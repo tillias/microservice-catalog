@@ -11,6 +11,10 @@ import { MicroserviceService } from './microservice.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { ITeam } from 'app/shared/model/team.model';
 import { TeamService } from 'app/entities/team/team.service';
+import { IStatus } from 'app/shared/model/status.model';
+import { StatusService } from 'app/entities/status/status.service';
+
+type SelectableEntity = ITeam | IStatus;
 
 @Component({
   selector: 'jhi-microservice-update',
@@ -19,6 +23,7 @@ import { TeamService } from 'app/entities/team/team.service';
 export class MicroserviceUpdateComponent implements OnInit {
   isSaving = false;
   teams: ITeam[] = [];
+  statuses: IStatus[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -28,6 +33,7 @@ export class MicroserviceUpdateComponent implements OnInit {
     swaggerUrl: [null, [Validators.required]],
     gitUrl: [null, [Validators.required]],
     team: [null, Validators.required],
+    status: [null, Validators.required],
   });
 
   constructor(
@@ -35,6 +41,7 @@ export class MicroserviceUpdateComponent implements OnInit {
     protected eventManager: JhiEventManager,
     protected microserviceService: MicroserviceService,
     protected teamService: TeamService,
+    protected statusService: StatusService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -44,6 +51,8 @@ export class MicroserviceUpdateComponent implements OnInit {
       this.updateForm(microservice);
 
       this.teamService.query().subscribe((res: HttpResponse<ITeam[]>) => (this.teams = res.body || []));
+
+      this.statusService.query().subscribe((res: HttpResponse<IStatus[]>) => (this.statuses = res.body || []));
     });
   }
 
@@ -56,6 +65,7 @@ export class MicroserviceUpdateComponent implements OnInit {
       swaggerUrl: microservice.swaggerUrl,
       gitUrl: microservice.gitUrl,
       team: microservice.team,
+      status: microservice.status,
     });
   }
 
@@ -99,6 +109,7 @@ export class MicroserviceUpdateComponent implements OnInit {
       swaggerUrl: this.editForm.get(['swaggerUrl'])!.value,
       gitUrl: this.editForm.get(['gitUrl'])!.value,
       team: this.editForm.get(['team'])!.value,
+      status: this.editForm.get(['status'])!.value,
     };
   }
 
@@ -118,7 +129,7 @@ export class MicroserviceUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: ITeam): any {
+  trackById(index: number, item: SelectableEntity): any {
     return item.id;
   }
 }

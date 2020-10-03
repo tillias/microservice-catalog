@@ -3,6 +3,7 @@ package com.github.microcatalog.web.rest;
 import com.github.microcatalog.MicrocatalogApp;
 import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.domain.Team;
+import com.github.microcatalog.domain.Status;
 import com.github.microcatalog.repository.MicroserviceRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -80,6 +81,16 @@ public class MicroserviceResourceIT {
             team = TestUtil.findAll(em, Team.class).get(0);
         }
         microservice.setTeam(team);
+        // Add required entity
+        Status status;
+        if (TestUtil.findAll(em, Status.class).isEmpty()) {
+            status = StatusResourceIT.createEntity(em);
+            em.persist(status);
+            em.flush();
+        } else {
+            status = TestUtil.findAll(em, Status.class).get(0);
+        }
+        microservice.setStatus(status);
         return microservice;
     }
     /**
@@ -105,6 +116,16 @@ public class MicroserviceResourceIT {
             team = TestUtil.findAll(em, Team.class).get(0);
         }
         microservice.setTeam(team);
+        // Add required entity
+        Status status;
+        if (TestUtil.findAll(em, Status.class).isEmpty()) {
+            status = StatusResourceIT.createUpdatedEntity(em);
+            em.persist(status);
+            em.flush();
+        } else {
+            status = TestUtil.findAll(em, Status.class).get(0);
+        }
+        microservice.setStatus(status);
         return microservice;
     }
 

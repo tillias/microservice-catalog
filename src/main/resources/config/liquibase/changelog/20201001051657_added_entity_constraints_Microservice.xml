@@ -14,5 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="team"/>
 
+        <addForeignKeyConstraint baseColumnNames="status_id"
+                                 baseTableName="microservice"
+                                 constraintName="fk_microservice_status_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="status"/>
+
     </changeSet>
 </databaseChangeLog>

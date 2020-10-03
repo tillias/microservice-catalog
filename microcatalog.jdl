@@ -4,6 +4,11 @@ entity Team {
     productOwner String required
 }
 
+entity Status {
+    name String required,
+    description String
+}
+
 entity Microservice {
 	name String required,
     description TextBlob required,
@@ -14,4 +19,6 @@ entity Microservice {
 
 relationship ManyToOne {
 	Microservice{team required} to Team
+	Microservice{status required} to Status
 }
+

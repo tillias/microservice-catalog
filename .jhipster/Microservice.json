@@ -46,6 +46,14 @@
       "relationshipValidateRules": "required",
       "relationshipName": "team",
       "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "status",
+      "otherEntityRelationshipName": "microservice",
+      "relationshipValidateRules": "required",
+      "relationshipName": "status",
+      "otherEntityField": "id"
     }
   ],
   "changelogDate": "20201001051657",
