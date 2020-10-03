@@ -48,7 +48,7 @@ script:
   - docker build -t tillias/microcatalog .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push tillias/microcatalog
-  - ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pdev -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog
+  - ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pheroku -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog
 
 notifications:
   webhooks:
