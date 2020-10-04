@@ -41,13 +41,13 @@ install:
   - npm install
 script:
   - chmod +x mvnw
-  - ./mvnw -ntp checkstyle:check && \
-    ./mvnw -ntp clean verify && \
-    ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME && \
-    ./mvnw -ntp verify -Pprod -DskipTests && \
-    docker build -t tillias/microcatalog . && \
-    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin && \
-    docker push tillias/microcatalog && \
+  - ./mvnw -ntp checkstyle:check &&
+    ./mvnw -ntp clean verify &&
+    ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME &&
+    ./mvnw -ntp verify -Pprod -DskipTests &&
+    docker build -t tillias/microcatalog . &&
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&
+    docker push tillias/microcatalog &&
     ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy-only -Pheroku -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog
 
 notifications:
