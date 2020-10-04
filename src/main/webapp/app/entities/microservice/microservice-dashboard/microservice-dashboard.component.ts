@@ -13,6 +13,7 @@ import { JhiEventManager } from 'ng-jhipster';
 export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
   microservices?: IMicroservice[];
   eventSubscriber?: Subscription;
+  search: any;
 
   constructor(protected microserviceService: MicroserviceService, protected eventManager: JhiEventManager) {}
 
@@ -20,6 +21,7 @@ export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
     this.loadAll();
     this.registerChangeInMicroservices();
   }
+
   ngOnDestroy(): void {
     if (this.eventSubscriber) {
       this.eventManager.destroy(this.eventSubscriber);
