@@ -1,5 +1,8 @@
 <input class="form-control" type="text" placeholder="Search" aria-label="Search"
+       [(ngModel)]="model"
        [ngbTypeahead]="search"
-       [resultFormatter]="microserviceFormatter"
-       [inputFormatter]="microserviceInputFormatter"
+       [resultFormatter]="formatter"
+       [inputFormatter]="inputFormatter"
+       (selectItem)="onItemSelected($event.item)"
+       (keyup.escape)="clear()"
 />

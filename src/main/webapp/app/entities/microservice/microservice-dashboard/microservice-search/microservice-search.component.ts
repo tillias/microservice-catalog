@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { MicroserviceService } from 'app/entities/microservice/microservice.service';
-import { HttpResponse } from '@angular/common/http';
 import { IMicroservice } from 'app/shared/model/microservice.model';
 
 @Component({
@@ -11,18 +10,38 @@ import { IMicroservice } from 'app/shared/model/microservice.model';
   styleUrls: ['./microservice-search.component.scss'],
 })
 export class MicroserviceSearchComponent implements OnInit {
+  model: any;
+
+  @Output() itemSelected = new EventEmitter<IMicroservice>();
+
   constructor(protected microserviceService: MicroserviceService) {}
+
+  ngOnInit(): void {}
 
   search = (text$: Observable<string>) =>
     text$.pipe(
-      debounceTime(200),
+      debounceTime(500),
       distinctUntilChanged(),
 
-      switchMap(searchText => (searchText.length < 2 ? [] : this.microserviceService.query()))
+      switchMap(searchText => (searchText.length < 2 ? [] : this.loadData(searchText)))
     );
 
-  microserviceFormatter = (result: HttpResponse<IMicroservice>) => result?.body?.name;
-  microserviceInputFormatter = (result: HttpResponse<IMicroservice>) => result?.body?.name;
+  loadData(searchText: string): Observable<IMicroservice[]> {
+    return this.microserviceService
+      .query()
+      .pipe(map(response => response.body!.filter(m => m.name!.toLowerCase().includes(searchText.toLowerCase())) || [{}]));
+  }
 
-  ngOnInit(): void {}
+  formatter = (result: IMicroservice) => result.name || '';
+
+  inputFormatter = (result: IMicroservice) => result.name || '';
+
+  onItemSelected(item: IMicroservice): any {
+    this.itemSelected.emit(item);
+  }
+
+  clear(): any {
+    this.model = '';
+    this.itemSelected.emit();
+  }
 }

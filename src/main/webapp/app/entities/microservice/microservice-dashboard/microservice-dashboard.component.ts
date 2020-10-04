@@ -13,7 +13,6 @@ import { JhiEventManager } from 'ng-jhipster';
 export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
   microservices?: IMicroservice[];
   eventSubscriber?: Subscription;
-  search: any;
 
   constructor(protected microserviceService: MicroserviceService, protected eventManager: JhiEventManager) {}
 
@@ -34,5 +33,13 @@ export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
 
   registerChangeInMicroservices(): void {
     this.eventSubscriber = this.eventManager.subscribe('microserviceListModification', () => this.loadAll());
+  }
+
+  onItemSelected(value?: IMicroservice): any {
+    if (value) {
+      this.microservices = this.microservices?.filter(i => i.id === value.id);
+    } else {
+      this.loadAll();
+    }
   }
 }

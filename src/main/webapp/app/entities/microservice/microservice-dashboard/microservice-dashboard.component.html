@@ -1,5 +1,6 @@
 <div class="mb-4">
-    <jhi-microservice-search></jhi-microservice-search>
+    <jhi-microservice-search (itemSelected)="onItemSelected($event)">
+    </jhi-microservice-search>
 </div>
 <div class="card-columns">
     <jhi-microservice-card *ngFor="let microservice of microservices"
