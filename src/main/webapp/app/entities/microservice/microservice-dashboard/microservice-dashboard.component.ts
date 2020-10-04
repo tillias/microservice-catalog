@@ -20,6 +20,7 @@ export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
     this.loadAll();
     this.registerChangeInMicroservices();
   }
+
   ngOnDestroy(): void {
     if (this.eventSubscriber) {
       this.eventManager.destroy(this.eventSubscriber);
@@ -32,5 +33,13 @@ export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
 
   registerChangeInMicroservices(): void {
     this.eventSubscriber = this.eventManager.subscribe('microserviceListModification', () => this.loadAll());
+  }
+
+  onItemSelected(value?: IMicroservice): any {
+    if (value) {
+      this.microservices = this.microservices?.filter(i => i.id === value.id);
+    } else {
+      this.loadAll();
+    }
   }
 }
