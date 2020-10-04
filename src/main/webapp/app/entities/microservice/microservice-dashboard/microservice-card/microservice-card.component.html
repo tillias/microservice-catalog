@@ -1,0 +1,32 @@
+<div class="card mb-4">
+    <div class="card-header border-0">
+        <h3 class="h3 d-inline-block">{{microservice.name}}</h3>
+        <span class="badge badge-secondary align-top">{{microservice.status?.name}}</span>
+    </div>
+    <div class="card-body">
+        <div class="d-flex flex-row mb-3">
+
+            <img [src]="microservice.imageUrl"
+                 (error)="microservice.imageUrl = '../../../../content/images/jhipster_family_member_1.svg'"
+                 alt="IMAGE"/>
+            <div class="d-flex flex-column ml-2">
+                <span class="font-weight-bold">Team: {{microservice.team?.name}}</span>
+                <span class="text-black-50">{{microservice.team?.productOwner}} (PO)</span>
+                <span class="text-black-50">{{microservice.team?.teamLead}} (TL)</span>
+            </div>
+        </div>
+        <h6>{{microservice.description}}</h6>
+
+        <div class="d-flex justify-content-between install mt-3">
+            <div>
+                <span><a href="{{microservice.gitUrl}}">GIT</a> </span>
+                <span class="px-1">|</span>
+                <span><a href="{{microservice.swaggerUrl}}">API</a> </span>
+            </div>
+            <span class="text-primary">
+                    <a [routerLink]="['/microservice', microservice.id, 'view']">Details</a>
+                    <i class="fa fa-angle-right"></i>
+                </span>
+        </div>
+    </div>
+</div>
