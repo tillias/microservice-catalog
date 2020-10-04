@@ -3,9 +3,11 @@
 
 # microcatalog
 
-This application was generated using JHipster 6.10.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.3](https://www.jhipster.tech/documentation-archive/v6.10.3).
+Microservice catalog helps you or your organization to centrally store information about your microservices and share information about developers and a modern, live way. See https://tillias.wordpress.com/2020/10/02/microservice-catalog/ for details
 
 ## Development
+
+This application was generated using JHipster 6.10.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.3](https://www.jhipster.tech/documentation-archive/v6.10.3).
 
 Before you can build this project, you must install and configure the following dependencies on your machine:
 
