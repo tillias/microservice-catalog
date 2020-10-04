@@ -7,7 +7,7 @@ import { IMicroservice } from 'app/shared/model/microservice.model';
   styleUrls: ['./microservice-card.component.scss'],
 })
 export class MicroserviceCardComponent implements OnInit {
-  @Input() microservice: IMicroservice;
+  @Input() microservice!: IMicroservice;
 
   constructor() {}
 
