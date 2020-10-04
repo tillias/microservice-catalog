@@ -1,5 +1,6 @@
 <input class="form-control" type="text" placeholder="Search" aria-label="Search"
        [(ngModel)]="model"
+       (ngModelChange)="onModelChanged()"
        [ngbTypeahead]="search"
        [resultFormatter]="formatter"
        [inputFormatter]="inputFormatter"

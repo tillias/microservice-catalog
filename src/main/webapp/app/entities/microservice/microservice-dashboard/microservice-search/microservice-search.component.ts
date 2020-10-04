@@ -44,4 +44,10 @@ export class MicroserviceSearchComponent implements OnInit {
     this.model = '';
     this.itemSelected.emit();
   }
+
+  onModelChanged(): any {
+    if (!this.model) {
+      this.itemSelected.emit();
+    }
+  }
 }
