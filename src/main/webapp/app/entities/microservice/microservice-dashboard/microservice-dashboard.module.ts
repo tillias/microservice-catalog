@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { MicroserviceDashboardComponent } from './microservice-dashboard.component';
 import { MicrocatalogSharedModule } from '../../../shared/shared.module';
 import { RouterModule } from '@angular/router';
+import { MicroserviceCardComponent } from './microservice-card/microservice-card.component';
 
 @NgModule({
-  declarations: [MicroserviceDashboardComponent],
+  declarations: [MicroserviceDashboardComponent, MicroserviceCardComponent],
   imports: [MicrocatalogSharedModule, RouterModule],
   exports: [MicroserviceDashboardComponent],
 })
