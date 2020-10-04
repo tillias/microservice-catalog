@@ -7,7 +7,7 @@
         <div class="d-flex flex-row mb-3">
 
             <img [src]="microservice.imageUrl"
-                 onerror="this.src='../../../../content/images/jhipster_family_member_1.svg';" width="70"
+                 (error)="microservice.imageUrl = '../../../../content/images/jhipster_family_member_1.svg'"
                  alt="IMAGE"/>
             <div class="d-flex flex-column ml-2">
                 <span class="font-weight-bold">Team: {{microservice.team?.name}}</span>
