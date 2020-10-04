@@ -40,15 +40,18 @@ before_install:
 install:
   - npm install
 script:
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
   - chmod +x mvnw
-  - ./mvnw -ntp checkstyle:check
-  - ./mvnw -ntp clean verify
-  - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
-  - ./mvnw -ntp verify -Pprod -DskipTests
-  - docker build -t tillias/microcatalog .
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push tillias/microcatalog
-  - ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy-only -Pheroku -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog
+  - ./mvnw -ntp checkstyle:check &&
+    ./mvnw -ntp clean verify &&
+    ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME &&
+    ./mvnw -ntp verify -Pprod -DskipTests &&
+    docker build -t tillias/microcatalog . &&
+    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&
+    docker push tillias/microcatalog &&
+    if [ "$BRANCH" = "master" ]; then
+    ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy-only -Pheroku -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog; fi
 
 notifications:
   webhooks:
