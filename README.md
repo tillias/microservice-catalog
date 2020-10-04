@@ -3,7 +3,7 @@
 
 # microcatalog
 
-Microservice catalog helps you or your organization to centrally store information about your microservices and share information about developers and a modern, live way. See https://tillias.wordpress.com/2020/10/02/microservice-catalog/ for details
+Microservice catalog helps you or your organization to centrally store information about your microservices and share information between developers in a modern, live way. See https://tillias.wordpress.com/2020/10/02/microservice-catalog/ for details
 
 ## Development
 
