@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DataSet } from 'vis-data';
-import { Network } from 'vis-network';
+import 'vis-network/styles/vis-network.css';
+import { DataSet } from 'vis-data/peer';
+import { Network } from 'vis-network/peer';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
