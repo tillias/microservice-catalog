@@ -1,1 +1,46 @@
-<p>dependency-dashboard works!</p>
+<div>
+    <ngx-graph
+        (select)="onSelect($event)"
+        class="chart-container"
+        [view]="[500, 200]"
+        [links]="[
+    {
+      id: 'a',
+      source: 'first',
+    target: 'second',
+      label: 'is parent of'
+    }, {
+      id: 'b',
+      source: 'first',
+      target: 'third',
+      label: 'custom label'
+    }
+  ]"
+        [nodes]="[
+    {
+      id: 'first',
+      label: 'A'
+    }, {
+      id: 'second',
+      label: 'B'
+    }, {
+      id: 'third',
+      label: 'C'
+    }
+  ]"
+    >
+        <ng-template #nodeTemplate let-node>
+            <svg:g class="node" ngx-tooltip [tooltipPlacement]="'top'" [tooltipType]="'tooltip'"
+                   [tooltipTitle]="node.label">
+                <svg:rect
+                    [attr.width]="node.dimension.width"
+                    [attr.height]="node.dimension.height"
+                    [attr.fill]="node.data.color"
+                />
+                <svg:text alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">
+                    {{node.label}}
+                </svg:text>
+            </svg:g>
+        </ng-template>
+    </ngx-graph>
+</div>
