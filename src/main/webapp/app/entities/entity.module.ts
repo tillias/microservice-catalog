@@ -16,6 +16,10 @@ import { RouterModule } from '@angular/router';
         path: 'status',
         loadChildren: () => import('./status/status.module').then(m => m.MicrocatalogStatusModule),
       },
+      {
+        path: 'dependency',
+        loadChildren: () => import('./dependency/dependency.module').then(m => m.MicrocatalogDependencyModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

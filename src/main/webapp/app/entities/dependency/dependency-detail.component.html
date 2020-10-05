@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="dependency">
+            <h2><span jhiTranslate="microcatalogApp.dependency.detail.title">Dependency</span> {{ dependency.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="microcatalogApp.dependency.name">Name</span></dt>
+                <dd>
+                    <span>{{ dependency.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.dependency.description">Description</span></dt>
+                <dd>
+                    <span>{{ dependency.description }}</span>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.dependency.source">Source</span></dt>
+                <dd>
+                    <div *ngIf="dependency.source">
+                        <a [routerLink]="['/microservice', dependency.source?.id, 'view']">{{ dependency.source?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.dependency.target">Target</span></dt>
+                <dd>
+                    <div *ngIf="dependency.target">
+                        <a [routerLink]="['/microservice', dependency.target?.id, 'view']">{{ dependency.target?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/dependency', dependency.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

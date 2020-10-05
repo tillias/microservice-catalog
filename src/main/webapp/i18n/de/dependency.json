@@ -1,0 +1,25 @@
+{
+  "microcatalogApp": {
+    "dependency": {
+      "home": {
+        "title": "Dependencies",
+        "createLabel": "Dependency erstellen",
+        "createOrEditLabel": "Dependency erstellen oder bearbeiten",
+        "notFound": "No Dependencies found"
+      },
+      "created": "Dependency erstellt mit ID {{ param }}",
+      "updated": "Dependency aktualisiert mit ID {{ param }}",
+      "deleted": "Dependency gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Dependency {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Dependency"
+      },
+      "name": "Name",
+      "description": "Description",
+      "source": "Source",
+      "target": "Target"
+    }
+  }
+}
