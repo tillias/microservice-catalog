@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import 'vis-network/styles/vis-network.css';
 import { DataSet } from 'vis-data/peer';
 import { Network } from 'vis-network/peer';
 
@@ -37,6 +36,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit {
     const data = { nodes, edges };
 
     const container = this.visNetwork;
-    this.networkInstance = new Network(container.nativeElement, data, {});
+    this.networkInstance = new Network(container.nativeElement, data, {
+      height: '500px',
+    });
   }
 }
