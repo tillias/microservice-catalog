@@ -1,6 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DataSet } from 'vis-data/peer';
 import { Network } from 'vis-network/peer';
+import { DependencyService } from '../../entities/dependency/dependency.service';
+import { IDependency } from '../../shared/model/dependency.model';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -8,36 +11,67 @@ import { Network } from 'vis-network/peer';
   styleUrls: ['./dependency-dashboard.component.scss'],
 })
 export class DependencyDashboardComponent implements OnInit, AfterViewInit {
-  @ViewChild('visNetwork', { static: false }) visNetwork!: ElementRef;
-  private networkInstance: any;
+  @ViewChild('visNetwork', { static: false })
+  visNetwork!: ElementRef;
 
-  constructor() {}
+  networkInstance: any;
+
+  constructor(protected dependencyService: DependencyService) {}
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    // create an array with nodes
-    const nodes = new DataSet<any>([
-      { id: 1, label: 'Node 1' },
-      { id: 2, label: 'Node 2' },
-      { id: 3, label: 'Node 3' },
-      { id: 4, label: 'Node 4' },
-      { id: 5, label: 'Node 5' },
-    ]);
+    const container = this.visNetwork;
 
-    // create an array with edges
-    const edges = new DataSet<any>([
-      { from: '1', to: '3' },
-      { from: '1', to: '2' },
-      { from: '2', to: '4' },
-      { from: '2', to: '5' },
-    ]);
+    const data = {};
+    this.networkInstance = new Network(container.nativeElement, data, {
+      height: '100%',
+      width: '100%',
+      nodes: {
+        shape: 'hexagon',
+        font: {
+          color: 'white',
+        },
+      },
+      edges: {
+        smooth: false,
+        arrows: {
+          to: {
+            enabled: true,
+            type: 'vee',
+          },
+        },
+      },
+    });
+
+    this.loadAll();
+  }
+
+  loadAll(): void {
+    this.dependencyService
+      .query()
+      .pipe(map(httpResponse => httpResponse.body))
+      .subscribe(dependencies => this.refreshGraph(dependencies || []));
+  }
+
+  refreshGraph(dependencies: IDependency[]): void {
+    const nodes = new DataSet<any>();
+    const edges = new DataSet<any>();
+
+    dependencies.forEach(d => {
+      nodes.add({
+        id: d.id,
+        label: d.name,
+      });
+
+      edges.add({
+        from: d.source?.id,
+        to: d.target?.id,
+      });
+    });
 
     const data = { nodes, edges };
 
-    const container = this.visNetwork;
-    this.networkInstance = new Network(container.nativeElement, data, {
-      height: '500px',
-    });
+    this.networkInstance.setData(data);
   }
 }
