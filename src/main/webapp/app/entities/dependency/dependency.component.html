@@ -1,0 +1,75 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="microcatalogApp.dependency.home.title">Dependencies</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-dependency" [routerLink]="['/dependency/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="microcatalogApp.dependency.home.createLabel">
+            Create a new Dependency
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="dependencies?.length === 0">
+        <span jhiTranslate="microcatalogApp.dependency.home.notFound">No dependencies found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="dependencies && dependencies.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.dependency.name">Name</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.dependency.description">Description</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.dependency.source">Source</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.dependency.target">Target</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let dependency of dependencies ;trackBy: trackId">
+                    <td><a [routerLink]="['/dependency', dependency.id, 'view']">{{ dependency.id }}</a></td>
+                    <td>{{ dependency.name }}</td>
+                    <td>{{ dependency.description }}</td>
+                    <td>
+                        <div *ngIf="dependency.source">
+                            <a [routerLink]="['/microservice', dependency.source?.id, 'view']" >{{ dependency.source?.id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="dependency.target">
+                            <a [routerLink]="['/microservice', dependency.target?.id, 'view']" >{{ dependency.target?.id }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/dependency', dependency.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/dependency', dependency.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(dependency)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

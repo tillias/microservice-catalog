@@ -1,0 +1,46 @@
+{
+  "name": "Dependency",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "microservice",
+      "otherEntityRelationshipName": "dependency",
+      "relationshipValidateRules": "required",
+      "relationshipName": "source",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "microservice",
+      "otherEntityRelationshipName": "dependency",
+      "relationshipValidateRules": "required",
+      "relationshipName": "target",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201005051343",
+  "entityTableName": "dependency",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

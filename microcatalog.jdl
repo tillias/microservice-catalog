@@ -17,8 +17,15 @@ entity Microservice {
     gitUrl String required
 }
 
+entity Dependency {
+    name String required
+    description TextBlob
+}
+
 relationship ManyToOne {
 	Microservice{team required} to Team
 	Microservice{status required} to Status
+	Dependency{source required} to Microservice
+	Dependency{target required} to Microservice
 }
 

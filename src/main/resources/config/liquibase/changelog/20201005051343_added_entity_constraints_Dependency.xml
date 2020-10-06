@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Dependency.
+    -->
+    <changeSet id="20201005051343-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="source_id"
+                                 baseTableName="dependency"
+                                 constraintName="fk_dependency_source_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="microservice"/>
+
+        <addForeignKeyConstraint baseColumnNames="target_id"
+                                 baseTableName="dependency"
+                                 constraintName="fk_dependency_target_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="microservice"/>
+
+    </changeSet>
+</databaseChangeLog>

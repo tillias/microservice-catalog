@@ -14,6 +14,14 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
     RouterModule.forRoot(
       [
         {
+          path: 'dashboard',
+          data: {
+            authorities: [Authority.USER],
+          },
+          canActivate: [UserRouteAccessService],
+          loadChildren: () => import('./dashboard/dashboard-routing.module').then(m => m.DashboardRoutingModule),
+        },
+        {
           path: 'admin',
           data: {
             authorities: [Authority.ADMIN],

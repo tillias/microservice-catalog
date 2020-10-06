@@ -4,6 +4,7 @@
 put Sass variables here:
 eg $input-color: red;
 ****************************/
+@import '~vis-network/styles/vis-network.css';
 @import '~bootswatch/dist/solar/variables';
 // Override Bootstrap variables
 @import 'bootstrap-variables';
