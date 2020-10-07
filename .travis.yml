@@ -44,7 +44,7 @@ script:
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
   - chmod +x mvnw
   - ./mvnw -ntp checkstyle:check &&
-    ./mvnw -ntp clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=myorg_myrepo &&
+    ./mvnw -ntp clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=tillias-github &&
     ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME &&
     ./mvnw -ntp verify -Pprod -DskipTests &&
     if [ "$BRANCH" = "master" ]; then
