@@ -43,7 +43,7 @@ script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
   - chmod +x mvnw
-    ./mvnw -ntp clean verify &&
+  - ./mvnw -ntp clean verify &&
     ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME &&
     ./mvnw -ntp org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -Dsonar.projectKey=microcatalog &&
     ./mvnw -ntp verify -Pprod -DskipTests &&
