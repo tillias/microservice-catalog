@@ -43,16 +43,18 @@ script:
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$TRAVIS_PULL_REQUEST, BRANCH=$BRANCH"
   - chmod +x mvnw
-  - ./mvnw -ntp checkstyle:check &&
-    ./mvnw -ntp clean verify &&
+  - ./mvnw -ntp clean verify &&
     ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME &&
+    ./mvnw -ntp org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -Dsonar.projectKey=microcatalog &&
     ./mvnw -ntp verify -Pprod -DskipTests &&
     if [ "$BRANCH" = "master" ]; then
     docker build -t tillias/microcatalog . &&
     echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&
     docker push tillias/microcatalog &&
     ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy-only -Pheroku -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog; fi
-
+addons:
+  sonarcloud:
+    organization: 'tillias-github'
 notifications:
   webhooks:
     on_success: change # options: [always|never|change] default: always
