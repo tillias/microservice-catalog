@@ -16,6 +16,9 @@ eureka:
     non-secure-port: 80
     prefer-ip-address: false
 
+csp:
+  image-src: '*'
+
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
