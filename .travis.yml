@@ -54,7 +54,7 @@ script:
     ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy-only -Pheroku -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog; fi
 addons:
   sonarcloud:
-    organization: 'tillias'
+    organization: 'tillias-github'
 notifications:
   webhooks:
     on_success: change # options: [always|never|change] default: always
