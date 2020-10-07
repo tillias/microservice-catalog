@@ -45,7 +45,7 @@ script:
   - chmod +x mvnw
     ./mvnw -ntp clean verify &&
     ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME &&
-    ./mvnw -ntp org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -Dsonar.projectKey=microcatalog
+    ./mvnw -ntp org.jacoco:jacoco-maven-plugin:prepare-agent sonar:sonar -Dsonar.projectKey=microcatalog &&
     ./mvnw -ntp verify -Pprod -DskipTests &&
     if [ "$BRANCH" = "master" ]; then
     docker build -t tillias/microcatalog . &&
