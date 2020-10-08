@@ -81,6 +81,7 @@ export class DependencyDashboardComponent implements AfterViewInit {
     return {
       id: microservice.id,
       label: microservice.name,
+      title: microservice.description,
     };
   }
 }
