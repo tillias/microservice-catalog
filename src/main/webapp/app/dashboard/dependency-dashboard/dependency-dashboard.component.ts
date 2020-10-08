@@ -16,6 +16,9 @@ export class DependencyDashboardComponent implements AfterViewInit {
   visNetwork!: ElementRef;
 
   networkInstance: any;
+  searchValue?: IMicroservice;
+  onlyIncomingFilter = true;
+  onlyOutgoingFilter = true;
 
   constructor(protected dependencyService: DependencyService) {}
 
@@ -46,6 +49,15 @@ export class DependencyDashboardComponent implements AfterViewInit {
     this.loadAll();
   }
 
+  onFilterChange(): any {
+    // eslint-disable-next-line no-console
+    console.log(this.onlyOutgoingFilter + ' ' + this.onlyIncomingFilter);
+    // Only makes sense to refresh if filter for particular microservice is active
+    if (this.searchValue) {
+      this.loadAll();
+    }
+  }
+
   loadAll(): void {
     this.dependencyService
       .query()
@@ -57,6 +69,25 @@ export class DependencyDashboardComponent implements AfterViewInit {
     const edges = new DataSet<any>();
 
     const microservicesMap = new Map<number, IMicroservice>();
+
+    if (this.searchValue) {
+      const searchID = this.searchValue.id;
+      dependencies = dependencies.filter(d => {
+        if (this.onlyIncomingFilter && !this.onlyOutgoingFilter) {
+          return d.target?.id === searchID;
+        }
+
+        if (this.onlyOutgoingFilter && !this.onlyIncomingFilter) {
+          return d.source?.id === searchID;
+        }
+
+        if (this.onlyIncomingFilter && this.onlyOutgoingFilter) {
+          return d.source?.id === searchID || d.target?.id === searchID;
+        }
+
+        return false;
+      });
+    }
 
     dependencies.forEach(d => {
       if (d.source != null && d.target != null) {
@@ -82,5 +113,10 @@ export class DependencyDashboardComponent implements AfterViewInit {
       id: microservice.id,
       label: microservice.name,
     };
+  }
+
+  onMicroserviceSelected(microservice?: IMicroservice): any {
+    this.searchValue = microservice;
+    this.loadAll();
   }
 }

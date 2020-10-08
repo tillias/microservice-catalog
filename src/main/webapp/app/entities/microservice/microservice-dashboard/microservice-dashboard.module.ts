@@ -3,11 +3,11 @@ import { MicroserviceDashboardComponent } from './microservice-dashboard.compone
 import { MicrocatalogSharedModule } from '../../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { MicroserviceCardComponent } from './microservice-card/microservice-card.component';
-import { MicroserviceSearchComponent } from './microservice-search/microservice-search.component';
+import { MicroserviceSearchModule } from 'app/entities/microservice/microservice-dashboard/microservice-search/microservice-search.module';
 
 @NgModule({
-  declarations: [MicroserviceDashboardComponent, MicroserviceCardComponent, MicroserviceSearchComponent],
-  imports: [MicrocatalogSharedModule, RouterModule],
+  declarations: [MicroserviceDashboardComponent, MicroserviceCardComponent],
+  imports: [MicroserviceSearchModule, MicrocatalogSharedModule, RouterModule],
   exports: [MicroserviceDashboardComponent],
 })
 export class MicroserviceDashboardModule {}

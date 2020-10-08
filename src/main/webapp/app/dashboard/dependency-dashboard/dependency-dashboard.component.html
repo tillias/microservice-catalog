@@ -1,2 +1,27 @@
-<div class="vis-network-full-height" id="visNetwork" #visNetwork></div>
-<button class="btn-dark" (click)="loadAll()">Reload</button>
+<div class="container-fluid">
+    <div class="row justify-content-start">
+        <div class="col-4">
+            <jhi-microservice-search class="p-3" (itemSelected)="onMicroserviceSelected($event)">
+            </jhi-microservice-search>
+        </div>
+    </div>
+    <div class="row justify-content-start">
+        <div class="col-4">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="checkbox" [(ngModel)]="onlyIncomingFilter" (ngModelChange)="onFilterChange()">
+                    Show incoming dependencies
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="checkbox" [(ngModel)]="onlyOutgoingFilter" (ngModelChange)="onFilterChange()">
+                    Show outgoing dependencies
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="vis-network-full-height" id="visNetwork" #visNetwork></div>
+    </div>
+</div>
