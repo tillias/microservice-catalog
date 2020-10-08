@@ -3,9 +3,10 @@ import { DependencyDashboardComponent } from './dependency-dashboard.component';
 import { RouterModule } from '@angular/router';
 import { dependencyDashboardRoute } from './dependency-dashboard.route';
 import { MicrocatalogSharedModule } from '../../shared/shared.module';
+import { MicroserviceSearchModule } from '../../entities/microservice/microservice-dashboard/microservice-search/microservice-search.module';
 
 @NgModule({
-  imports: [MicrocatalogSharedModule, RouterModule.forChild(dependencyDashboardRoute)],
+  imports: [MicroserviceSearchModule, MicrocatalogSharedModule, RouterModule.forChild(dependencyDashboardRoute)],
   declarations: [DependencyDashboardComponent],
 })
 export class DependencyDashboardModule {}
