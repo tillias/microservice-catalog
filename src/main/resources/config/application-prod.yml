@@ -25,6 +25,9 @@ management:
       prometheus:
         enabled: false
 
+csp:
+  image-src: ${CSP_IMAGE_SRC}
+
 spring:
   devtools:
     restart:

@@ -17,7 +17,7 @@ eureka:
     prefer-ip-address: false
 
 csp:
-  image-src: '*'
+  image-src: ${CSP_IMAGE_SRC}
 
 spring:
   datasource:
