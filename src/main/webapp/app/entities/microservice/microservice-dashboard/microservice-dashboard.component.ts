@@ -35,7 +35,7 @@ export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
     this.eventSubscriber = this.eventManager.subscribe('microserviceListModification', () => this.loadAll());
   }
 
-  onItemSelected(value?: IMicroservice): any {
+  onMicroserviceSelected(value?: IMicroservice): any {
     if (value) {
       this.microservices = this.microservices?.filter(i => i.id === value.id);
     } else {

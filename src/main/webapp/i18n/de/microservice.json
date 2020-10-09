@@ -7,6 +7,9 @@
         "createOrEditLabel": "Microservice erstellen oder bearbeiten",
         "notFound": "No Microservices found"
       },
+      "search": {
+        "placeholder": "Bitte geben Sie einen Suchbegriff ein"
+      },
       "created": "Microservice erstellt mit ID {{ param }}",
       "updated": "Microservice aktualisiert mit ID {{ param }}",
       "deleted": "Microservice gelöscht mit ID {{ param }}",

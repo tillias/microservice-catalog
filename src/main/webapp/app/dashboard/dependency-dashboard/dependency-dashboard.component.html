@@ -7,16 +7,16 @@
     </div>
     <div class="row justify-content-start">
         <div class="col-4">
-            <div class="form-check">
+            <div class="form-check" >
                 <label class="form-check-label">
                     <input type="checkbox" [(ngModel)]="onlyIncomingFilter" (ngModelChange)="onFilterChange()">
-                    Show incoming dependencies
+                    <span jhiTranslate="microcatalogApp.dashboard.dependency.filter.incoming"></span>
                 </label>
             </div>
             <div class="form-check">
                 <label class="form-check-label">
                     <input type="checkbox" [(ngModel)]="onlyOutgoingFilter" (ngModelChange)="onFilterChange()">
-                    Show outgoing dependencies
+                    <span jhiTranslate="microcatalogApp.dashboard.dependency.filter.outgoing"></span>
                 </label>
             </div>
         </div>
