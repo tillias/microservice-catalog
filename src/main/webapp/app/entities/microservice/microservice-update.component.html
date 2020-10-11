@@ -72,6 +72,18 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.ciUrl" for="field_ciUrl">Ci Url</label>
+                    <input type="text" class="form-control" name="ciUrl" id="field_ciUrl"
+                           formControlName="ciUrl"/>
+                    <div *ngIf="editForm.get('ciUrl')!.invalid && (editForm.get('ciUrl')!.dirty || editForm.get('ciUrl')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('ciUrl')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.team" for="field_team">Team</label>
                     <select class="form-control" id="field_team" name="team" formControlName="team">
                         <option *ngIf="!editForm.get('team')!.value" [ngValue]="null" selected></option>

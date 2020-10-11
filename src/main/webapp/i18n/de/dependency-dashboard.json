@@ -1,12 +1,3 @@
 {
-  "microcatalogApp": {
-    "dashboard": {
-      "dependency": {
-        "filter": {
-          "incoming": "Eingehende Abhängigkeiten anzeigen",
-          "outgoing": "Ausgehende Abhängigkeiten anzeigen"
-        }
-      }
-    }
-  }
+  "microcatalogApp": {}
 }

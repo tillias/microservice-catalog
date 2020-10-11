@@ -32,6 +32,7 @@ export class MicroserviceUpdateComponent implements OnInit {
     imageUrl: [null, [Validators.required]],
     swaggerUrl: [null, [Validators.required]],
     gitUrl: [null, [Validators.required]],
+    ciUrl: [null, [Validators.required]],
     team: [null, Validators.required],
     status: [null, Validators.required],
   });
@@ -64,6 +65,7 @@ export class MicroserviceUpdateComponent implements OnInit {
       imageUrl: microservice.imageUrl,
       swaggerUrl: microservice.swaggerUrl,
       gitUrl: microservice.gitUrl,
+      ciUrl: microservice.ciUrl,
       team: microservice.team,
       status: microservice.status,
     });
@@ -108,6 +110,7 @@ export class MicroserviceUpdateComponent implements OnInit {
       imageUrl: this.editForm.get(['imageUrl'])!.value,
       swaggerUrl: this.editForm.get(['swaggerUrl'])!.value,
       gitUrl: this.editForm.get(['gitUrl'])!.value,
+      ciUrl: this.editForm.get(['ciUrl'])!.value,
       team: this.editForm.get(['team'])!.value,
       status: this.editForm.get(['status'])!.value,
     };

@@ -1,8 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { MicroserviceService } from 'app/entities/microservice/microservice.service';
 import { IMicroservice } from 'app/shared/model/microservice.model';
+import { IMicroserviceGroupFilter } from 'app/shared/model/util/microservice-group-filter';
 
 @Component({
   selector: 'jhi-microservice-search',
@@ -12,7 +13,12 @@ import { IMicroservice } from 'app/shared/model/microservice.model';
 export class MicroserviceSearchComponent implements OnInit {
   model: any;
 
+  /**
+   * Enables advanced search capabilities. Default: false
+   */
+  @Input() advanced = false;
   @Output() itemSelected = new EventEmitter<IMicroservice>();
+  @Output() groupFilterChanged = new EventEmitter<IMicroserviceGroupFilter>();
 
   constructor(protected microserviceService: MicroserviceService) {}
 
@@ -49,5 +55,9 @@ export class MicroserviceSearchComponent implements OnInit {
     if (!this.model) {
       this.itemSelected.emit();
     }
+  }
+
+  onFilterChanged(groupFilter: IMicroserviceGroupFilter): any {
+    this.groupFilterChanged.emit(groupFilter);
   }
 }

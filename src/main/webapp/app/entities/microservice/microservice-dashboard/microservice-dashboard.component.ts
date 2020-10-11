@@ -4,6 +4,7 @@ import { IMicroservice } from 'app/shared/model/microservice.model';
 import { HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
+import { IMicroserviceGroupFilter, MicroserviceGroupFilter } from 'app/shared/model/util/microservice-group-filter';
 
 @Component({
   selector: 'jhi-microservice-dashboard',
@@ -11,10 +12,14 @@ import { JhiEventManager } from 'ng-jhipster';
   styleUrls: ['./microservice-dashboard.component.scss'],
 })
 export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
-  microservices?: IMicroservice[];
+  microservices: IMicroservice[];
+  filter: IMicroserviceGroupFilter;
   eventSubscriber?: Subscription;
 
-  constructor(protected microserviceService: MicroserviceService, protected eventManager: JhiEventManager) {}
+  constructor(protected microserviceService: MicroserviceService, protected eventManager: JhiEventManager) {
+    this.microservices = [];
+    this.filter = new MicroserviceGroupFilter();
+  }
 
   ngOnInit(): void {
     this.loadAll();
@@ -41,5 +46,10 @@ export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
     } else {
       this.loadAll();
     }
+  }
+
+  onGroupFilterChanged(groupFilter: IMicroserviceGroupFilter): void {
+    this.filter = groupFilter;
+    this.loadAll();
   }
 }

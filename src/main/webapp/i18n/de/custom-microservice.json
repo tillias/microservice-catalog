@@ -1,0 +1,24 @@
+{
+  "microcatalogApp": {
+    "microservice": {
+      "search": {
+        "placeholder": "Bitte geben Sie einen Suchbegriff ein",
+        "group": {
+          "case": "Case-sensitive search",
+          "team": "Select Team...",
+          "status": "Select Status...",
+          "search": "Search",
+          "clear": "Clear filters"
+        }
+      }
+    },
+    "dashboard": {
+      "dependency": {
+        "filter": {
+          "incoming": "Eingehende Abhängigkeiten anzeigen",
+          "outgoing": "Ausgehende Abhängigkeiten anzeigen"
+        }
+      }
+    }
+  }
+}

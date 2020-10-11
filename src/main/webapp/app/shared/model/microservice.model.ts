@@ -8,6 +8,7 @@ export interface IMicroservice {
   imageUrl?: string;
   swaggerUrl?: string;
   gitUrl?: string;
+  ciUrl?: string;
   team?: ITeam;
   status?: IStatus;
 }
@@ -20,6 +21,7 @@ export class Microservice implements IMicroservice {
     public imageUrl?: string,
     public swaggerUrl?: string,
     public gitUrl?: string,
+    public ciUrl?: string,
     public team?: ITeam,
     public status?: IStatus
   ) {}
