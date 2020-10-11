@@ -1,0 +1,20 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: kEt#uR6M
+  microcatalog:
+    image: tillias/microcatalog
+    restart: always
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_PASSWORD: kEt#uR6M
+      DB_USER: postgres
+      CSP_IMAGE_SRC: '*'
+    ports:
+      - 8080:8080
