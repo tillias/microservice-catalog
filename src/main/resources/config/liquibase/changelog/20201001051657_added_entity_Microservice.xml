@@ -30,6 +30,9 @@
             <column name="git_url" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
+            <column name="ci_url" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <column name="team_id" type="bigint">
                 <constraints nullable="false" />
             </column>
@@ -64,6 +67,7 @@
             <column name="image_url" type="string"/>
             <column name="swagger_url" type="string"/>
             <column name="git_url" type="string"/>
+            <column name="ci_url" type="string"/>
             <column name="team_id" type="numeric"/>
             <column name="status_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->

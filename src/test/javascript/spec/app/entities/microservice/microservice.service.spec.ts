@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(MicroserviceService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Microservice(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new Microservice(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -59,6 +59,7 @@ describe('Service Tests', () => {
             imageUrl: 'BBBBBB',
             swaggerUrl: 'BBBBBB',
             gitUrl: 'BBBBBB',
+            ciUrl: 'BBBBBB',
           },
           elemDefault
         );
@@ -80,6 +81,7 @@ describe('Service Tests', () => {
             imageUrl: 'BBBBBB',
             swaggerUrl: 'BBBBBB',
             gitUrl: 'BBBBBB',
+            ciUrl: 'BBBBBB',
           },
           elemDefault
         );

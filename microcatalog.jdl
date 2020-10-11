@@ -14,7 +14,8 @@ entity Microservice {
     description TextBlob required,
     imageUrl String required,
     swaggerUrl String required,
-    gitUrl String required
+    gitUrl String required,
+    ciUrl String required
 }
 
 entity Dependency {

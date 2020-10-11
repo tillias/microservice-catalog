@@ -47,6 +47,9 @@ public class MicroserviceResourceIT {
     private static final String DEFAULT_GIT_URL = "AAAAAAAAAA";
     private static final String UPDATED_GIT_URL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CI_URL = "AAAAAAAAAA";
+    private static final String UPDATED_CI_URL = "BBBBBBBBBB";
+
     @Autowired
     private MicroserviceRepository microserviceRepository;
 
@@ -70,7 +73,8 @@ public class MicroserviceResourceIT {
             .description(DEFAULT_DESCRIPTION)
             .imageUrl(DEFAULT_IMAGE_URL)
             .swaggerUrl(DEFAULT_SWAGGER_URL)
-            .gitUrl(DEFAULT_GIT_URL);
+            .gitUrl(DEFAULT_GIT_URL)
+            .ciUrl(DEFAULT_CI_URL);
         // Add required entity
         Team team;
         if (TestUtil.findAll(em, Team.class).isEmpty()) {
@@ -105,7 +109,8 @@ public class MicroserviceResourceIT {
             .description(UPDATED_DESCRIPTION)
             .imageUrl(UPDATED_IMAGE_URL)
             .swaggerUrl(UPDATED_SWAGGER_URL)
-            .gitUrl(UPDATED_GIT_URL);
+            .gitUrl(UPDATED_GIT_URL)
+            .ciUrl(UPDATED_CI_URL);
         // Add required entity
         Team team;
         if (TestUtil.findAll(em, Team.class).isEmpty()) {
@@ -153,6 +158,7 @@ public class MicroserviceResourceIT {
         assertThat(testMicroservice.getImageUrl()).isEqualTo(DEFAULT_IMAGE_URL);
         assertThat(testMicroservice.getSwaggerUrl()).isEqualTo(DEFAULT_SWAGGER_URL);
         assertThat(testMicroservice.getGitUrl()).isEqualTo(DEFAULT_GIT_URL);
+        assertThat(testMicroservice.getCiUrl()).isEqualTo(DEFAULT_CI_URL);
     }
 
     @Test
@@ -253,6 +259,25 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
+    public void checkCiUrlIsRequired() throws Exception {
+        int databaseSizeBeforeTest = microserviceRepository.findAll().size();
+        // set the field null
+        microservice.setCiUrl(null);
+
+        // Create the Microservice, which fails.
+
+
+        restMicroserviceMockMvc.perform(post("/api/microservices")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(microservice)))
+            .andExpect(status().isBadRequest());
+
+        List<Microservice> microserviceList = microserviceRepository.findAll();
+        assertThat(microserviceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllMicroservices() throws Exception {
         // Initialize the database
         microserviceRepository.saveAndFlush(microservice);
@@ -266,7 +291,8 @@ public class MicroserviceResourceIT {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].imageUrl").value(hasItem(DEFAULT_IMAGE_URL)))
             .andExpect(jsonPath("$.[*].swaggerUrl").value(hasItem(DEFAULT_SWAGGER_URL)))
-            .andExpect(jsonPath("$.[*].gitUrl").value(hasItem(DEFAULT_GIT_URL)));
+            .andExpect(jsonPath("$.[*].gitUrl").value(hasItem(DEFAULT_GIT_URL)))
+            .andExpect(jsonPath("$.[*].ciUrl").value(hasItem(DEFAULT_CI_URL)));
     }
     
     @Test
@@ -284,7 +310,8 @@ public class MicroserviceResourceIT {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.imageUrl").value(DEFAULT_IMAGE_URL))
             .andExpect(jsonPath("$.swaggerUrl").value(DEFAULT_SWAGGER_URL))
-            .andExpect(jsonPath("$.gitUrl").value(DEFAULT_GIT_URL));
+            .andExpect(jsonPath("$.gitUrl").value(DEFAULT_GIT_URL))
+            .andExpect(jsonPath("$.ciUrl").value(DEFAULT_CI_URL));
     }
     @Test
     @Transactional
@@ -311,7 +338,8 @@ public class MicroserviceResourceIT {
             .description(UPDATED_DESCRIPTION)
             .imageUrl(UPDATED_IMAGE_URL)
             .swaggerUrl(UPDATED_SWAGGER_URL)
-            .gitUrl(UPDATED_GIT_URL);
+            .gitUrl(UPDATED_GIT_URL)
+            .ciUrl(UPDATED_CI_URL);
 
         restMicroserviceMockMvc.perform(put("/api/microservices")
             .contentType(MediaType.APPLICATION_JSON)
@@ -327,6 +355,7 @@ public class MicroserviceResourceIT {
         assertThat(testMicroservice.getImageUrl()).isEqualTo(UPDATED_IMAGE_URL);
         assertThat(testMicroservice.getSwaggerUrl()).isEqualTo(UPDATED_SWAGGER_URL);
         assertThat(testMicroservice.getGitUrl()).isEqualTo(UPDATED_GIT_URL);
+        assertThat(testMicroservice.getCiUrl()).isEqualTo(UPDATED_CI_URL);
     }
 
     @Test

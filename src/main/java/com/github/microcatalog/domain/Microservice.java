@@ -47,6 +47,10 @@ public class Microservice implements Serializable {
     @Column(name = "git_url", nullable = false)
     private String gitUrl;
 
+    @NotNull
+    @Column(name = "ci_url", nullable = false)
+    private String ciUrl;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "microservices", allowSetters = true)
@@ -131,6 +135,19 @@ public class Microservice implements Serializable {
         this.gitUrl = gitUrl;
     }
 
+    public String getCiUrl() {
+        return ciUrl;
+    }
+
+    public Microservice ciUrl(String ciUrl) {
+        this.ciUrl = ciUrl;
+        return this;
+    }
+
+    public void setCiUrl(String ciUrl) {
+        this.ciUrl = ciUrl;
+    }
+
     public Team getTeam() {
         return team;
     }
@@ -184,6 +201,7 @@ public class Microservice implements Serializable {
             ", imageUrl='" + getImageUrl() + "'" +
             ", swaggerUrl='" + getSwaggerUrl() + "'" +
             ", gitUrl='" + getGitUrl() + "'" +
+            ", ciUrl='" + getCiUrl() + "'" +
             "}";
     }
 }

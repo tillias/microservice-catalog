@@ -28,6 +28,7 @@
                     <th scope="col" ><span jhiTranslate="microcatalogApp.microservice.imageUrl">Image Url</span></th>
                     <th scope="col" ><span jhiTranslate="microcatalogApp.microservice.swaggerUrl">Swagger Url</span></th>
                     <th scope="col" ><span jhiTranslate="microcatalogApp.microservice.gitUrl">Git Url</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.microservice.ciUrl">Ci Url</span></th>
                     <th scope="col" ><span jhiTranslate="microcatalogApp.microservice.team">Team</span></th>
                     <th scope="col" ><span jhiTranslate="microcatalogApp.microservice.status">Status</span></th>
                     <th scope="col"></th>
@@ -41,6 +42,7 @@
                     <td>{{ microservice.imageUrl }}</td>
                     <td>{{ microservice.swaggerUrl }}</td>
                     <td>{{ microservice.gitUrl }}</td>
+                    <td>{{ microservice.ciUrl }}</td>
                     <td>
                         <div *ngIf="microservice.team">
                             <a [routerLink]="['/team', microservice.team?.id, 'view']" >{{ microservice.team?.id }}</a>
