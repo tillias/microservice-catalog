@@ -11,6 +11,7 @@ import { MicroserviceService } from './microservice.service';
 import { MicroserviceComponent } from './microservice.component';
 import { MicroserviceDetailComponent } from './microservice-detail.component';
 import { MicroserviceUpdateComponent } from './microservice-update.component';
+import { MicroserviceCustomDetailsComponent } from './microservice-details/microservice-custom-details.component';
 
 @Injectable({ providedIn: 'root' })
 export class MicroserviceResolve implements Resolve<IMicroservice> {
@@ -71,6 +72,18 @@ export const microserviceRoute: Routes = [
   {
     path: ':id/edit',
     component: MicroserviceUpdateComponent,
+    resolve: {
+      microservice: MicroserviceResolve,
+    },
+    data: {
+      authorities: [Authority.USER],
+      pageTitle: 'microcatalogApp.microservice.home.title',
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: ':id/details/custom',
+    component: MicroserviceCustomDetailsComponent,
     resolve: {
       microservice: MicroserviceResolve,
     },

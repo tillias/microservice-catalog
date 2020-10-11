@@ -116,6 +116,9 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
         ]
     },
     plugins: [
+        new webpack.DefinePlugin({
+          'EXPERIMENTAL_FEATURE': false
+        }),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional

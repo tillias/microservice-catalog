@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/tillias/microservice-catalog.svg?branch=master)](https://travis-ci.org/tillias/microservice-catalog)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=microcatalog)
 [![Docker Image Version (latest by date)](https://img.shields.io/docker/v/tillias/microcatalog)](https://hub.docker.com/r/tillias/microcatalog)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # microcatalog
 
