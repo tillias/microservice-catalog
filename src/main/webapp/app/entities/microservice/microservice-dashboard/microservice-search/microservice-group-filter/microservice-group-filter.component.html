@@ -1,0 +1,44 @@
+<div class="btn-group" ngbDropdown container="body" placement="bottom-right">
+    <button type="button" class="btn btn-secondary dropdown-toggle" ngbDropdownToggle></button>
+    <div class="dropdown-menu" ngbDropdownMenu>
+        <div class="input-group p-3">
+            <div class="container">
+                <div class="row p-2">
+                    <input type="text" [(ngModel)]="groupFilter.name" class="form-control" placeholder="Name"
+                           aria-label="Name">
+                </div>
+                <div class="row p-2">
+                    <input type="text" [(ngModel)]="groupFilter.description" class="form-control"
+                           placeholder="Description" aria-label="Description">
+                </div>
+                <div class="row p-2">
+                    <input type="text" [(ngModel)]="groupFilter.swaggerUrl" class="form-control"
+                           placeholder="Swagger url" aria-label="Swagger url">
+                </div>
+                <div class="row p-2">
+                    <input type="text" [(ngModel)]="groupFilter.gitUrl" class="form-control" placeholder="Git url"
+                           aria-label="Git url">
+                </div>
+                <div class="row p-2">
+                    <select title="Team" class="custom-select">
+                        <option selected>Team...</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="row p-2">
+                    <select title="Status" class="custom-select">
+                        <option selected>Status...</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="row p-2">
+                    <button class="btn btn-primary ml-auto" (click)="onSearch()">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

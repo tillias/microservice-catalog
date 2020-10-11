@@ -9,4 +9,5 @@
            (selectItem)="onItemSelected($event.item)"
            (keyup.escape)="clear()"
     />
+    <jhi-microservice-group-filter *ngIf="advanced" class="ml-1" (filterChanged)="onFilterChanged($event)"></jhi-microservice-group-filter>
 </div>
