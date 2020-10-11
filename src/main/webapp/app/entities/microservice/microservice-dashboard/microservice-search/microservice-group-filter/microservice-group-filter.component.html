@@ -4,39 +4,59 @@
         <div class="input-group p-3">
             <div class="container">
                 <div class="row p-2">
-                    <input type="text" [(ngModel)]="groupFilter.name" class="form-control" placeholder="Name"
-                           aria-label="Name">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1"
+                               [(ngModel)]="groupFilter.caseSensitive">
+                        <label class="custom-control-label" for="customSwitch1"
+                               jhiTranslate="microcatalogApp.microservice.search.group.case">
+                            Case-sensitive search</label>
+                    </div>
                 </div>
                 <div class="row p-2">
-                    <input type="text" [(ngModel)]="groupFilter.description" class="form-control"
-                           placeholder="Description" aria-label="Description">
+                    <input type="text" [(ngModel)]="groupFilter.name" (keyup.enter)="onSearch()" class="form-control"
+                           placeholder="Name" aria-label="Name">
                 </div>
                 <div class="row p-2">
-                    <input type="text" [(ngModel)]="groupFilter.swaggerUrl" class="form-control"
-                           placeholder="Swagger url" aria-label="Swagger url">
+                    <input type="text" [(ngModel)]="groupFilter.description" (keyup.enter)="onSearch()"
+                           class="form-control" placeholder="Description" aria-label="Description">
                 </div>
                 <div class="row p-2">
-                    <input type="text" [(ngModel)]="groupFilter.gitUrl" class="form-control" placeholder="Git url"
-                           aria-label="Git url">
+                    <input type="text" [(ngModel)]="groupFilter.swaggerUrl" (keyup.enter)="onSearch()"
+                           class="form-control" placeholder="Swagger url" aria-label="Swagger url">
+                </div>
+                <div class="row p-2">
+                    <input type="text" [(ngModel)]="groupFilter.gitUrl" (keyup.enter)="onSearch()" class="form-control"
+                           placeholder="Git url" aria-label="Git url">
                 </div>
                 <div class="row p-2">
                     <select title="Team" [(ngModel)]="groupFilter.team" class="custom-select">
-                        <option [ngValue]="undefined" selected>Select Team...</option>
-                        <option *ngFor="let team of teams" [value]="team">
+                        <option [ngValue]="undefined" selected
+                                jhiTranslate="microcatalogApp.microservice.search.group.team">Select Team...
+                        </option>
+                        <option *ngFor="let team of teams" [ngValue]="team">
                             {{team.name}}
                         </option>
                     </select>
                 </div>
                 <div class="row p-2">
                     <select title="Status" [(ngModel)]="groupFilter.status" class="custom-select">
-                        <option [ngValue]="undefined" selected>Select Status...</option>
-                        <option *ngFor="let status of statuses" [value]="status">
+                        <option [ngValue]="undefined" selected
+                                jhiTranslate="microcatalogApp.microservice.search.group.status">Select Status...
+                        </option>
+                        <option *ngFor="let status of statuses" [ngValue]="status">
                             {{status.name}}
                         </option>
                     </select>
                 </div>
                 <div class="row p-2">
-                    <button class="btn btn-primary ml-auto" (click)="onSearch()">Search</button>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" (click)="onSearch()"
+                                jhiTranslate="microcatalogApp.microservice.search.group.search">Search
+                        </button>
+                        <button class="btn btn-primary" (click)="onClearFilter()"
+                                jhiTranslate="microcatalogApp.microservice.search.group.clear">Clear filters
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

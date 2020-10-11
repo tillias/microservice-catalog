@@ -8,7 +8,14 @@
         "notFound": "No Microservices found"
       },
       "search": {
-        "placeholder": "Please type your search text here"
+        "placeholder": "Please type your search text here",
+        "group": {
+          "case": "Case-sensitive search",
+          "team": "Select Team...",
+          "status": "Select Status...",
+          "search": "Search",
+          "clear": "Clear filters"
+        }
       },
       "created": "A new Microservice is created with identifier {{ param }}",
       "updated": "A Microservice is updated with identifier {{ param }}",

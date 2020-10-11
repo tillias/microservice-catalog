@@ -36,4 +36,9 @@ export class MicroserviceGroupFilterComponent implements OnInit {
   onSearch(): void {
     this.filterChanged.emit(this.groupFilter);
   }
+
+  onClearFilter(): void {
+    this.groupFilter = new MicroserviceGroupFilter();
+    this.onSearch();
+  }
 }

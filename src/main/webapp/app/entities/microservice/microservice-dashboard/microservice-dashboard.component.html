@@ -4,7 +4,7 @@
     </jhi-microservice-search>
 </div>
 <div class="card-columns">
-    <jhi-microservice-card *ngFor="let microservice of microservices"
+    <jhi-microservice-card *ngFor="let microservice of (microservices | microserviceGroupFilter: filter)"
                            [microservice]="microservice">
     </jhi-microservice-card>
 </div>
