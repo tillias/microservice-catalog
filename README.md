@@ -2,10 +2,13 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=microcatalog)
 [![Docker Image Version (latest by date)](https://img.shields.io/docker/v/tillias/microcatalog)](https://hub.docker.com/r/tillias/microcatalog)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=ncloc)](https://sonarcloud.io/dashboard?id=microcatalog)
+
+[![Try in PWD](https://raw.githubusercontent.com/play-with-docker/stacks/master/assets/images/button.png)](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/tillias/microservice-catalog/master/docker-compose.yml)
 
 # microcatalog
 
-Microservice catalog helps you or your organization to centrally store information about your microservices and share information between developers in a modern, live way. See https://tillias.wordpress.com/2020/10/02/microservice-catalog/ for details
+Microservice catalog helps you or your organization to centrally store information about your microservices and share information between developers in a modern, live way. See https://tillias.wordpress.com/2020/10/02/microservice-catalog for details
 
 ## Development
 
