@@ -20,5 +20,6 @@ services:
       DB_PASSWORD: kEt#uR6M
       DB_USER: postgres
       CSP_IMAGE_SRC: '*'
+      SERVER_PORT: 2080
     ports:
-      - 8080:8080
+      - 8080:2080
