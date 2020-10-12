@@ -1,17 +1,19 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { DataSet } from 'vis-data/peer';
 import { Network } from 'vis-network/peer';
 import { DependencyService } from '../../entities/dependency/dependency.service';
 import { IDependency } from '../../shared/model/dependency.model';
 import { map } from 'rxjs/operators';
 import { IMicroservice } from '../../shared/model/microservice.model';
+import { ISelectPayload } from '../../shared/vis/events/VisEvents';
+import { EXPERIMENTAL_FEATURE } from '../../app.constants';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
   templateUrl: './dependency-dashboard.component.html',
   styleUrls: ['./dependency-dashboard.component.scss'],
 })
-export class DependencyDashboardComponent implements AfterViewInit {
+export class DependencyDashboardComponent implements AfterViewInit, OnDestroy {
   @ViewChild('visNetwork', { static: false })
   visNetwork!: ElementRef;
 
@@ -19,6 +21,8 @@ export class DependencyDashboardComponent implements AfterViewInit {
   searchValue?: IMicroservice;
   onlyIncomingFilter = true;
   onlyOutgoingFilter = true;
+  selection?: ISelectPayload;
+  experimentalFeatures = EXPERIMENTAL_FEATURE;
 
   constructor(protected dependencyService: DependencyService) {}
 
@@ -35,6 +39,7 @@ export class DependencyDashboardComponent implements AfterViewInit {
           color: 'white',
         },
       },
+      clickToUse: false,
       edges: {
         smooth: false,
         arrows: {
@@ -46,12 +51,31 @@ export class DependencyDashboardComponent implements AfterViewInit {
       },
     });
 
+    // See Network.d.ts -> NetworkEvents
+    this.networkInstance.on('selectNode', (params: any) => {
+      this.handleSelectNode(params);
+    });
+    this.networkInstance.on('deselectNode', () => {
+      this.handleDeselectNode();
+    });
+
     this.loadAll();
   }
 
+  ngOnDestroy(): void {
+    this.networkInstance.off('selectNode');
+    this.networkInstance.off('deselectNode');
+  }
+
+  handleSelectNode(payload: ISelectPayload): void {
+    this.selection = payload;
+  }
+
+  handleDeselectNode(): void {
+    this.selection = undefined;
+  }
+
   onFilterChange(): any {
-    // eslint-disable-next-line no-console
-    console.log(this.onlyOutgoingFilter + ' ' + this.onlyIncomingFilter);
     // Only makes sense to refresh if filter for particular microservice is active
     if (this.searchValue) {
       this.loadAll();
@@ -112,7 +136,6 @@ export class DependencyDashboardComponent implements AfterViewInit {
     return {
       id: microservice.id,
       label: microservice.name,
-      title: microservice.description,
     };
   }
 

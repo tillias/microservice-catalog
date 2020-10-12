@@ -5,6 +5,11 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: kEt#uR6M
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9080:8080
   microcatalog:
     image: tillias/microcatalog
     restart: always

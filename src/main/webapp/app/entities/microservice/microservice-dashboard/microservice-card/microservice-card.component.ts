@@ -12,7 +12,7 @@ export class MicroserviceCardComponent implements OnInit {
   @Input() microservice!: IMicroservice;
   @Input() settings: ICardSettings = CardSettings.DEFAULT;
 
-  enableCustomDetailsScreen = EXPERIMENTAL_FEATURE;
+  experimentalFeatures = EXPERIMENTAL_FEATURE;
 
   constructor() {}
 
