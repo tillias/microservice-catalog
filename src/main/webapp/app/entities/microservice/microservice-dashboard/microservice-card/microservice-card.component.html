@@ -26,9 +26,9 @@
                 <span><a href="{{microservice.swaggerUrl}}">API</a> </span>
             </div>
             <span class="text-primary">
-                    <a *ngIf="enableCustomDetailsScreen; else experimental"
+                    <a *ngIf="experimentalFeatures; else production"
                        [routerLink]="['/microservice', microservice.id, 'details', 'custom']">Details</a>
-                    <ng-template #experimental>
+                    <ng-template #production>
                         <a [routerLink]="['/microservice', microservice.id, 'view']">Details</a>
                     </ng-template>
                     <i class="fa fa-angle-right"></i>

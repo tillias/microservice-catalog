@@ -1,29 +1,48 @@
-<div class="container-fluid">
-    <div class="row justify-content-start">
-        <div class="col-4">
-            <jhi-microservice-search class="p-3" (itemSelected)="onMicroserviceSelected($event)">
-            </jhi-microservice-search>
-        </div>
+<div class="row">
+    <div class="col-2">
+        <ngb-accordion [closeOthers]="true" activeIds="search">
+            <ngb-panel title="Search" id="search">
+                <ng-template ngbPanelContent>
+                    <jhi-microservice-search (itemSelected)="onMicroserviceSelected($event)">
+                    </jhi-microservice-search>
+                    <div class="form-check p-0 pt-4">
+                        <label class="form-check-label">
+                            <input type="checkbox" [(ngModel)]="onlyIncomingFilter" (ngModelChange)="onFilterChange()">
+                            <span jhiTranslate="microcatalogApp.dashboard.dependency.filter.incoming"></span>
+                        </label>
+                    </div>
+                    <div class="form-check p-0 pt-1">
+                        <label class="form-check-label">
+                            <input type="checkbox" [(ngModel)]="onlyOutgoingFilter" (ngModelChange)="onFilterChange()">
+                            <span jhiTranslate="microcatalogApp.dashboard.dependency.filter.outgoing"></span>
+                        </label>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Dependencies" id="dependency">
+                <ng-template ngbPanelContent>
+                    <div class="p-1">
+                        <button class="btn btn-block btn-success btn-sm">Create dependency</button>
+                    </div>
+                    <div class="p-1">
+                        <button class="btn btn-block btn-success btn-sm" disabled>Delete dependency</button>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel title="Deployments">
+                <ng-template ngbPanelContent>
+                    <div class="p-1">
+                        <button class="btn btn-block btn-success btn-sm" disabled>Build deployment path</button>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+
     </div>
-    <div class="row justify-content-start">
-        <div class="col-4">
-            <div class="form-check" >
-                <label class="form-check-label">
-                    <input type="checkbox" [(ngModel)]="onlyIncomingFilter" (ngModelChange)="onFilterChange()">
-                    <span jhiTranslate="microcatalogApp.dashboard.dependency.filter.incoming"></span>
-                </label>
-            </div>
-            <div class="form-check">
-                <label class="form-check-label">
-                    <input type="checkbox" [(ngModel)]="onlyOutgoingFilter" (ngModelChange)="onFilterChange()">
-                    <span jhiTranslate="microcatalogApp.dashboard.dependency.filter.outgoing"></span>
-                </label>
-            </div>
-        </div>
+    <div class="col-7">
+        <div class="p3 vis-network-full-height" #visNetwork></div>
     </div>
-    <div class="row">
-        <div class="col">
-            <div class="vis-network-full-height" id="visNetwork"  #visNetwork></div>
-        </div>
+    <div class="col-3">
+        <jhi-node-legend [selection]="selection"></jhi-node-legend>
     </div>
 </div>

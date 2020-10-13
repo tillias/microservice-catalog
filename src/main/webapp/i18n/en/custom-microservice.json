@@ -2,7 +2,7 @@
   "microcatalogApp": {
     "microservice": {
       "search": {
-        "placeholder": "Please type your search text here",
+        "placeholder": "Search text...",
         "group": {
           "case": "Case-sensitive search",
           "team": "Select Team...",
@@ -15,8 +15,8 @@
     "dashboard": {
       "dependency": {
         "filter": {
-          "incoming": "Show incoming dependencies",
-          "outgoing": "Show outgoing dependencies"
+          "incoming": "Show downstreams",
+          "outgoing": "Show upstreams"
         }
       }
     }

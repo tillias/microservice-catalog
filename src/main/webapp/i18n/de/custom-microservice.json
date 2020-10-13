@@ -2,7 +2,7 @@
   "microcatalogApp": {
     "microservice": {
       "search": {
-        "placeholder": "Bitte geben Sie einen Suchbegriff ein",
+        "placeholder": "Suchbegriff...",
         "group": {
           "case": "Case-sensitive search",
           "team": "Select Team...",
