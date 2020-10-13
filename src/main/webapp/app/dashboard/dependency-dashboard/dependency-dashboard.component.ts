@@ -143,4 +143,6 @@ export class DependencyDashboardComponent implements AfterViewInit, OnDestroy {
     this.searchValue = microservice;
     this.loadAll();
   }
+
+  buildDeploymentPath(): void {}
 }
