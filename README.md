@@ -1,3 +1,4 @@
+[![Join the chat at https://gitter.im/microservice-catalog/community](https://badges.gitter.im/microservice-catalog/community.svg)](https://gitter.im/microservice-catalog/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/tillias/microservice-catalog.svg?branch=master)](https://travis-ci.org/tillias/microservice-catalog)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=microcatalog)
 [![Docker Image Version (latest by date)](https://img.shields.io/docker/v/tillias/microcatalog)](https://hub.docker.com/r/tillias/microcatalog)
@@ -8,7 +9,15 @@
 
 # microcatalog
 
-Microservice catalog helps you or your organization to centrally store information about your microservices and share information between developers in a modern, live way. See https://tillias.wordpress.com/2020/10/02/microservice-catalog for details
+Microservice catalog helps you or your organization to centrally store information about your microservices and share information between developers in a modern, live way. See [original idea](https://tillias.wordpress.com/2020/10/02/microservice-catalog) and [blog posts](https://tillias.wordpress.com/tag/microservice-catalog) for details
+
+Interested or have suggestions? Join [gitter chat](https://gitter.im/microservice-catalog/community) or ping me on [twitter](https://twitter.com/tillias)
+
+## Check it yourself
+
+Latest version and deployment instructions are always available on [Docker Hub](https://hub.docker.com/r/tillias/microcatalog).
+
+You can also test it in on click on [Play with Docker](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/tillias/microservice-catalog/master/docker-compose.yml)
 
 ## Development
 
