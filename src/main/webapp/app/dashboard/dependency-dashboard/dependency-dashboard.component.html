@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-2">
-        <ngb-accordion [closeOthers]="true" activeIds="search">
+        <ngb-accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="search">
             <ngb-panel title="Search" id="search">
                 <ng-template ngbPanelContent>
                     <jhi-microservice-search (itemSelected)="onMicroserviceSelected($event)">
@@ -25,14 +25,17 @@
                         <button class="btn btn-block btn-success btn-sm">Create dependency</button>
                     </div>
                     <div class="p-1">
-                        <button class="btn btn-block btn-success btn-sm" disabled>Delete dependency</button>
+                        <button class="btn btn-block btn-success btn-sm" [disabled]="!selection">Delete dependency
+                        </button>
                     </div>
                 </ng-template>
             </ngb-panel>
             <ngb-panel title="Deployments">
                 <ng-template ngbPanelContent>
                     <div class="p-1">
-                        <button class="btn btn-block btn-success btn-sm" disabled>Build deployment path</button>
+                        <button class="btn btn-block btn-success btn-sm" [disabled]="!selection"
+                                (click)="buildDeploymentPath()">Build deployment path
+                        </button>
                     </div>
                 </ng-template>
             </ngb-panel>
