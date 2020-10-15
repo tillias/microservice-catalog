@@ -17,7 +17,7 @@ Interested or have suggestions? Join [gitter chat](https://gitter.im/microservic
 
 Latest version and deployment instructions are always available on [Docker Hub](https://hub.docker.com/r/tillias/microcatalog).
 
-You can also test it in on click on [Play with Docker](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/tillias/microservice-catalog/master/docker-compose.yml)
+You can also test it with only one mouse click on [Play with Docker](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/tillias/microservice-catalog/master/docker-compose.yml)
 
 ## Development
 

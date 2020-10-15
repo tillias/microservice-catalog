@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h4 class="modal-title">Create dependency</h4>
+</div>
+
+<div class="modal-body">
+    <div class="form-group">
+        <label>Name: </label>
+            <p class="text-primary">{{name}}</p>
+    </div>
+    <div class="form-group">
+        <label>Source: </label>
+        <div>
+            <jhi-microservice-search (itemSelected)="onSourceSelected($event)"></jhi-microservice-search>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Target: </label>
+        <div>
+            <jhi-microservice-search (itemSelected)="onTargetSelected($event)"></jhi-microservice-search>
+        </div>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary" [disabled]="!(source && target) || isSaving" (click)="createDependency()">Create</button>
+        <button type="submit" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+    </div>
+</div>

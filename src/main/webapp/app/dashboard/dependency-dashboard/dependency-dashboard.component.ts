@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DataSet } from 'vis-data/peer';
 import { Network } from 'vis-network/peer';
 import { DependencyService } from '../../entities/dependency/dependency.service';
@@ -7,15 +7,21 @@ import { map } from 'rxjs/operators';
 import { IMicroservice } from '../../shared/model/microservice.model';
 import { ISelectPayload } from '../../shared/vis/events/VisEvents';
 import { EXPERIMENTAL_FEATURE } from '../../app.constants';
+import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
+import { JhiEventManager } from 'ng-jhipster';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
   templateUrl: './dependency-dashboard.component.html',
   styleUrls: ['./dependency-dashboard.component.scss'],
 })
-export class DependencyDashboardComponent implements AfterViewInit, OnDestroy {
+export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('visNetwork', { static: false })
   visNetwork!: ElementRef;
+
+  dependenciesSubscriber?: Subscription;
+  microservicesSubscriber?: Subscription;
 
   networkInstance: any;
   searchValue?: IMicroservice;
@@ -24,7 +30,20 @@ export class DependencyDashboardComponent implements AfterViewInit, OnDestroy {
   selection?: ISelectPayload;
   experimentalFeatures = EXPERIMENTAL_FEATURE;
 
-  constructor(protected dependencyService: DependencyService) {}
+  constructor(
+    protected eventManager: JhiEventManager,
+    protected dependencyService: DependencyService,
+    protected createDependencyDialogService: CreateDependencyDialogService
+  ) {}
+
+  ngOnInit(): void {
+    this.registerChangeInDependencies();
+  }
+
+  registerChangeInDependencies(): void {
+    this.dependenciesSubscriber = this.eventManager.subscribe('dependencyListModification', () => this.loadAll());
+    this.microservicesSubscriber = this.eventManager.subscribe('microserviceListModification', () => this.loadAll());
+  }
 
   ngAfterViewInit(): void {
     const container = this.visNetwork;
@@ -65,6 +84,13 @@ export class DependencyDashboardComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.networkInstance.off('selectNode');
     this.networkInstance.off('deselectNode');
+
+    if (this.dependenciesSubscriber) {
+      this.eventManager.destroy(this.dependenciesSubscriber);
+    }
+    if (this.microservicesSubscriber) {
+      this.eventManager.destroy(this.microservicesSubscriber);
+    }
   }
 
   handleSelectNode(payload: ISelectPayload): void {
@@ -145,4 +171,8 @@ export class DependencyDashboardComponent implements AfterViewInit, OnDestroy {
   }
 
   buildDeploymentPath(): void {}
+
+  createDependency(): void {
+    this.createDependencyDialogService.open();
+  }
 }
