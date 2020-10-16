@@ -22,7 +22,7 @@
             <ngb-panel title="Management" id="dependency">
                 <ng-template ngbPanelContent>
                     <div class="p-1">
-                        <button class="btn btn-block btn-success btn-sm" >Create microservice</button>
+                        <button class="btn btn-block btn-success btn-sm" (click)="createMicroservice()" >Create microservice</button>
                     </div>
                     <div class="p-1">
                         <button class="btn btn-block btn-success btn-sm" (click)="createDependency()">Create dependency</button>

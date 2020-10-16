@@ -10,6 +10,7 @@ import { EXPERIMENTAL_FEATURE } from '../../app.constants';
 import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
 import { JhiEventManager } from 'ng-jhipster';
 import { Subscription } from 'rxjs';
+import { CreateMicroserviceDialogService } from './create-microservice-dialog/create-microservice-dialog.service';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -20,8 +21,7 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   @ViewChild('visNetwork', { static: false })
   visNetwork!: ElementRef;
 
-  dependenciesSubscriber?: Subscription;
-  microservicesSubscriber?: Subscription;
+  subscription?: Subscription;
 
   networkInstance: any;
   searchValue?: IMicroservice;
@@ -33,7 +33,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   constructor(
     protected eventManager: JhiEventManager,
     protected dependencyService: DependencyService,
-    protected createDependencyDialogService: CreateDependencyDialogService
+    protected createDependencyDialogService: CreateDependencyDialogService,
+    protected createMicroserviceDialogService: CreateMicroserviceDialogService
   ) {}
 
   ngOnInit(): void {
@@ -41,8 +42,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   }
 
   registerChangeInDependencies(): void {
-    this.dependenciesSubscriber = this.eventManager.subscribe('dependencyListModification', () => this.loadAll());
-    this.microservicesSubscriber = this.eventManager.subscribe('microserviceListModification', () => this.loadAll());
+    this.subscription = this.eventManager.subscribe('dependencyListModification', () => this.loadAll());
+    this.subscription.add(this.eventManager.subscribe('microserviceListModification', () => this.loadAll()));
   }
 
   ngAfterViewInit(): void {
@@ -85,11 +86,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     this.networkInstance.off('selectNode');
     this.networkInstance.off('deselectNode');
 
-    if (this.dependenciesSubscriber) {
-      this.eventManager.destroy(this.dependenciesSubscriber);
-    }
-    if (this.microservicesSubscriber) {
-      this.eventManager.destroy(this.microservicesSubscriber);
+    if (this.subscription) {
+      this.eventManager.destroy(this.subscription);
     }
   }
 
@@ -174,5 +172,9 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
 
   createDependency(): void {
     this.createDependencyDialogService.open();
+  }
+
+  createMicroservice(): void {
+    this.createMicroserviceDialogService.open();
   }
 }
