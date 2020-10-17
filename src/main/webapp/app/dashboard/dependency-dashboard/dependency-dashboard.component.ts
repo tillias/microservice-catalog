@@ -3,14 +3,13 @@ import { DataSet } from 'vis-data/peer';
 import { Network } from 'vis-network/peer';
 import { DependencyService } from '../../entities/dependency/dependency.service';
 import { IDependency } from '../../shared/model/dependency.model';
-import { map } from 'rxjs/operators';
 import { IMicroservice } from '../../shared/model/microservice.model';
 import { ISelectPayload } from '../../shared/vis/events/VisEvents';
 import { EXPERIMENTAL_FEATURE } from '../../app.constants';
 import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
 import { JhiEventManager } from 'ng-jhipster';
-import { Subscription } from 'rxjs';
-import { CreateMicroserviceDialogService } from './create-microservice-dialog/create-microservice-dialog.service';
+import { forkJoin, Subscription } from 'rxjs';
+import { MicroserviceService } from '../../entities/microservice/microservice.service';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -33,8 +32,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   constructor(
     protected eventManager: JhiEventManager,
     protected dependencyService: DependencyService,
-    protected createDependencyDialogService: CreateDependencyDialogService,
-    protected createMicroserviceDialogService: CreateMicroserviceDialogService
+    protected microserviceService: MicroserviceService,
+    protected createDependencyDialogService: CreateDependencyDialogService
   ) {}
 
   ngOnInit(): void {
@@ -107,16 +106,18 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   }
 
   loadAll(): void {
-    this.dependencyService
-      .query()
-      .pipe(map(httpResponse => httpResponse.body))
-      .subscribe(dependencies => this.refreshGraph(dependencies || []));
+    const dependencies = this.dependencyService.query();
+    const microservices = this.microserviceService.query();
+
+    forkJoin([dependencies, microservices]).subscribe(results => {
+      this.refreshGraph(results[0].body || [], results[1].body || []);
+    });
   }
 
-  refreshGraph(dependencies: IDependency[]): void {
+  refreshGraph(dependencies: IDependency[], microservices: IMicroservice[]): void {
     const edges = new DataSet<any>();
 
-    const microservicesMap = new Map<number, IMicroservice>();
+    const microservicesMap = new Map(microservices.map(m => [m.id, m]));
 
     if (this.searchValue) {
       const searchID = this.searchValue.id;
@@ -139,9 +140,6 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
 
     dependencies.forEach(d => {
       if (d.source != null && d.target != null) {
-        microservicesMap.set(d.source.id!, d.source);
-        microservicesMap.set(d.target.id!, d.target);
-
         edges.add({
           from: d.source.id,
           to: d.target.id,
@@ -172,9 +170,5 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
 
   createDependency(): void {
     this.createDependencyDialogService.open();
-  }
-
-  createMicroservice(): void {
-    this.createMicroserviceDialogService.open();
   }
 }

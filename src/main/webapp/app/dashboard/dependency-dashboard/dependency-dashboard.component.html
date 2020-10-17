@@ -22,10 +22,14 @@
             <ngb-panel title="Management" id="dependency">
                 <ng-template ngbPanelContent>
                     <div class="p-1">
-                        <button class="btn btn-block btn-success btn-sm" (click)="createMicroservice()" >Create microservice</button>
+                        <button class="btn btn-block btn-success btn-sm" [routerLink]="['/microservice','', 'edit']">
+                            Create microservice
+                        </button>
                     </div>
                     <div class="p-1">
-                        <button class="btn btn-block btn-success btn-sm" (click)="createDependency()">Create dependency</button>
+                        <button class="btn btn-block btn-success btn-sm" (click)="createDependency()">Create
+                            dependency
+                        </button>
                     </div>
                     <div class="p-1">
                         <button class="btn btn-block btn-warning btn-sm" [disabled]="!selection">Delete microservice

@@ -6,7 +6,6 @@ import { MicrocatalogSharedModule } from '../../shared/shared.module';
 import { MicroserviceSearchModule } from '../../entities/microservice/microservice-dashboard/microservice-search/microservice-search.module';
 import { GraphLegendModule } from './node-legend/graph-legend.module';
 import { CreateDependencyDialogModule } from './create-dependency-dialog/create-dependency-dialog.module';
-import { CreateMicroserviceDialogModule } from './create-microservice-dialog/create-microservice-dialog.module';
 
 @NgModule({
   imports: [
@@ -14,7 +13,6 @@ import { CreateMicroserviceDialogModule } from './create-microservice-dialog/cre
     MicrocatalogSharedModule,
     GraphLegendModule,
     CreateDependencyDialogModule,
-    CreateMicroserviceDialogModule,
     RouterModule.forChild(dependencyDashboardRoute),
   ],
   declarations: [DependencyDashboardComponent],
