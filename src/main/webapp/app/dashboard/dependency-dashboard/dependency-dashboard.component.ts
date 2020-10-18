@@ -10,6 +10,7 @@ import { CreateDependencyDialogService } from './create-dependency-dialog/create
 import { JhiEventManager } from 'ng-jhipster';
 import { forkJoin, Subscription } from 'rxjs';
 import { MicroserviceService } from '../../entities/microservice/microservice.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -106,12 +107,21 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   }
 
   loadAll(): void {
-    const dependencies = this.dependencyService.query();
-    const microservices = this.microserviceService.query();
+    const dependencies$ = this.dependencyService.query();
+    const microservices$ = this.microserviceService.query();
 
-    forkJoin([dependencies, microservices]).subscribe(results => {
-      this.refreshGraph(results[0].body || [], results[1].body || []);
-    });
+    forkJoin({ dependencies$, microservices$ })
+      .pipe(
+        map(result => {
+          return {
+            dependencies: result.dependencies$.body || [],
+            microservices: result.microservices$.body || [],
+          };
+        })
+      )
+      .subscribe(results => {
+        this.refreshGraph(results.dependencies, results.microservices);
+      });
   }
 
   refreshGraph(dependencies: IDependency[], microservices: IMicroservice[]): void {
