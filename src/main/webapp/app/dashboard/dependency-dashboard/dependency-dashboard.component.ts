@@ -3,13 +3,14 @@ import { DataSet } from 'vis-data/peer';
 import { Network } from 'vis-network/peer';
 import { DependencyService } from '../../entities/dependency/dependency.service';
 import { IDependency } from '../../shared/model/dependency.model';
-import { map } from 'rxjs/operators';
 import { IMicroservice } from '../../shared/model/microservice.model';
 import { ISelectPayload } from '../../shared/vis/events/VisEvents';
 import { EXPERIMENTAL_FEATURE } from '../../app.constants';
 import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
 import { JhiEventManager } from 'ng-jhipster';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
+import { MicroserviceService } from '../../entities/microservice/microservice.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -20,8 +21,7 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   @ViewChild('visNetwork', { static: false })
   visNetwork!: ElementRef;
 
-  dependenciesSubscriber?: Subscription;
-  microservicesSubscriber?: Subscription;
+  subscription?: Subscription;
 
   networkInstance: any;
   searchValue?: IMicroservice;
@@ -33,6 +33,7 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   constructor(
     protected eventManager: JhiEventManager,
     protected dependencyService: DependencyService,
+    protected microserviceService: MicroserviceService,
     protected createDependencyDialogService: CreateDependencyDialogService
   ) {}
 
@@ -41,8 +42,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   }
 
   registerChangeInDependencies(): void {
-    this.dependenciesSubscriber = this.eventManager.subscribe('dependencyListModification', () => this.loadAll());
-    this.microservicesSubscriber = this.eventManager.subscribe('microserviceListModification', () => this.loadAll());
+    this.subscription = this.eventManager.subscribe('dependencyListModification', () => this.loadAll());
+    this.subscription.add(this.eventManager.subscribe('microserviceListModification', () => this.loadAll()));
   }
 
   ngAfterViewInit(): void {
@@ -85,11 +86,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     this.networkInstance.off('selectNode');
     this.networkInstance.off('deselectNode');
 
-    if (this.dependenciesSubscriber) {
-      this.eventManager.destroy(this.dependenciesSubscriber);
-    }
-    if (this.microservicesSubscriber) {
-      this.eventManager.destroy(this.microservicesSubscriber);
+    if (this.subscription) {
+      this.eventManager.destroy(this.subscription);
     }
   }
 
@@ -109,16 +107,27 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   }
 
   loadAll(): void {
-    this.dependencyService
-      .query()
-      .pipe(map(httpResponse => httpResponse.body))
-      .subscribe(dependencies => this.refreshGraph(dependencies || []));
+    const dependencies$ = this.dependencyService.query();
+    const microservices$ = this.microserviceService.query();
+
+    forkJoin({ dependencies$, microservices$ })
+      .pipe(
+        map(result => {
+          return {
+            dependencies: result.dependencies$.body || [],
+            microservices: result.microservices$.body || [],
+          };
+        })
+      )
+      .subscribe(results => {
+        this.refreshGraph(results.dependencies, results.microservices);
+      });
   }
 
-  refreshGraph(dependencies: IDependency[]): void {
+  refreshGraph(dependencies: IDependency[], microservices: IMicroservice[]): void {
     const edges = new DataSet<any>();
 
-    const microservicesMap = new Map<number, IMicroservice>();
+    const microservicesMap = new Map(microservices.map(m => [m.id, m]));
 
     if (this.searchValue) {
       const searchID = this.searchValue.id;
@@ -141,9 +150,6 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
 
     dependencies.forEach(d => {
       if (d.source != null && d.target != null) {
-        microservicesMap.set(d.source.id!, d.source);
-        microservicesMap.set(d.target.id!, d.target);
-
         edges.add({
           from: d.source.id,
           to: d.target.id,
