@@ -125,13 +125,11 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   }
 
   refreshGraph(dependencies: IDependency[], microservices: IMicroservice[]): void {
-    const edges = new DataSet<any>();
-
-    const microservicesMap = new Map(microservices.map(m => [m.id, m]));
+    let filteredDependencies = dependencies;
 
     if (this.searchValue) {
       const searchID = this.searchValue.id;
-      dependencies = dependencies.filter(d => {
+      filteredDependencies = dependencies.filter(d => {
         if (this.onlyIncomingFilter && !this.onlyOutgoingFilter) {
           return d.target?.id === searchID;
         }
@@ -148,16 +146,30 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
       });
     }
 
-    dependencies.forEach(d => {
+    const edges = new DataSet<any>();
+    const nodeIds = new Set();
+
+    filteredDependencies.forEach(d => {
       if (d.source != null && d.target != null) {
+        const sourceID = d.source.id;
+        const targetID = d.target.id;
+
         edges.add({
-          from: d.source.id,
-          to: d.target.id,
+          from: sourceID,
+          to: targetID,
         });
+
+        nodeIds.add(sourceID);
+        nodeIds.add(targetID);
       }
     });
 
-    const nodes = new DataSet<any>([...microservicesMap.values()].map(m => this.convertToGraphNode(m)));
+    let filteredMicroservices = microservices;
+    if (this.searchValue) {
+      filteredMicroservices = microservices.filter(m => nodeIds.has(m.id));
+    }
+
+    const nodes = new DataSet<any>(filteredMicroservices.map(m => this.convertToGraphNode(m)));
 
     const data = { nodes, edges };
 
@@ -179,6 +191,19 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   buildDeploymentPath(): void {}
 
   createDependency(): void {
-    this.createDependencyDialogService.open();
+    // Use selected microservice as dependency's start
+    if (this.selection) {
+      const id = this.selection.nodes[0];
+      this.microserviceService
+        .find(id)
+        .pipe(map(r => r.body || undefined))
+        .subscribe(r => this.openDialog(r));
+    } else {
+      this.openDialog(this.searchValue);
+    }
+  }
+
+  openDialog(initialSource?: IMicroservice): void {
+    this.createDependencyDialogService.open(initialSource);
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CreateDependencyDialogComponent } from './create-dependency-dialog.component';
+import { IMicroservice } from '../../../shared/model/microservice.model';
 
 @Injectable({ providedIn: 'root' })
 export class CreateDependencyDialogService {
@@ -8,7 +9,7 @@ export class CreateDependencyDialogService {
 
   constructor(private modalService: NgbModal) {}
 
-  open(): void {
+  open(initialSource?: IMicroservice): void {
     if (this.isOpen) {
       return;
     }
@@ -19,6 +20,7 @@ export class CreateDependencyDialogService {
     };
 
     const modalRef: NgbModalRef = this.modalService.open(CreateDependencyDialogComponent, options);
+    modalRef.componentInstance.source = initialSource;
     modalRef.result.finally(() => (this.isOpen = false));
   }
 }
