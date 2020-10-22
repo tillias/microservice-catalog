@@ -21,7 +21,11 @@ export class CreateDependencyDialogComponent implements OnInit {
     this.name = 'Please specify source & target';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.source) {
+      this.updateName();
+    }
+  }
 
   createDependency(): void {
     if (this.source && this.target) {
