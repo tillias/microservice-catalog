@@ -142,5 +142,5 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "Dies ist Ihre Fußzeile"
+  "footer": "GitHub: tillias/microservice-catalog"
 }

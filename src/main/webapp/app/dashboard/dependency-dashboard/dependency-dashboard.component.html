@@ -1,50 +1,53 @@
 <div class="row">
-    <div class="col-2">
-        <ngb-accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="search">
-            <ngb-panel title="Search" id="search">
+    <div class="col-3">
+        <ngb-accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="general">
+            <ngb-panel title="General" id="general">
                 <ng-template ngbPanelContent>
                     <jhi-microservice-search (itemSelected)="onMicroserviceSelected($event)">
                     </jhi-microservice-search>
-                    <div class="form-check p-0 pt-4">
+                    <div class="form-check p-0 pt-4 pl-1">
                         <label class="form-check-label">
                             <input type="checkbox" [(ngModel)]="onlyIncomingFilter" (ngModelChange)="onFilterChange()">
                             <span jhiTranslate="microcatalogApp.dashboard.dependency.filter.incoming"></span>
                         </label>
                     </div>
-                    <div class="form-check p-0 pt-1">
+                    <div class="form-check p-0 pt-1 pl-1">
                         <label class="form-check-label">
                             <input type="checkbox" [(ngModel)]="onlyOutgoingFilter" (ngModelChange)="onFilterChange()">
                             <span jhiTranslate="microcatalogApp.dashboard.dependency.filter.outgoing"></span>
                         </label>
                     </div>
-                </ng-template>
-            </ngb-panel>
-            <ngb-panel title="Management" id="dependency">
-                <ng-template ngbPanelContent>
-                    <div class="p-1">
+                    <div class="pt-4">
                         <button class="btn btn-block btn-success btn-sm" [routerLink]="['/microservice','', 'edit']">
                             Create microservice
                         </button>
                     </div>
-                    <div class="p-1">
+                    <div class="pt-2">
                         <button class="btn btn-block btn-success btn-sm" (click)="createDependency()">Create
                             dependency
                         </button>
                     </div>
-                    <div class="p-1">
-                        <button class="btn btn-block btn-warning btn-sm" [disabled]="!selection">Delete microservice
+                    <div class="pt-2">
+                        <button class="btn btn-block btn-warning btn-sm" [disabled]="!nodeSelection?.hasNodes()"
+                                (click)="deleteMicroservice()">Delete microservice
                         </button>
                     </div>
-                    <div class="pt-1">
-                        <button class="btn btn-block btn-warning btn-sm" [disabled]="!selection">Delete dependency
+                    <div class="pt-2">
+                        <button class="btn btn-block btn-warning btn-sm" [disabled]="!edgeSelection?.hasEdges()"
+                                (click)="deleteDependency()">Delete dependency
                         </button>
                     </div>
+                </ng-template>
+            </ngb-panel>
+            <ngb-panel title="DDD" id="dependency">
+                <ng-template ngbPanelContent>
+                    <p>DDD is coming soon!</p>
                 </ng-template>
             </ngb-panel>
             <ngb-panel title="Analysis">
                 <ng-template ngbPanelContent>
                     <div class="p-1">
-                        <button class="btn btn-block btn-success btn-sm" [disabled]="!selection"
+                        <button class="btn btn-block btn-success btn-sm" [disabled]="!nodeSelection"
                                 (click)="buildDeploymentPath()">Build deployment path
                         </button>
                     </div>
@@ -53,10 +56,10 @@
         </ngb-accordion>
 
     </div>
-    <div class="col-7">
+    <div class="col-6">
         <div class="p3 vis-network-full-height" #visNetwork></div>
     </div>
     <div class="col-3">
-        <jhi-node-legend [selection]="selection"></jhi-node-legend>
+        <jhi-node-legend [nodeSelection]="nodeSelection" [edgeSelection]="edgeSelection"></jhi-node-legend>
     </div>
 </div>

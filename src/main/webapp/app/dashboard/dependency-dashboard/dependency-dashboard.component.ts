@@ -1,16 +1,15 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DataSet } from 'vis-data/peer';
-import { Network } from 'vis-network/peer';
 import { DependencyService } from '../../entities/dependency/dependency.service';
-import { IDependency } from '../../shared/model/dependency.model';
 import { IMicroservice } from '../../shared/model/microservice.model';
-import { ISelectPayload } from '../../shared/vis/events/VisEvents';
 import { EXPERIMENTAL_FEATURE } from '../../app.constants';
 import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
 import { JhiEventManager } from 'ng-jhipster';
-import { forkJoin, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MicroserviceService } from '../../entities/microservice/microservice.service';
 import { map } from 'rxjs/operators';
+import { ISelectPayload, SelectPayload } from '../../shared/vis/events/VisEvents';
+import { DeleteDialogService } from './delete-dialog.service';
+import { FilterContext, GraphBuilderService } from './graph-builder.service';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -27,14 +26,17 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   searchValue?: IMicroservice;
   onlyIncomingFilter = true;
   onlyOutgoingFilter = true;
-  selection?: ISelectPayload;
+  nodeSelection?: ISelectPayload;
+  edgeSelection?: ISelectPayload;
   experimentalFeatures = EXPERIMENTAL_FEATURE;
 
   constructor(
     protected eventManager: JhiEventManager,
     protected dependencyService: DependencyService,
     protected microserviceService: MicroserviceService,
-    protected createDependencyDialogService: CreateDependencyDialogService
+    protected graphBuilderService: GraphBuilderService,
+    protected createDependencyDialogService: CreateDependencyDialogService,
+    protected deleteDialogService: DeleteDialogService
   ) {}
 
   ngOnInit(): void {
@@ -42,34 +44,14 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   }
 
   registerChangeInDependencies(): void {
-    this.subscription = this.eventManager.subscribe('dependencyListModification', () => this.loadAll());
-    this.subscription.add(this.eventManager.subscribe('microserviceListModification', () => this.loadAll()));
+    this.subscription = this.eventManager.subscribe('dependencyListModification', () => this.refreshGraph());
+    this.subscription.add(this.eventManager.subscribe('microserviceListModification', () => this.refreshGraph()));
   }
 
   ngAfterViewInit(): void {
     const container = this.visNetwork;
 
-    const data = {};
-    this.networkInstance = new Network(container.nativeElement, data, {
-      height: '100%',
-      width: '100%',
-      nodes: {
-        shape: 'hexagon',
-        font: {
-          color: 'white',
-        },
-      },
-      clickToUse: false,
-      edges: {
-        smooth: false,
-        arrows: {
-          to: {
-            enabled: true,
-            type: 'vee',
-          },
-        },
-      },
-    });
+    this.networkInstance = this.graphBuilderService.createNetwork(container);
 
     // See Network.d.ts -> NetworkEvents
     this.networkInstance.on('selectNode', (params: any) => {
@@ -78,132 +60,100 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     this.networkInstance.on('deselectNode', () => {
       this.handleDeselectNode();
     });
+    this.networkInstance.on('selectEdge', (params: any) => {
+      this.handleSelectEdge(params);
+    });
+    this.networkInstance.on('deselectEdge', () => {
+      this.handleDeselectEdge();
+    });
 
-    this.loadAll();
+    this.refreshGraph();
   }
 
   ngOnDestroy(): void {
     this.networkInstance.off('selectNode');
     this.networkInstance.off('deselectNode');
+    this.networkInstance.off('selectEdge');
+    this.networkInstance.off('deselectEdge');
 
     if (this.subscription) {
       this.eventManager.destroy(this.subscription);
     }
   }
 
-  handleSelectNode(payload: ISelectPayload): void {
-    this.selection = payload;
+  handleSelectNode(payload: any): void {
+    this.nodeSelection = new SelectPayload(payload);
+  }
+
+  handleSelectEdge(payload: any): void {
+    this.edgeSelection = new SelectPayload(payload);
   }
 
   handleDeselectNode(): void {
-    this.selection = undefined;
+    this.nodeSelection = undefined;
+  }
+
+  handleDeselectEdge(): void {
+    this.edgeSelection = undefined;
   }
 
   onFilterChange(): any {
     // Only makes sense to refresh if filter for particular microservice is active
     if (this.searchValue) {
-      this.loadAll();
+      this.refreshGraph();
     }
   }
 
-  loadAll(): void {
-    const dependencies$ = this.dependencyService.query();
-    const microservices$ = this.microserviceService.query();
-
-    forkJoin({ dependencies$, microservices$ })
-      .pipe(
-        map(result => {
-          return {
-            dependencies: result.dependencies$.body || [],
-            microservices: result.microservices$.body || [],
-          };
-        })
-      )
-      .subscribe(results => {
-        this.refreshGraph(results.dependencies, results.microservices);
-      });
-  }
-
-  refreshGraph(dependencies: IDependency[], microservices: IMicroservice[]): void {
-    let filteredDependencies = dependencies;
-
-    if (this.searchValue) {
-      const searchID = this.searchValue.id;
-      filteredDependencies = dependencies.filter(d => {
-        if (this.onlyIncomingFilter && !this.onlyOutgoingFilter) {
-          return d.target?.id === searchID;
-        }
-
-        if (this.onlyOutgoingFilter && !this.onlyIncomingFilter) {
-          return d.source?.id === searchID;
-        }
-
-        if (this.onlyIncomingFilter && this.onlyOutgoingFilter) {
-          return d.source?.id === searchID || d.target?.id === searchID;
-        }
-
-        return false;
-      });
-    }
-
-    const edges = new DataSet<any>();
-    const nodeIds = new Set();
-
-    filteredDependencies.forEach(d => {
-      if (d.source != null && d.target != null) {
-        const sourceID = d.source.id;
-        const targetID = d.target.id;
-
-        edges.add({
-          from: sourceID,
-          to: targetID,
-        });
-
-        nodeIds.add(sourceID);
-        nodeIds.add(targetID);
-      }
-    });
-
-    let filteredMicroservices = microservices;
-    if (this.searchValue) {
-      filteredMicroservices = microservices.filter(m => nodeIds.has(m.id));
-    }
-
-    const nodes = new DataSet<any>(filteredMicroservices.map(m => this.convertToGraphNode(m)));
-
-    const data = { nodes, edges };
-
-    this.networkInstance.setData(data);
-  }
-
-  convertToGraphNode(microservice: IMicroservice): any {
-    return {
-      id: microservice.id,
-      label: microservice.name,
-    };
+  refreshGraph(): void {
+    const filterContext = new FilterContext(this.onlyIncomingFilter, this.onlyOutgoingFilter, this.searchValue);
+    this.graphBuilderService.refreshGraph(this.networkInstance, filterContext);
   }
 
   onMicroserviceSelected(microservice?: IMicroservice): any {
     this.searchValue = microservice;
-    this.loadAll();
+    this.refreshGraph();
   }
 
   buildDeploymentPath(): void {}
 
   createDependency(): void {
     // Use selected microservice as dependency's start
-    if (this.selection) {
-      const id = this.selection.nodes[0];
+    if (this.nodeSelection && this.nodeSelection.hasNodes()) {
+      const id = this.nodeSelection.firstNode();
       this.microserviceService
         .find(id)
         .pipe(map(r => r.body || undefined))
-        .subscribe(r => this.openDialog(r));
+        .subscribe(r => this.openCreateDependencyDialog(r));
     } else {
-      this.openDialog(this.searchValue);
+      this.openCreateDependencyDialog(this.searchValue);
     }
   }
 
-  openDialog(initialSource?: IMicroservice): void {
+  openCreateDependencyDialog(initialSource?: IMicroservice): void {
     this.createDependencyDialogService.open(initialSource);
+  }
+
+  deleteDependency(): void {
+    if (this.edgeSelection && this.edgeSelection.hasEdges()) {
+      const id = this.edgeSelection.firstEdge();
+      this.dependencyService
+        .find(id)
+        .pipe(map(r => r.body || undefined))
+        .subscribe(d => {
+          this.deleteDialogService.openForDependency(d);
+        });
+    }
+  }
+
+  deleteMicroservice(): void {
+    if (this.nodeSelection && this.nodeSelection.hasNodes()) {
+      const id = this.nodeSelection.firstNode();
+      this.microserviceService
+        .find(id)
+        .pipe(map(r => r.body || undefined))
+        .subscribe(m => {
+          this.deleteDialogService.openForMicroservice(m);
+        });
+    }
   }
 }

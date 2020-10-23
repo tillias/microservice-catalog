@@ -7,7 +7,8 @@ import { ISelectPayload } from '../../../shared/vis/events/VisEvents';
   styleUrls: ['./graph-legend.component.scss'],
 })
 export class GraphLegendComponent implements OnInit {
-  @Input() selection?: ISelectPayload;
+  @Input() nodeSelection?: ISelectPayload;
+  @Input() edgeSelection?: ISelectPayload;
 
   constructor() {}
 
