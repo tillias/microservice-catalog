@@ -1,3 +1,5 @@
+// Core entities
+
 entity Team {
 	name String required,
     teamLead String required,
@@ -23,6 +25,7 @@ entity Dependency {
     description TextBlob
 }
 
+
 relationship ManyToOne {
 	Microservice{team required} to Team
 	Microservice{status required} to Status
@@ -30,3 +33,24 @@ relationship ManyToOne {
 	Dependency{target required} to Microservice
 }
 
+// Release Paths
+
+entity ReleaseStep {
+}
+
+entity ReleaseGroup{
+}
+
+entity ReleasePath {
+	createdOn Instant
+}
+
+relationship ManyToOne {
+	ReleasePath{target required} to Microservice
+    ReleaseStep{workItem required} to Microservice
+}
+
+relationship OneToMany {
+	ReleasePath{groups} to ReleaseGroup
+    ReleaseGroup{steps} to ReleaseStep
+}

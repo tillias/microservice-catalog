@@ -52,6 +52,11 @@ public class CacheConfiguration {
             createCache(cm, com.github.microcatalog.domain.Team.class.getName());
             createCache(cm, com.github.microcatalog.domain.Status.class.getName());
             createCache(cm, com.github.microcatalog.domain.Dependency.class.getName());
+            createCache(cm, com.github.microcatalog.domain.ReleaseStep.class.getName());
+            createCache(cm, com.github.microcatalog.domain.ReleaseGroup.class.getName());
+            createCache(cm, com.github.microcatalog.domain.ReleaseGroup.class.getName() + ".steps");
+            createCache(cm, com.github.microcatalog.domain.ReleasePath.class.getName());
+            createCache(cm, com.github.microcatalog.domain.ReleasePath.class.getName() + ".groups");
             // jhipster-needle-ehcache-add-entry
         };
     }

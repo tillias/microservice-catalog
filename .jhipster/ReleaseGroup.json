@@ -1,0 +1,30 @@
+{
+  "name": "ReleaseGroup",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "releaseStep",
+      "otherEntityRelationshipName": "releaseGroup",
+      "relationshipName": "steps"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "releasePath",
+      "otherEntityRelationshipName": "groups",
+      "relationshipName": "releasePath",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201024045817",
+  "entityTableName": "release_group",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

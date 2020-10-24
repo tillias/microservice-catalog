@@ -1,0 +1,32 @@
+{
+  "name": "ReleaseStep",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "microservice",
+      "otherEntityRelationshipName": "releaseStep",
+      "relationshipValidateRules": "required",
+      "relationshipName": "workItem",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "releaseGroup",
+      "otherEntityRelationshipName": "steps",
+      "relationshipName": "releaseGroup",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201024045717",
+  "entityTableName": "release_step",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

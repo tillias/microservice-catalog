@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="releasePath">
+            <h2><span jhiTranslate="microcatalogApp.releasePath.detail.title">Release Path</span> {{ releasePath.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="microcatalogApp.releasePath.createdOn">Created On</span></dt>
+                <dd>
+                    <span>{{ releasePath.createdOn }}</span>
+                </dd>
+                <dt><span jhiTranslate="microcatalogApp.releasePath.target">Target</span></dt>
+                <dd>
+                    <div *ngIf="releasePath.target">
+                        <a [routerLink]="['/microservice', releasePath.target?.id, 'view']">{{ releasePath.target?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/release-path', releasePath.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

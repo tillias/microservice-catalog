@@ -1,0 +1,67 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="microcatalogApp.releasePath.home.title">Release Paths</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-release-path" [routerLink]="['/release-path/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="microcatalogApp.releasePath.home.createLabel">
+            Create a new Release Path
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="releasePaths?.length === 0">
+        <span jhiTranslate="microcatalogApp.releasePath.home.notFound">No releasePaths found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="releasePaths && releasePaths.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.releasePath.createdOn">Created On</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.releasePath.target">Target</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let releasePath of releasePaths ;trackBy: trackId">
+                    <td><a [routerLink]="['/release-path', releasePath.id, 'view']">{{ releasePath.id }}</a></td>
+                    <td>{{ releasePath.createdOn | date:'medium' }}</td>
+                    <td>
+                        <div *ngIf="releasePath.target">
+                            <a [routerLink]="['/microservice', releasePath.target?.id, 'view']" >{{ releasePath.target?.id }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/release-path', releasePath.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/release-path', releasePath.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(releasePath)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

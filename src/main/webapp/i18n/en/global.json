@@ -14,6 +14,9 @@
         "team": "Team",
         "status": "Status",
         "dependency": "Dependency",
+        "releaseStep": "Release Step",
+        "releaseGroup": "Release Group",
+        "releasePath": "Release Path",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

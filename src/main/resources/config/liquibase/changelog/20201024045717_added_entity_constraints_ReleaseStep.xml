@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity ReleaseStep.
+    -->
+    <changeSet id="20201024045717-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="work_item_id"
+                                 baseTableName="release_step"
+                                 constraintName="fk_release_step_work_item_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="microservice"/>
+
+        <addForeignKeyConstraint baseColumnNames="release_group_id"
+                                 baseTableName="release_step"
+                                 constraintName="fk_release_step_release_group_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="release_group"/>
+
+    </changeSet>
+</databaseChangeLog>

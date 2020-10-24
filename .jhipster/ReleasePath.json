@@ -1,0 +1,36 @@
+{
+  "name": "ReleasePath",
+  "fields": [
+    {
+      "fieldName": "createdOn",
+      "fieldType": "Instant"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "releaseGroup",
+      "otherEntityRelationshipName": "releasePath",
+      "relationshipName": "groups"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "microservice",
+      "otherEntityRelationshipName": "releasePath",
+      "relationshipValidateRules": "required",
+      "relationshipName": "target",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201024045917",
+  "entityTableName": "release_path",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

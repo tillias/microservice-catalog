@@ -1,0 +1,24 @@
+{
+  "microcatalogApp": {
+    "releasePath": {
+      "home": {
+        "title": "Release Paths",
+        "createLabel": "Create a new Release Path",
+        "createOrEditLabel": "Create or edit a Release Path",
+        "notFound": "No Release Paths found"
+      },
+      "created": "A new Release Path is created with identifier {{ param }}",
+      "updated": "A Release Path is updated with identifier {{ param }}",
+      "deleted": "A Release Path is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Release Path {{ id }}?"
+      },
+      "detail": {
+        "title": "Release Path"
+      },
+      "createdOn": "Created On",
+      "groups": "Groups",
+      "target": "Target"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "microcatalogApp": {
+    "releaseGroup": {
+      "home": {
+        "title": "Release Groups",
+        "createLabel": "Release Group erstellen",
+        "createOrEditLabel": "Release Group erstellen oder bearbeiten",
+        "notFound": "No Release Groups found"
+      },
+      "created": "Release Group erstellt mit ID {{ param }}",
+      "updated": "Release Group aktualisiert mit ID {{ param }}",
+      "deleted": "Release Group gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Release Group {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Release Group"
+      },
+      "steps": "Steps",
+      "releasePath": "Release Path"
+    }
+  }
+}
