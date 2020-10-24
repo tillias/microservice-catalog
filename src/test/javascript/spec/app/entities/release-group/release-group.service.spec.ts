@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(ReleaseGroupService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new ReleaseGroup(0);
+      elemDefault = new ReleaseGroup(0, 0);
     });
 
     describe('Service methods', () => {
@@ -52,7 +52,12 @@ describe('Service Tests', () => {
       });
 
       it('should update a ReleaseGroup', () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            order: 1,
+          },
+          elemDefault
+        );
 
         const expected = Object.assign({}, returnedFromService);
 
@@ -64,7 +69,12 @@ describe('Service Tests', () => {
       });
 
       it('should return a list of ReleaseGroup', () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            order: 1,
+          },
+          elemDefault
+        );
 
         const expected = Object.assign({}, returnedFromService);
 

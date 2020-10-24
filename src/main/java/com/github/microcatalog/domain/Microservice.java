@@ -29,7 +29,7 @@ public class Microservice implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    
+
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "description", nullable = false)
@@ -188,7 +188,7 @@ public class Microservice implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        return id.intValue();
     }
 
     // prettier-ignore

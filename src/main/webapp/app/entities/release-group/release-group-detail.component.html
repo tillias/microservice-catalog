@@ -8,6 +8,10 @@
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="microcatalogApp.releaseGroup.order">Order</span></dt>
+                <dd>
+                    <span>{{ releaseGroup.order }}</span>
+                </dd>
                 <dt><span jhiTranslate="microcatalogApp.releaseGroup.releasePath">Release Path</span></dt>
                 <dd>
                     <div *ngIf="releaseGroup.releasePath">

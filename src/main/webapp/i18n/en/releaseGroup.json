@@ -16,6 +16,7 @@
       "detail": {
         "title": "Release Group"
       },
+      "order": "Order",
       "steps": "Steps",
       "releasePath": "Release Path"
     }

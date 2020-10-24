@@ -38,7 +38,8 @@ relationship ManyToOne {
 entity ReleaseStep {
 }
 
-entity ReleaseGroup{
+entity ReleaseGroup {
+    order Integer required min(0)
 }
 
 entity ReleasePath {

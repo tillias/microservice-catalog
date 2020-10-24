@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { ISelectPayload, SelectPayload } from '../../shared/vis/events/VisEvents';
 import { DeleteDialogService } from './delete-dialog.service';
 import { FilterContext, GraphBuilderService } from './graph-builder.service';
+import { ReleasePathCustomService } from '../../entities/release-path/custom/release-path-custom.service';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -34,6 +35,7 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     protected eventManager: JhiEventManager,
     protected dependencyService: DependencyService,
     protected microserviceService: MicroserviceService,
+    protected releasePathService: ReleasePathCustomService,
     protected graphBuilderService: GraphBuilderService,
     protected createDependencyDialogService: CreateDependencyDialogService,
     protected deleteDialogService: DeleteDialogService
@@ -114,7 +116,14 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     this.refreshGraph();
   }
 
-  buildDeploymentPath(): void {}
+  buildReleasePath(): void {
+    if (this.nodeSelection && this.nodeSelection.hasNodes()) {
+      const microserviceId = this.nodeSelection.firstNode();
+      this.releasePathService.find(microserviceId).subscribe(r => {
+        alert(r.body);
+      });
+    }
+  }
 
   createDependency(): void {
     // Use selected microservice as dependency's start

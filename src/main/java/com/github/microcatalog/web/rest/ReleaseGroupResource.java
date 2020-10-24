@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -47,7 +48,7 @@ public class ReleaseGroupResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/release-groups")
-    public ResponseEntity<ReleaseGroup> createReleaseGroup(@RequestBody ReleaseGroup releaseGroup) throws URISyntaxException {
+    public ResponseEntity<ReleaseGroup> createReleaseGroup(@Valid @RequestBody ReleaseGroup releaseGroup) throws URISyntaxException {
         log.debug("REST request to save ReleaseGroup : {}", releaseGroup);
         if (releaseGroup.getId() != null) {
             throw new BadRequestAlertException("A new releaseGroup cannot already have an ID", ENTITY_NAME, "idexists");
@@ -68,7 +69,7 @@ public class ReleaseGroupResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/release-groups")
-    public ResponseEntity<ReleaseGroup> updateReleaseGroup(@RequestBody ReleaseGroup releaseGroup) throws URISyntaxException {
+    public ResponseEntity<ReleaseGroup> updateReleaseGroup(@Valid @RequestBody ReleaseGroup releaseGroup) throws URISyntaxException {
         log.debug("REST request to update ReleaseGroup : {}", releaseGroup);
         if (releaseGroup.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -25,6 +26,11 @@ public class ReleaseGroup implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    @NotNull
+    @Min(value = 0)
+    @Column(name = "jhi_order", nullable = false)
+    private Integer order;
+
     @OneToMany(mappedBy = "releaseGroup")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<ReleaseStep> steps = new HashSet<>();
@@ -40,6 +46,19 @@ public class ReleaseGroup implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public ReleaseGroup order(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 
     public Set<ReleaseStep> getSteps() {
@@ -102,6 +121,7 @@ public class ReleaseGroup implements Serializable {
     public String toString() {
         return "ReleaseGroup{" +
             "id=" + getId() +
+            ", order=" + getOrder() +
             "}";
     }
 }

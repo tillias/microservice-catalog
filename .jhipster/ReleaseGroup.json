@@ -1,6 +1,16 @@
 {
   "name": "ReleaseGroup",
-  "fields": [],
+  "fields": [
+    {
+      "fieldName": "order",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "required",
+        "min"
+      ],
+      "fieldValidateRulesMin": "0"
+    }
+  ],
   "relationships": [
     {
       "relationshipType": "one-to-many",

@@ -20,6 +20,7 @@ export class ReleaseGroupUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
+    order: [null, [Validators.required, Validators.min(0)]],
     releasePath: [],
   });
 
@@ -41,6 +42,7 @@ export class ReleaseGroupUpdateComponent implements OnInit {
   updateForm(releaseGroup: IReleaseGroup): void {
     this.editForm.patchValue({
       id: releaseGroup.id,
+      order: releaseGroup.order,
       releasePath: releaseGroup.releasePath,
     });
   }
@@ -63,6 +65,7 @@ export class ReleaseGroupUpdateComponent implements OnInit {
     return {
       ...new ReleaseGroup(),
       id: this.editForm.get(['id'])!.value,
+      order: this.editForm.get(['order'])!.value,
       releasePath: this.editForm.get(['releasePath'])!.value,
     };
   }

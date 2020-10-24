@@ -29,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class ReleaseGroupResourceIT {
 
+    private static final Integer DEFAULT_ORDER = 0;
+    private static final Integer UPDATED_ORDER = 1;
+
     @Autowired
     private ReleaseGroupRepository releaseGroupRepository;
 
@@ -47,7 +50,8 @@ public class ReleaseGroupResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static ReleaseGroup createEntity(EntityManager em) {
-        ReleaseGroup releaseGroup = new ReleaseGroup();
+        ReleaseGroup releaseGroup = new ReleaseGroup()
+            .order(DEFAULT_ORDER);
         return releaseGroup;
     }
     /**
@@ -57,7 +61,8 @@ public class ReleaseGroupResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static ReleaseGroup createUpdatedEntity(EntityManager em) {
-        ReleaseGroup releaseGroup = new ReleaseGroup();
+        ReleaseGroup releaseGroup = new ReleaseGroup()
+            .order(UPDATED_ORDER);
         return releaseGroup;
     }
 
@@ -80,6 +85,7 @@ public class ReleaseGroupResourceIT {
         List<ReleaseGroup> releaseGroupList = releaseGroupRepository.findAll();
         assertThat(releaseGroupList).hasSize(databaseSizeBeforeCreate + 1);
         ReleaseGroup testReleaseGroup = releaseGroupList.get(releaseGroupList.size() - 1);
+        assertThat(testReleaseGroup.getOrder()).isEqualTo(DEFAULT_ORDER);
     }
 
     @Test
@@ -104,6 +110,25 @@ public class ReleaseGroupResourceIT {
 
     @Test
     @Transactional
+    public void checkOrderIsRequired() throws Exception {
+        int databaseSizeBeforeTest = releaseGroupRepository.findAll().size();
+        // set the field null
+        releaseGroup.setOrder(null);
+
+        // Create the ReleaseGroup, which fails.
+
+
+        restReleaseGroupMockMvc.perform(post("/api/release-groups")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(releaseGroup)))
+            .andExpect(status().isBadRequest());
+
+        List<ReleaseGroup> releaseGroupList = releaseGroupRepository.findAll();
+        assertThat(releaseGroupList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllReleaseGroups() throws Exception {
         // Initialize the database
         releaseGroupRepository.saveAndFlush(releaseGroup);
@@ -112,7 +137,8 @@ public class ReleaseGroupResourceIT {
         restReleaseGroupMockMvc.perform(get("/api/release-groups?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(releaseGroup.getId().intValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(releaseGroup.getId().intValue())))
+            .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)));
     }
     
     @Test
@@ -125,7 +151,8 @@ public class ReleaseGroupResourceIT {
         restReleaseGroupMockMvc.perform(get("/api/release-groups/{id}", releaseGroup.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(releaseGroup.getId().intValue()));
+            .andExpect(jsonPath("$.id").value(releaseGroup.getId().intValue()))
+            .andExpect(jsonPath("$.order").value(DEFAULT_ORDER));
     }
     @Test
     @Transactional
@@ -147,6 +174,8 @@ public class ReleaseGroupResourceIT {
         ReleaseGroup updatedReleaseGroup = releaseGroupRepository.findById(releaseGroup.getId()).get();
         // Disconnect from session so that the updates on updatedReleaseGroup are not directly saved in db
         em.detach(updatedReleaseGroup);
+        updatedReleaseGroup
+            .order(UPDATED_ORDER);
 
         restReleaseGroupMockMvc.perform(put("/api/release-groups")
             .contentType(MediaType.APPLICATION_JSON)
@@ -157,6 +186,7 @@ public class ReleaseGroupResourceIT {
         List<ReleaseGroup> releaseGroupList = releaseGroupRepository.findAll();
         assertThat(releaseGroupList).hasSize(databaseSizeBeforeUpdate);
         ReleaseGroup testReleaseGroup = releaseGroupList.get(releaseGroupList.size() - 1);
+        assertThat(testReleaseGroup.getOrder()).isEqualTo(UPDATED_ORDER);
     }
 
     @Test

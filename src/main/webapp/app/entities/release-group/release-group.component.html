@@ -23,6 +23,7 @@
             <thead>
                 <tr>
                     <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+                    <th scope="col" ><span jhiTranslate="microcatalogApp.releaseGroup.order">Order</span></th>
                     <th scope="col" ><span jhiTranslate="microcatalogApp.releaseGroup.releasePath">Release Path</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -30,6 +31,7 @@
             <tbody>
                 <tr *ngFor="let releaseGroup of releaseGroups ;trackBy: trackId">
                     <td><a [routerLink]="['/release-group', releaseGroup.id, 'view']">{{ releaseGroup.id }}</a></td>
+                    <td>{{ releaseGroup.order }}</td>
                     <td>
                         <div *ngIf="releaseGroup.releasePath">
                             <a [routerLink]="['/release-path', releaseGroup.releasePath?.id, 'view']" >{{ releaseGroup.releasePath?.id }}</a>
