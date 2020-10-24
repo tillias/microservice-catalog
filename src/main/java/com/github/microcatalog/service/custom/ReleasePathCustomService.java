@@ -3,9 +3,6 @@ package com.github.microcatalog.service.custom;
 import com.github.microcatalog.domain.*;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.repository.MicroserviceRepository;
-import com.github.microcatalog.repository.ReleasePathRepository;
-import com.google.common.graph.Graphs;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.alg.cycle.CycleDetector;
@@ -13,7 +10,6 @@ import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.EdgeReversedGraph;
-import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.jgrapht.traverse.GraphIterator;
 import org.slf4j.Logger;
@@ -34,14 +30,11 @@ public class ReleasePathCustomService {
 
     private final Logger log = LoggerFactory.getLogger(ReleasePathCustomService.class);
 
-    private final ReleasePathRepository releasePathRepository;
     private final MicroserviceRepository microserviceRepository;
     private final DependencyRepository dependencyRepository;
 
-    public ReleasePathCustomService(ReleasePathRepository releasePathRepository,
-                                    MicroserviceRepository microserviceRepository,
+    public ReleasePathCustomService(MicroserviceRepository microserviceRepository,
                                     DependencyRepository dependencyRepository) {
-        this.releasePathRepository = releasePathRepository;
         this.microserviceRepository = microserviceRepository;
         this.dependencyRepository = dependencyRepository;
     }

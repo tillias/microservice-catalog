@@ -32,26 +32,3 @@ relationship ManyToOne {
 	Dependency{source required} to Microservice
 	Dependency{target required} to Microservice
 }
-
-// Release Paths
-
-entity ReleaseStep {
-}
-
-entity ReleaseGroup {
-    order Integer required min(0)
-}
-
-entity ReleasePath {
-	createdOn Instant
-}
-
-relationship ManyToOne {
-	ReleasePath{target required} to Microservice
-    ReleaseStep{workItem required} to Microservice
-}
-
-relationship OneToMany {
-	ReleasePath{groups} to ReleaseGroup
-    ReleaseGroup{steps} to ReleaseStep
-}

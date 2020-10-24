@@ -20,18 +20,6 @@ import { RouterModule } from '@angular/router';
         path: 'dependency',
         loadChildren: () => import('./dependency/dependency.module').then(m => m.MicrocatalogDependencyModule),
       },
-      {
-        path: 'release-step',
-        loadChildren: () => import('./release-step/release-step.module').then(m => m.MicrocatalogReleaseStepModule),
-      },
-      {
-        path: 'release-group',
-        loadChildren: () => import('./release-group/release-group.module').then(m => m.MicrocatalogReleaseGroupModule),
-      },
-      {
-        path: 'release-path',
-        loadChildren: () => import('./release-path/release-path.module').then(m => m.MicrocatalogReleasePathModule),
-      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

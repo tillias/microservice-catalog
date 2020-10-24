@@ -3,7 +3,6 @@ package com.github.microcatalog.service.custom;
 import com.github.microcatalog.domain.*;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.repository.MicroserviceRepository;
-import com.github.microcatalog.repository.ReleasePathRepository;
 import com.github.microcatalog.utils.DependencyBuilder;
 import com.github.microcatalog.utils.MicroserviceBuilder;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,9 +20,6 @@ import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = ReleasePathCustomService.class)
 public class ReleasePathCustomServiceTest {
-
-    @MockBean
-    private ReleasePathRepository releasePathRepository;
 
     @MockBean
     private MicroserviceRepository microserviceRepository;
