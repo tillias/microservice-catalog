@@ -188,6 +188,10 @@ public class Microservice implements Serializable {
 
     @Override
     public int hashCode() {
+        if (id == null) {
+            return 31;
+        }
+
         return id.intValue();
     }
 
