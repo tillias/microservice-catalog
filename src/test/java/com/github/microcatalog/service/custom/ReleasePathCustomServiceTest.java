@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = ReleasePathCustomService.class)
-public class ReleasePathCustomServiceTest {
+class ReleasePathCustomServiceTest {
 
     @MockBean
     private MicroserviceRepository microserviceRepository;
@@ -34,7 +34,7 @@ public class ReleasePathCustomServiceTest {
     private ReleasePathCustomService service;
 
     @Test
-    public void getReleasePath_NoCycles_Success() {
+    void getReleasePath_NoCycles_Success() {
         given(microserviceRepository.findAll()).willReturn(createMicroservices());
 
         given(dependencyRepository.findAll()).willReturn(createDependencies());
@@ -70,7 +70,7 @@ public class ReleasePathCustomServiceTest {
     }
 
     @Test
-    public void getReleasePath_ContainsCyclesInSameComponent_ExceptionIsThrown() {
+    void getReleasePath_ContainsCyclesInSameComponent_ExceptionIsThrown() {
         given(microserviceRepository.findAll()).willReturn(createMicroservices());
 
         given(dependencyRepository.findAll()).willReturn(createDependenciesWithCycleInSameComponent());
@@ -83,7 +83,7 @@ public class ReleasePathCustomServiceTest {
     }
 
     @Test
-    public void getReleasePath_ContainsCyclesInOtherComponent_Success() {
+    void getReleasePath_ContainsCyclesInOtherComponent_Success() {
         given(microserviceRepository.findAll()).willReturn(createMicroservices());
 
         given(dependencyRepository.findAll()).willReturn(createDependenciesWithCycleInOtherComponent());

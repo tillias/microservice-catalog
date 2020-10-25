@@ -63,7 +63,7 @@ public class ReleasePathCustomService {
 
         // Connected subgraph, that contains target microservice
         final AsSubgraph<Long, DefaultEdge> targetSubgraph = new AsSubgraph<>(graph, connectedSet);
-        log.debug(targetSubgraph.toString());
+        log.debug("Connected subgraph, that contains target microservice: {}", targetSubgraph);
 
         final CycleDetector<Long, DefaultEdge> cycleDetector = new CycleDetector<>(targetSubgraph);
         if (cycleDetector.detectCycles()) {
@@ -80,9 +80,8 @@ public class ReleasePathCustomService {
         // TODO new use-case and visualisation
         // For each element of pathSet calculate all nodes who depends on items from pathSet. Microservices which will be possibly affected if we build target and it's direct dependencies
 
-        // Connected subgraph, which contains all paths from target to it's dependencies.
         final Graph<Long, DefaultEdge> pathGraph = new AsSubgraph<>(targetSubgraph, pathMicroservices);
-        log.debug(pathGraph.toString());
+        log.debug("Connected subgraph, which contains all paths from target microservice to it's dependencies {}", pathGraph);
 
         final Graph<Long, DefaultEdge> reversed = new EdgeReversedGraph<>(pathGraph);
         final Graph<Long, DefaultEdge> reversedCopy = new AsSubgraph<>(reversed);

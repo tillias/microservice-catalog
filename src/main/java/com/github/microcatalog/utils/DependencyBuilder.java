@@ -1,7 +1,6 @@
 package com.github.microcatalog.utils;
 
 import com.github.microcatalog.domain.Dependency;
-import com.github.microcatalog.domain.Microservice;
 
 public class DependencyBuilder {
     private Long id;
