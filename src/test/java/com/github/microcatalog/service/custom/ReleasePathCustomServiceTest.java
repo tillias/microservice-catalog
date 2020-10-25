@@ -18,8 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = ReleasePathCustomService.class)
@@ -72,12 +71,43 @@ public class ReleasePathCustomServiceTest {
 
     @Test
     public void getReleasePath_ContainsCyclesInSameComponent_ExceptionIsThrown() {
-        fail("Not yet implemented");
+        given(microserviceRepository.findAll()).willReturn(createMicroservices());
+
+        given(dependencyRepository.findAll()).willReturn(createDependenciesWithCycleInSameComponent());
+
+        assertThatIllegalArgumentException()
+            .isThrownBy(() ->
+                service.getReleasePath(1L)
+            )
+            .withMessageStartingWith("There are cyclic dependencies between microservices");
     }
 
     @Test
     public void getReleasePath_ContainsCyclesInOtherComponent_Success() {
-        fail("Not yet implemented");
+        given(microserviceRepository.findAll()).willReturn(createMicroservices());
+
+        given(dependencyRepository.findAll()).willReturn(createDependenciesWithCycleInOtherComponent());
+
+        Optional<ReleasePath> maybePath = service.getReleasePath(1L);
+        assertThat(maybePath).isPresent();
+
+        ReleasePath path = maybePath.get();
+
+        ReleaseStep step = getStep(path, 0, 3);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
+
+        step = getStep(path, 0, 4);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
+
+        step = getStep(path, 1, 2);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(1L);
+
+        step = getStep(path, 2, 1L);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).isEmpty();
     }
 
     private ReleaseStep getStep(final ReleasePath path, int groupIndex, long microserviceId) {
@@ -114,6 +144,79 @@ public class ReleasePathCustomServiceTest {
         return LongStream.rangeClosed(1, 12)
             .mapToObj(i -> new MicroserviceBuilder().withId(i).build())
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Graph will contain two connected components, one of them has cycle
+     * <p>
+     * First component with cycle 1->2->3->1
+     * Second component without cycle 5->6, 5->7
+     *
+     * @return dependencies
+     */
+    private List<Dependency> createDependenciesWithCycleInSameComponent() {
+        final List<Dependency> dependencies = new ArrayList<>();
+
+        // First component with cycle 1->2->3->1
+        dependencies.add(new DependencyBuilder()
+            .withId(1L).withSource(1L).withTarget(2L)
+            .build());
+        dependencies.add(new DependencyBuilder()
+            .withId(2L).withSource(2L).withTarget(3L)
+            .build());
+        dependencies.add(new DependencyBuilder()
+            .withId(3L).withSource(3L).withTarget(1L)
+            .build());
+
+        // Second component without cycle 5->6, 5->7
+        dependencies.add(new DependencyBuilder()
+            .withId(4L).withSource(5L).withTarget(6L)
+            .build());
+        dependencies.add(new DependencyBuilder()
+            .withId(5L).withSource(5L).withTarget(7L)
+            .build());
+
+
+        return dependencies;
+    }
+
+    /**
+     * Graph will contain two connected components, one of them has cycle
+     * First component without cycle 1->2, 2->3, 2->4
+     * Second component with cycle 6->7->8->6
+     *
+     * @return dependencies
+     */
+    private List<Dependency> createDependenciesWithCycleInOtherComponent() {
+        final List<Dependency> dependencies = new ArrayList<>();
+
+        // First component without cycle 1->2, 2->3, 2->4
+        dependencies.add(new DependencyBuilder()
+            .withId(1L).withSource(1L).withTarget(2L)
+            .build());
+        dependencies.add(new DependencyBuilder()
+            .withId(2L).withSource(2L).withTarget(3L)
+            .build());
+        dependencies.add(new DependencyBuilder()
+            .withId(3L).withSource(2L).withTarget(4L)
+            .build());
+
+        // Second component with cycle 6->7->8->6
+        dependencies.add(new DependencyBuilder()
+            .withId(4L).withSource(5L).withTarget(6L)
+            .build());
+        dependencies.add(new DependencyBuilder()
+            .withId(5L).withSource(6L).withTarget(7L)
+            .build());
+        dependencies.add(new DependencyBuilder()
+            .withId(6L).withSource(7L).withTarget(8L)
+            .build());
+        dependencies.add(new DependencyBuilder()
+            .withId(7L).withSource(8L).withTarget(6L)
+            .build());
+
+
+        return dependencies;
     }
 
     private List<Dependency> createDependencies() {
