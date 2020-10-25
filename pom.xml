@@ -86,6 +86,8 @@
         <jacoco.itReportFile>${jacoco.itReportFolder}/integrationTest.exec</jacoco.itReportFile>
         <junit.utReportFolder>${project.testresult.directory}/test</junit.utReportFolder>
         <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
+
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco/test/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <!-- jhipster-needle-maven-property -->
     </properties>
 
