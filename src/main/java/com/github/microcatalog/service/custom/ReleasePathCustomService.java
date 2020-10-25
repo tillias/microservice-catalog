@@ -1,6 +1,9 @@
 package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.domain.*;
+import com.github.microcatalog.domain.custom.ReleaseGroup;
+import com.github.microcatalog.domain.custom.ReleasePath;
+import com.github.microcatalog.domain.custom.ReleaseStep;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.repository.MicroserviceRepository;
 import org.jgrapht.Graph;
@@ -91,11 +94,10 @@ public class ReleasePathCustomService {
         result.setCreatedOn(Instant.now());
         result.setTarget(target);
 
-        final Set<ReleaseGroup> groups = new HashSet<>();
+        final List<ReleaseGroup> groups = new ArrayList<>();
         final Map<Long, Microservice> microserviceMap = microservices.stream()
             .collect(Collectors.toMap(Microservice::getId, m -> m));
 
-        int groupIndex = 0;
         do {
             final List<Long> verticesWithoutIncomingEdges = graph.vertexSet().stream()
                 .filter(v -> graph.incomingEdgesOf(v).isEmpty())
@@ -104,7 +106,6 @@ public class ReleasePathCustomService {
 
             final ReleaseGroup group = new ReleaseGroup();
             group.setSteps(convertSteps(microserviceMap, verticesWithoutIncomingEdges));
-            group.setOrder(groupIndex++);
             groups.add(group);
 
             verticesWithoutIncomingEdges.forEach(graph::removeVertex);

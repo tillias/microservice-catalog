@@ -1,6 +1,6 @@
 package com.github.microcatalog.web.rest.custom;
 
-import com.github.microcatalog.domain.ReleasePath;
+import com.github.microcatalog.domain.custom.ReleasePath;
 import com.github.microcatalog.service.custom.ReleasePathCustomService;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 /**
- * REST controller for calculation of release paths {@link com.github.microcatalog.domain.ReleasePath}.
+ * REST controller for calculation of release paths {@link ReleasePath}.
  */
 @RestController
 @RequestMapping("/api")

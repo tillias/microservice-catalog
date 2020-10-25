@@ -2,6 +2,9 @@ package com.github.microcatalog.config;
 
 import java.time.Duration;
 
+import com.github.microcatalog.domain.custom.ReleaseGroup;
+import com.github.microcatalog.domain.custom.ReleasePath;
+import com.github.microcatalog.domain.custom.ReleaseStep;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
 
@@ -52,11 +55,11 @@ public class CacheConfiguration {
             createCache(cm, com.github.microcatalog.domain.Team.class.getName());
             createCache(cm, com.github.microcatalog.domain.Status.class.getName());
             createCache(cm, com.github.microcatalog.domain.Dependency.class.getName());
-            createCache(cm, com.github.microcatalog.domain.ReleaseStep.class.getName());
-            createCache(cm, com.github.microcatalog.domain.ReleaseGroup.class.getName());
-            createCache(cm, com.github.microcatalog.domain.ReleaseGroup.class.getName() + ".steps");
-            createCache(cm, com.github.microcatalog.domain.ReleasePath.class.getName());
-            createCache(cm, com.github.microcatalog.domain.ReleasePath.class.getName() + ".groups");
+            createCache(cm, ReleaseStep.class.getName());
+            createCache(cm, ReleaseGroup.class.getName());
+            createCache(cm, ReleaseGroup.class.getName() + ".steps");
+            createCache(cm, ReleasePath.class.getName());
+            createCache(cm, ReleasePath.class.getName() + ".groups");
             // jhipster-needle-ehcache-add-entry
         };
     }

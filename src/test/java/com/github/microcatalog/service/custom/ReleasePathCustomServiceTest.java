@@ -1,6 +1,9 @@
 package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.domain.*;
+import com.github.microcatalog.domain.custom.ReleaseGroup;
+import com.github.microcatalog.domain.custom.ReleasePath;
+import com.github.microcatalog.domain.custom.ReleaseStep;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.repository.MicroserviceRepository;
 import com.github.microcatalog.utils.DependencyBuilder;
@@ -45,33 +48,33 @@ public class ReleasePathCustomServiceTest {
         assertThat(steps).isNotEmpty()
             .extracting(ReleaseStep::getWorkItem).extracting(Microservice::getId).containsExactlyInAnyOrder(5L, 7L);
 
-        steps = getStep(path,1);
+        steps = getStep(path, 1);
         assertThat(steps).isNotEmpty()
             .extracting(ReleaseStep::getWorkItem).extracting(Microservice::getId).containsExactly(4L);
 
-        steps = getStep(path,2);
+        steps = getStep(path, 2);
         assertThat(steps).isNotEmpty()
             .extracting(ReleaseStep::getWorkItem).extracting(Microservice::getId).containsExactly(2L);
 
-        steps = getStep(path,3);
+        steps = getStep(path, 3);
         assertThat(steps).isNotEmpty()
             .extracting(ReleaseStep::getWorkItem).extracting(Microservice::getId).containsExactly(1L);
     }
 
     @Test
-    public void getReleasePath_ContainsCyclesInSameComponent_ExceptionIsThrown(){
+    public void getReleasePath_ContainsCyclesInSameComponent_ExceptionIsThrown() {
         fail("Not yet implemented");
     }
 
     @Test
-    public void getReleasePath_ContainsCyclesInOtherComponent_Success(){
+    public void getReleasePath_ContainsCyclesInOtherComponent_Success() {
         fail("Not yet implemented");
     }
 
     private Set<ReleaseStep> getStep(ReleasePath path, int groupIndex) {
-        Optional<ReleaseGroup> first = path.getGroups().stream().filter(g -> g.getOrder() == groupIndex).findFirst();
-        if (first.isPresent()) {
-            return first.get().getSteps();
+        ReleaseGroup first = path.getGroups().get(groupIndex);
+        if (first != null) {
+            return first.getSteps();
         } else {
             return Collections.emptySet();
         }
