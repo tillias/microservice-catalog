@@ -88,6 +88,10 @@
         <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
 
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco/test/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.exclusions>
+            **/main/resources/**/*,
+            **/test/**/*
+        </sonar.coverage.exclusions>
         <!-- jhipster-needle-maven-property -->
     </properties>
 
