@@ -8,6 +8,10 @@ import { RouterModule } from '@angular/router';
         path: 'dependencies',
         loadChildren: () => import('./dependency-dashboard/dependency-dashboard.module').then(m => m.DependencyDashboardModule),
       },
+      {
+        path: 'release-path',
+        loadChildren: () => import('./release-path-dashboard/release-path-dashboard.module').then(m => m.ReleasePathDashboardModule),
+      },
     ]),
   ],
 })

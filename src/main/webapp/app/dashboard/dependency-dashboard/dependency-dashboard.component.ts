@@ -10,6 +10,8 @@ import { map } from 'rxjs/operators';
 import { ISelectPayload, SelectPayload } from '../../shared/vis/events/VisEvents';
 import { DeleteDialogService } from './delete-dialog.service';
 import { FilterContext, GraphBuilderService } from './graph-builder.service';
+import { ReleasePathCustomService } from '../../entities/release-path/custom/release-path-custom.service';
+import { VisNetworkService } from '../../shared/vis/vis-network.service';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -19,10 +21,10 @@ import { FilterContext, GraphBuilderService } from './graph-builder.service';
 export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('visNetwork', { static: false })
   visNetwork!: ElementRef;
+  networkInstance: any;
 
   subscription?: Subscription;
 
-  networkInstance: any;
   searchValue?: IMicroservice;
   onlyIncomingFilter = true;
   onlyOutgoingFilter = true;
@@ -34,6 +36,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     protected eventManager: JhiEventManager,
     protected dependencyService: DependencyService,
     protected microserviceService: MicroserviceService,
+    protected releasePathService: ReleasePathCustomService,
+    protected visNetworkService: VisNetworkService,
     protected graphBuilderService: GraphBuilderService,
     protected createDependencyDialogService: CreateDependencyDialogService,
     protected deleteDialogService: DeleteDialogService
@@ -51,7 +55,7 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   ngAfterViewInit(): void {
     const container = this.visNetwork;
 
-    this.networkInstance = this.graphBuilderService.createNetwork(container);
+    this.networkInstance = this.visNetworkService.createNetwork(container);
 
     // See Network.d.ts -> NetworkEvents
     this.networkInstance.on('selectNode', (params: any) => {
@@ -114,7 +118,15 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     this.refreshGraph();
   }
 
-  buildDeploymentPath(): void {}
+  buildReleasePath(): void {}
+
+  selectedNodeId(): number {
+    if (this.nodeSelection && this.nodeSelection.hasNodes()) {
+      return this.nodeSelection.firstNode();
+    }
+
+    return -1;
+  }
 
   createDependency(): void {
     // Use selected microservice as dependency's start

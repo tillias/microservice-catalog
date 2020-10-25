@@ -1,3 +1,5 @@
+// Core entities
+
 entity Team {
 	name String required,
     teamLead String required,
@@ -23,10 +25,10 @@ entity Dependency {
     description TextBlob
 }
 
+
 relationship ManyToOne {
 	Microservice{team required} to Team
 	Microservice{status required} to Status
 	Dependency{source required} to Microservice
 	Dependency{target required} to Microservice
 }
-
