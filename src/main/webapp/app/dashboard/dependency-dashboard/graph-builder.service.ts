@@ -1,8 +1,8 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { DataSet } from 'vis-data/peer';
 import { IDependency } from '../../shared/model/dependency.model';
 import { IMicroservice } from '../../shared/model/microservice.model';
-import { Network, Options } from 'vis-network/peer';
+import { Network } from 'vis-network/peer';
 import { DependencyService } from '../../entities/dependency/dependency.service';
 import { MicroserviceService } from '../../entities/microservice/microservice.service';
 import { forkJoin } from 'rxjs';
@@ -26,34 +26,6 @@ class GraphContext {
 })
 export class GraphBuilderService {
   constructor(protected dependencyService: DependencyService, protected microserviceService: MicroserviceService) {}
-
-  createNetwork(element: ElementRef, options?: Options): Network {
-    const defaultOptions = {
-      height: '100%',
-      width: '100%',
-      nodes: {
-        shape: 'hexagon',
-        font: {
-          color: 'white',
-        },
-      },
-      clickToUse: false,
-      edges: {
-        smooth: false,
-        arrows: {
-          to: {
-            enabled: true,
-            type: 'vee',
-          },
-        },
-      },
-      interaction: {
-        multiselect: true,
-      },
-    };
-
-    return new Network(element.nativeElement, {}, options || defaultOptions);
-  }
 
   refreshGraph(network: Network, filterContext: FilterContext): void {
     const dependencies$ = this.dependencyService.query();

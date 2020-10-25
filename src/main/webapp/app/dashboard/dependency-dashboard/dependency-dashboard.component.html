@@ -23,6 +23,11 @@
                         </button>
                     </div>
                     <div class="pt-2">
+                        <button class="btn btn-block btn-success btn-sm" [routerLink]="['/microservice',selectedNodeId(), 'edit']">
+                            Edit microservice
+                        </button>
+                    </div>
+                    <div class="pt-2">
                         <button class="btn btn-block btn-success btn-sm" (click)="createDependency()">Create
                             dependency
                         </button>
@@ -47,8 +52,8 @@
             <ngb-panel title="Analysis">
                 <ng-template ngbPanelContent>
                     <div class="p-1">
-                        <button class="btn btn-block btn-success btn-sm" [disabled]="!nodeSelection"
-                                (click)="buildReleasePath()">Build release path
+                        <button type="submit" [routerLink]="['/dashboard','release-path', selectedNodeId()]" class="btn btn-block btn-success btn-sm"
+                                [disabled]="!nodeSelection">Build release path
                         </button>
                     </div>
                 </ng-template>

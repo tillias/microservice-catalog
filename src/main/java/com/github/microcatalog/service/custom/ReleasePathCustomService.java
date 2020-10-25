@@ -85,8 +85,9 @@ public class ReleasePathCustomService {
         log.debug(pathGraph.toString());
 
         final Graph<Long, DefaultEdge> reversed = new EdgeReversedGraph<>(pathGraph);
+        final Graph<Long, DefaultEdge> reversedCopy = new AsSubgraph<>(reversed);
 
-        return Optional.of(convert(reversed, microservices, target));
+        return Optional.of(convert(reversedCopy, microservices, target));
     }
 
     private ReleasePath convert(final Graph<Long, DefaultEdge> graph, final List<Microservice> microservices, final Microservice target) {
@@ -105,7 +106,7 @@ public class ReleasePathCustomService {
             log.debug("Leaves: {}", verticesWithoutIncomingEdges);
 
             final ReleaseGroup group = new ReleaseGroup();
-            group.setSteps(convertSteps(microserviceMap, verticesWithoutIncomingEdges));
+            group.setSteps(convertSteps(microserviceMap, verticesWithoutIncomingEdges, graph));
             groups.add(group);
 
             verticesWithoutIncomingEdges.forEach(graph::removeVertex);
@@ -116,13 +117,25 @@ public class ReleasePathCustomService {
         return result;
     }
 
-    private Set<ReleaseStep> convertSteps(final Map<Long, Microservice> microserviceMap, List<Long> microserviceIds) {
+    private Set<ReleaseStep> convertSteps(final Map<Long, Microservice> microserviceMap,
+                                          final List<Long> microserviceIds,
+                                          final Graph<Long, DefaultEdge> graph) {
         final Set<ReleaseStep> result = new HashSet<>();
 
         microserviceIds.forEach(id -> {
-            final ReleaseStep step = new ReleaseStep();
-            step.setWorkItem(microserviceMap.get(id));
-            result.add(step);
+            final List<Microservice> parentWorkItems = new ArrayList<>();
+
+            final Set<DefaultEdge> outgoingEdges = graph.outgoingEdgesOf(id);
+            for (DefaultEdge e : outgoingEdges) {
+                final Long edgeTarget = graph.getEdgeTarget(e);
+                parentWorkItems.add(microserviceMap.get(edgeTarget));
+            }
+
+            result.add(
+                new ReleaseStep()
+                    .workItem(microserviceMap.get(id))
+                    .parentWorkItems(parentWorkItems)
+            );
         });
 
         return result;

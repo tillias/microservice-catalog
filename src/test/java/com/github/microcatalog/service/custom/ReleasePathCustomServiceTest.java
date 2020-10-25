@@ -1,6 +1,7 @@
 package com.github.microcatalog.service.custom;
 
-import com.github.microcatalog.domain.*;
+import com.github.microcatalog.domain.Dependency;
+import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.domain.custom.ReleaseGroup;
 import com.github.microcatalog.domain.custom.ReleasePath;
 import com.github.microcatalog.domain.custom.ReleaseStep;
@@ -44,21 +45,29 @@ public class ReleasePathCustomServiceTest {
 
         ReleasePath path = maybePath.get();
 
-        Set<ReleaseStep> steps = getStep(path, 0);
-        assertThat(steps).isNotEmpty()
-            .extracting(ReleaseStep::getWorkItem).extracting(Microservice::getId).containsExactlyInAnyOrder(5L, 7L);
+        ReleaseStep step = getStep(path, 0, 5L);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L, 7L);
 
-        steps = getStep(path, 1);
-        assertThat(steps).isNotEmpty()
-            .extracting(ReleaseStep::getWorkItem).extracting(Microservice::getId).containsExactly(4L);
+        step = getStep(path, 0, 8L);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L);
 
-        steps = getStep(path, 2);
-        assertThat(steps).isNotEmpty()
-            .extracting(ReleaseStep::getWorkItem).extracting(Microservice::getId).containsExactly(2L);
+        step = getStep(path, 1, 7L);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L);
 
-        steps = getStep(path, 3);
-        assertThat(steps).isNotEmpty()
-            .extracting(ReleaseStep::getWorkItem).extracting(Microservice::getId).containsExactly(1L);
+        step = getStep(path, 2, 4L);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
+
+        step = getStep(path, 3, 2L);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(1L);
+
+        step = getStep(path, 4, 1L);
+        assertThat(step).isNotNull();
+        assertThat(step.getParentWorkItems()).isEmpty();
     }
 
     @Test
@@ -71,7 +80,28 @@ public class ReleasePathCustomServiceTest {
         fail("Not yet implemented");
     }
 
-    private Set<ReleaseStep> getStep(ReleasePath path, int groupIndex) {
+    private ReleaseStep getStep(final ReleasePath path, int groupIndex, long microserviceId) {
+        final Set<ReleaseStep> steps = getSteps(path, groupIndex);
+        if (steps != null) {
+            Optional<ReleaseStep> maybeStep = steps.stream()
+                .filter(s -> s.getWorkItem() != null && microserviceId == s.getWorkItem().getId()).findFirst();
+            if (maybeStep.isPresent()) {
+                return maybeStep.get();
+            }
+        }
+
+        return null;
+    }
+
+    private Set<ReleaseStep> getSteps(ReleasePath path, int groupIndex) {
+        if (path.getGroups() == null) {
+            return null;
+        }
+
+        if (groupIndex > path.getGroups().size()) {
+            return null;
+        }
+
         ReleaseGroup first = path.getGroups().get(groupIndex);
         if (first != null) {
             return first.getSteps();
@@ -110,11 +140,11 @@ public class ReleasePathCustomServiceTest {
             .build());
 
         dependencies.add(new DependencyBuilder()
-            .withId(6L).withSource(8L).withTarget(9L)
+            .withId(6L).withSource(4L).withTarget(8L)
             .build());
 
         dependencies.add(new DependencyBuilder()
-            .withId(7L).withSource(3L).withTarget(10L)
+            .withId(7L).withSource(3L).withTarget(9L)
             .build());
 
         dependencies.add(new DependencyBuilder()
@@ -123,6 +153,14 @@ public class ReleasePathCustomServiceTest {
 
         dependencies.add(new DependencyBuilder()
             .withId(9L).withSource(12L).withTarget(1L)
+            .build());
+
+        dependencies.add(new DependencyBuilder()
+            .withId(10L).withSource(7L).withTarget(5L)
+            .build());
+
+        dependencies.add(new DependencyBuilder()
+            .withId(11L).withSource(10L).withTarget(1L)
             .build());
 
         return dependencies;

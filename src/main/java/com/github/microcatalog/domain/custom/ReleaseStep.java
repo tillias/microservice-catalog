@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A ReleaseStep.
@@ -16,6 +18,7 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ReleaseStep {
     private Microservice workItem;
+    private List<Microservice> parentWorkItems;
 
     public Microservice getWorkItem() {
         return workItem;
@@ -28,5 +31,18 @@ public class ReleaseStep {
 
     public void setWorkItem(Microservice microservice) {
         this.workItem = microservice;
+    }
+
+    public List<Microservice> getParentWorkItems() {
+        return parentWorkItems;
+    }
+
+    public ReleaseStep parentWorkItems(List<Microservice> microservices) {
+        this.parentWorkItems = microservices;
+        return this;
+    }
+
+    public void setParentWorkItems(List<Microservice> parentWorkItems) {
+        this.parentWorkItems = parentWorkItems;
     }
 }
