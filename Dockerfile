@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-slim
 ENV APP_ROOT /app
 RUN mkdir ${APP_ROOT}
 WORKDIR ${APP_ROOT}
