@@ -5,7 +5,6 @@ import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
-import com.github.microcatalog.web.rest.errors.BadRequestAlertException;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.graph.DefaultEdge;
@@ -35,7 +34,7 @@ public class DependencyService {
 
     public Dependency create(final Dependency dependency) {
         if (dependency.getId() != null) {
-            throw new BadRequestAlertException("A new dependency cannot already have an ID", getEntityName(), "idexists");
+            throw new IllegalArgumentException("A new dependency can not already have an id");
         }
 
         validateSelfCycle(dependency);
@@ -46,14 +45,10 @@ public class DependencyService {
 
     public Dependency update(final Dependency dependency) {
         if (dependency.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", getEntityName(), "idnull");
+            throw new IllegalArgumentException("Updating non-persistent entity without id");
         }
 
         validateSelfCycle(dependency);
-
-        // TODO
-        // FIXME
-        // We need second method which updates existing instead of adding new one!
         validateIfUpdated(dependency);
 
         return repository.save(dependency);
@@ -69,10 +64,6 @@ public class DependencyService {
 
     public void deleteById(Long id) {
         repository.deleteById(id);
-    }
-
-    private String getEntityName() {
-        return Dependency.class.getSimpleName().toLowerCase();
     }
 
     private void validateSelfCycle(final Dependency dependency) {
@@ -116,6 +107,8 @@ public class DependencyService {
         final CycleDetector<Microservice, DefaultEdge> cycleDetector = new CycleDetector<>(graph);
         if (cycleDetector.detectCycles()) {
             final Set<Microservice> cycles = cycleDetector.findCycles();
+            log.debug("Cycles: {}", cycles);
+
             throw new CircularDependenciesException("Circular dependency will be introduced.", cycles);
         }
     }

@@ -15,8 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -66,9 +65,9 @@ class DependencyServiceTest {
 
     @Test
     void create_WithId_ExceptionIsThrown() {
-        assertThatThrownBy(() -> service.create(new DependencyBuilder().withId(1L).build()))
-            .isInstanceOf(BadRequestAlertException.class)
-            .hasMessageStartingWith("A new dependency cannot already have an ID");
+        assertThatIllegalArgumentException()
+            .isThrownBy(() ->service.create(new DependencyBuilder().withId(1L).build()))
+            .withMessageStartingWith("A new dependency can not already have an id");
     }
 
     @Test
@@ -141,9 +140,10 @@ class DependencyServiceTest {
 
     @Test
     void update_NoId_ExceptionIsThrown() {
-        assertThatThrownBy(() -> service.update(new DependencyBuilder().withSource(1L).withTarget(2L).build()))
-            .isInstanceOf(BadRequestAlertException.class)
-            .hasMessageStartingWith("Invalid id");
+        assertThatIllegalArgumentException()
+            .isThrownBy(() ->
+                service.update(new DependencyBuilder().withSource(1L).withTarget(2L).build()))
+            .withMessageStartingWith("Updating non-persistent entity without id");
     }
 
     @Test
