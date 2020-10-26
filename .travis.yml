@@ -49,6 +49,7 @@ script:
     ./mvnw -ntp verify -Pprod -DskipTests &&
     if [ "$BRANCH" = "master" ]; then
     docker build -t tillias/microcatalog . &&
+    docker tag tillias/microcatalog tillias/microcatalog:0.0.1 &&
     echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin &&
     docker push tillias/microcatalog &&
     ./mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy-only -Pheroku -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog; fi
