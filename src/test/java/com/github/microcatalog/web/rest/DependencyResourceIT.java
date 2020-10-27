@@ -15,6 +15,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class DependencyResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -58,23 +59,22 @@ public class DependencyResourceIT {
         Dependency dependency = new Dependency()
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION);
+
         // Add required entity
-        Microservice microservice;
-        if (TestUtil.findAll(em, Microservice.class).isEmpty()) {
-            microservice = MicroserviceResourceIT.createEntity(em);
-            em.persist(microservice);
-            em.flush();
-        } else {
-            microservice = TestUtil.findAll(em, Microservice.class).get(0);
-        }
-        dependency.setSource(microservice);
-        // Add required entity
-        dependency.setTarget(microservice);
+        Microservice source = MicroserviceResourceIT.createEntity(em);
+        Microservice target = MicroserviceResourceIT.createEntity(em);
+        em.persist(source);
+        em.persist(target);
+        em.flush();
+
+        dependency.setSource(source);
+        dependency.setTarget(target);
         return dependency;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -132,7 +132,7 @@ public class DependencyResourceIT {
         restDependencyMockMvc.perform(post("/api/dependencies")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(dependency)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().is5xxServerError());
 
         // Validate the Dependency in the database
         List<Dependency> dependencyList = dependencyRepository.findAll();
@@ -173,7 +173,7 @@ public class DependencyResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getDependency() throws Exception {
@@ -188,6 +188,7 @@ public class DependencyResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }
+
     @Test
     @Transactional
     public void getNonExistingDependency() throws Exception {
@@ -234,7 +235,7 @@ public class DependencyResourceIT {
         restDependencyMockMvc.perform(put("/api/dependencies")
             .contentType(MediaType.APPLICATION_JSON)
             .content(TestUtil.convertObjectToJsonBytes(dependency)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().is5xxServerError());
 
         // Validate the Dependency in the database
         List<Dependency> dependencyList = dependencyRepository.findAll();
