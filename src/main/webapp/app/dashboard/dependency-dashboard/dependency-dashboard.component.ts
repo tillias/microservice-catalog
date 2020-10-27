@@ -118,8 +118,6 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     this.refreshGraph();
   }
 
-  buildReleasePath(): void {}
-
   selectedNodeId(): number {
     if (this.nodeSelection && this.nodeSelection.hasNodes()) {
       return this.nodeSelection.firstNode();

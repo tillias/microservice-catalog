@@ -1,43 +1,70 @@
 package com.github.microcatalog.service.custom;
 
-import com.github.microcatalog.domain.Dependency;
 import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.domain.custom.ReleaseGroup;
 import com.github.microcatalog.domain.custom.ReleasePath;
 import com.github.microcatalog.domain.custom.ReleaseStep;
-import com.github.microcatalog.repository.DependencyRepository;
-import com.github.microcatalog.repository.MicroserviceRepository;
-import com.github.microcatalog.utils.DependencyBuilder;
-import com.github.microcatalog.utils.MicroserviceBuilder;
+import com.github.microcatalog.service.GraphUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest(classes = ReleasePathCustomService.class)
+@SpringBootTest(classes = {ReleasePathCustomService.class})
 class ReleasePathCustomServiceTest {
 
     @MockBean
-    private MicroserviceRepository microserviceRepository;
-
-    @MockBean
-    private DependencyRepository dependencyRepository;
+    private GraphLoaderService graphLoaderService;
 
     @Autowired
     private ReleasePathCustomService service;
 
     @Test
-    void getReleasePath_NoCycles_Success() {
-        given(microserviceRepository.findAll()).willReturn(createMicroservices());
+    void getReleasePath_NodeOutsideGraph_EmptyPath() {
+        given(graphLoaderService.loadGraph())
+            .willReturn(
+                GraphUtils.createGraph(String.join("\n",
+                    "strict digraph G { ",
+                    "1; 2; 3;",
+                    "1 -> 2;",
+                    "2 -> 3;}"
+                    )
+                )
+            );
 
-        given(dependencyRepository.findAll()).willReturn(createDependencies());
+        Optional<ReleasePath> maybePath = service.getReleasePath(4L);
+        assertThat(maybePath).isEmpty();
+    }
+
+    @Test
+    void getReleasePath_NoCycles_Success() {
+        given(graphLoaderService.loadGraph())
+            .willReturn(
+                GraphUtils.createGraph(String.join("\n",
+                    "strict digraph G { ",
+                    "1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12;",
+                    "1 -> 2;",
+                    "2 -> 4;",
+                    "6 -> 4;",
+                    "4 -> 5;",
+                    "4 -> 7;",
+                    "4 -> 8;",
+                    "3 -> 9;",
+                    "3 -> 11;",
+                    "12 -> 1;",
+                    "7 -> 5;",
+                    "10 -> 1;}"
+                    )
+                )
+            );
 
         Optional<ReleasePath> maybePath = service.getReleasePath(1L);
         assertThat(maybePath).isPresent();
@@ -71,9 +98,19 @@ class ReleasePathCustomServiceTest {
 
     @Test
     void getReleasePath_ContainsCyclesInSameComponent_ExceptionIsThrown() {
-        given(microserviceRepository.findAll()).willReturn(createMicroservices());
-
-        given(dependencyRepository.findAll()).willReturn(createDependenciesWithCycleInSameComponent());
+        given(graphLoaderService.loadGraph())
+            .willReturn(
+                GraphUtils.createGraph(String.join("\n",
+                    "strict digraph G { ",
+                    "1; 2; 3; 5; 6; 7;",
+                    "1 -> 2;",
+                    "2 -> 3;",
+                    "3 -> 1;",
+                    "5 -> 6;",
+                    "5 -> 7;}"
+                    )
+                )
+            );
 
         assertThatIllegalArgumentException()
             .isThrownBy(() ->
@@ -84,9 +121,21 @@ class ReleasePathCustomServiceTest {
 
     @Test
     void getReleasePath_ContainsCyclesInOtherComponent_Success() {
-        given(microserviceRepository.findAll()).willReturn(createMicroservices());
-
-        given(dependencyRepository.findAll()).willReturn(createDependenciesWithCycleInOtherComponent());
+        given(graphLoaderService.loadGraph())
+            .willReturn(
+                GraphUtils.createGraph(String.join("\n",
+                    "strict digraph G { ",
+                    "1; 2; 3; 4; 5; 6; 7; 8;",
+                    "1 -> 2;",
+                    "2 -> 3;",
+                    "2 -> 4;",
+                    "5 -> 6;",
+                    "6 -> 7;",
+                    "7 -> 8;",
+                    "8 -> 6;}"
+                    )
+                )
+            );
 
         Optional<ReleasePath> maybePath = service.getReleasePath(1L);
         assertThat(maybePath).isPresent();
@@ -138,134 +187,5 @@ class ReleasePathCustomServiceTest {
         } else {
             return Collections.emptySet();
         }
-    }
-
-    private List<Microservice> createMicroservices() {
-        return LongStream.rangeClosed(1, 12)
-            .mapToObj(i -> new MicroserviceBuilder().withId(i).build())
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Graph will contain two connected components, one of them has cycle
-     * <p>
-     * First component with cycle 1->2->3->1
-     * Second component without cycle 5->6, 5->7
-     *
-     * @return dependencies
-     */
-    private List<Dependency> createDependenciesWithCycleInSameComponent() {
-        final List<Dependency> dependencies = new ArrayList<>();
-
-        // First component with cycle 1->2->3->1
-        dependencies.add(new DependencyBuilder()
-            .withId(1L).withSource(1L).withTarget(2L)
-            .build());
-        dependencies.add(new DependencyBuilder()
-            .withId(2L).withSource(2L).withTarget(3L)
-            .build());
-        dependencies.add(new DependencyBuilder()
-            .withId(3L).withSource(3L).withTarget(1L)
-            .build());
-
-        // Second component without cycle 5->6, 5->7
-        dependencies.add(new DependencyBuilder()
-            .withId(4L).withSource(5L).withTarget(6L)
-            .build());
-        dependencies.add(new DependencyBuilder()
-            .withId(5L).withSource(5L).withTarget(7L)
-            .build());
-
-
-        return dependencies;
-    }
-
-    /**
-     * Graph will contain two connected components, one of them has cycle
-     * First component without cycle 1->2, 2->3, 2->4
-     * Second component with cycle 6->7->8->6
-     *
-     * @return dependencies
-     */
-    private List<Dependency> createDependenciesWithCycleInOtherComponent() {
-        final List<Dependency> dependencies = new ArrayList<>();
-
-        // First component without cycle 1->2, 2->3, 2->4
-        dependencies.add(new DependencyBuilder()
-            .withId(1L).withSource(1L).withTarget(2L)
-            .build());
-        dependencies.add(new DependencyBuilder()
-            .withId(2L).withSource(2L).withTarget(3L)
-            .build());
-        dependencies.add(new DependencyBuilder()
-            .withId(3L).withSource(2L).withTarget(4L)
-            .build());
-
-        // Second component with cycle 6->7->8->6
-        dependencies.add(new DependencyBuilder()
-            .withId(4L).withSource(5L).withTarget(6L)
-            .build());
-        dependencies.add(new DependencyBuilder()
-            .withId(5L).withSource(6L).withTarget(7L)
-            .build());
-        dependencies.add(new DependencyBuilder()
-            .withId(6L).withSource(7L).withTarget(8L)
-            .build());
-        dependencies.add(new DependencyBuilder()
-            .withId(7L).withSource(8L).withTarget(6L)
-            .build());
-
-
-        return dependencies;
-    }
-
-    private List<Dependency> createDependencies() {
-        final List<Dependency> dependencies = new ArrayList<>();
-
-        dependencies.add(new DependencyBuilder()
-            .withId(1L).withSource(1L).withTarget(2L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(2L).withSource(2L).withTarget(4L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(3L).withSource(6L).withTarget(4L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(4L).withSource(4L).withTarget(5L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(5L).withSource(4L).withTarget(7L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(6L).withSource(4L).withTarget(8L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(7L).withSource(3L).withTarget(9L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(8L).withSource(3L).withTarget(11L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(9L).withSource(12L).withTarget(1L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(10L).withSource(7L).withTarget(5L)
-            .build());
-
-        dependencies.add(new DependencyBuilder()
-            .withId(11L).withSource(10L).withTarget(1L)
-            .build());
-
-        return dependencies;
     }
 }
