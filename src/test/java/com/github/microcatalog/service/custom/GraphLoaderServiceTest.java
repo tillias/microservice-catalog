@@ -8,14 +8,11 @@ import com.github.microcatalog.utils.DependencyBuilder;
 import com.github.microcatalog.utils.MicroserviceBuilder;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.nio.dot.DOTExporter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -25,7 +22,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @SpringBootTest(classes = GraphLoaderService.class)
-public class GraphLoaderServiceTest {
+class GraphLoaderServiceTest {
 
     @MockBean
     private MicroserviceRepository microserviceRepository;
@@ -43,8 +40,8 @@ public class GraphLoaderServiceTest {
 
         Graph<Microservice, DefaultEdge> graph = sut.loadGraph();
         assertThat(graph).isNotNull();
-        assertThat(graph.vertexSet()).hasSize(0);
-        assertThat(graph.edgeSet()).hasSize(0);
+        assertThat(graph.vertexSet()).isEmpty();
+        assertThat(graph.edgeSet()).isEmpty();
 
         then(microserviceRepository).should().findAll();
         then(dependencyRepository).should().findAll();

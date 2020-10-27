@@ -3,7 +3,7 @@ import { DependencyService } from '../../entities/dependency/dependency.service'
 import { IMicroservice } from '../../shared/model/microservice.model';
 import { EXPERIMENTAL_FEATURE } from '../../app.constants';
 import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
-import { JhiEventManager } from 'ng-jhipster';
+import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 import { Subscription } from 'rxjs';
 import { MicroserviceService } from '../../entities/microservice/microservice.service';
 import { map } from 'rxjs/operators';
@@ -34,6 +34,7 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
 
   constructor(
     protected eventManager: JhiEventManager,
+    protected alertService: JhiAlertService,
     protected dependencyService: DependencyService,
     protected microserviceService: MicroserviceService,
     protected releasePathService: ReleasePathCustomService,
@@ -118,7 +119,9 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     this.refreshGraph();
   }
 
-  buildReleasePath(): void {}
+  buildReleasePath(): void {
+    this.alertService.success('Alert');
+  }
 
   selectedNodeId(): number {
     if (this.nodeSelection && this.nodeSelection.hasNodes()) {

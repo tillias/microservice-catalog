@@ -10,7 +10,6 @@ import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.EdgeReversedGraph;
-import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.jgrapht.traverse.GraphIterator;
 import org.slf4j.Logger;
@@ -18,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;

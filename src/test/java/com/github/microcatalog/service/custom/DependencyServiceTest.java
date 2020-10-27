@@ -6,7 +6,7 @@ import com.github.microcatalog.service.GraphUtils;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
 import com.github.microcatalog.utils.DependencyBuilder;
-import com.github.microcatalog.web.rest.errors.BadRequestAlertException;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,9 +43,9 @@ class DependencyServiceTest {
 
     @Test
     void findById() {
-        final long id = 3L;
+        final Long id = 3L;
 
-        given(repository.findById(id)).willReturn(Optional.of(new DependencyBuilder().withId(id).build()));
+        given(repository.findById(id)).willReturn(Optional.of(dependency(id.intValue(), null, null)));
 
         Optional<Dependency> maybeDependency = service.findById(id);
         assertThat(maybeDependency).isPresent();
@@ -66,20 +66,17 @@ class DependencyServiceTest {
     @Test
     void create_WithId_ExceptionIsThrown() {
         assertThatIllegalArgumentException()
-            .isThrownBy(() ->service.create(new DependencyBuilder().withId(1L).build()))
+            .isThrownBy(() -> service.create(dependency(1, null, null)))
             .withMessageStartingWith("A new dependency can not already have an id");
     }
 
     @Test
     void create_SelfCycle_ExceptionIsThrown() {
-        assertThatThrownBy(() -> service.create(
-            new DependencyBuilder()
-                .withSource(2L)
-                .withTarget(2L)
-                .build()
-        ))
+        final Dependency dependency = dependency(null, 2, 2);
+
+        assertThatThrownBy(() -> service.create(dependency))
             .isInstanceOf(SelfCircularException.class)
-            .hasMessageStartingWith("Source id is the same as target id");
+            .hasMessageStartingWith("Source of dependency can't be the same as target");
     }
 
     @Test
@@ -96,14 +93,14 @@ class DependencyServiceTest {
             )
         );
 
-        assertThatThrownBy(() -> service.create(
-            new DependencyBuilder()
-                .withSource(4L)
-                .withTarget(1L)
-                .build()
-        ))
+        final Dependency dependency = dependency(null, 4, 1);
+
+        assertThatThrownBy(() -> service.create(dependency))
             .isInstanceOf(CircularDependenciesException.class)
-            .hasMessageStartingWith("Circular dependency will be introduced.");
+            .hasMessageStartingWith("Circular dependency will be introduced")
+            .extracting("cycles", InstanceOfAssertFactories.ITERABLE)
+            .extracting("id")
+            .containsExactlyInAnyOrder(1L, 2L, 3L, 4L);
     }
 
     @Test
@@ -119,19 +116,11 @@ class DependencyServiceTest {
             )
         );
 
-        final Dependency expected = new DependencyBuilder()
-            .withId(1L)
-            .withSource(3L)
-            .withTarget(4L)
-            .build();
+        final Dependency expected = dependency(1, 3, 4);
 
         given(repository.save(any(Dependency.class))).willReturn(expected);
 
-        Dependency persistent = service.create(
-            new DependencyBuilder()
-                .withSource(3L)
-                .withTarget(4L)
-                .build());
+        Dependency persistent = service.create(dependency(null, 3, 4));
 
         assertThat(persistent).isEqualTo(expected);
 
@@ -142,21 +131,17 @@ class DependencyServiceTest {
     void update_NoId_ExceptionIsThrown() {
         assertThatIllegalArgumentException()
             .isThrownBy(() ->
-                service.update(new DependencyBuilder().withSource(1L).withTarget(2L).build()))
+                service.update(dependency(null, 1, 2)))
             .withMessageStartingWith("Updating non-persistent entity without id");
     }
 
     @Test
     void update_SelfCycle_ExceptionIsThrown() {
-        assertThatThrownBy(() -> service.update(
-            new DependencyBuilder()
-                .withId(1L)
-                .withSource(2L)
-                .withTarget(2L)
-                .build()
-        ))
+        final Dependency dependency = dependency(1, 2, 2);
+
+        assertThatThrownBy(() -> service.update(dependency))
             .isInstanceOf(SelfCircularException.class)
-            .hasMessageStartingWith("Source id is the same as target id");
+            .hasMessageStartingWith("Source of dependency can't be the same as target");
     }
 
     @Test
@@ -174,17 +159,16 @@ class DependencyServiceTest {
         );
 
         given(repository.findById(3L))
-            .willReturn(Optional.of(new DependencyBuilder().withId(3L).withSource(3L).withTarget(4L).build()));
+            .willReturn(Optional.of(dependency(3, 3, 4)));
 
-        assertThatThrownBy(() -> service.update(
-            new DependencyBuilder()
-                .withId(3L)
-                .withSource(3L)
-                .withTarget(1L)
-                .build()
-        ))
+        final Dependency dependency = dependency(3, 3, 1);
+
+        assertThatThrownBy(() -> service.update(dependency))
             .isInstanceOf(CircularDependenciesException.class)
-            .hasMessageStartingWith("Circular dependency will be introduced.");
+            .hasMessageStartingWith("Circular dependency will be introduced")
+            .extracting("cycles", InstanceOfAssertFactories.ITERABLE)
+            .extracting("id")
+            .containsExactlyInAnyOrder(1L, 2L, 3L);
     }
 
     @Test
@@ -202,25 +186,32 @@ class DependencyServiceTest {
         );
 
         given(repository.findById(2L))
-            .willReturn(Optional.of(new DependencyBuilder().withId(2L).withSource(2L).withTarget(3L).build()));
+            .willReturn(Optional.of(dependency(2, 2, 3)));
 
-        final Dependency expected = new DependencyBuilder()
-            .withId(2L)
-            .withSource(2L)
-            .withTarget(4L)
-            .build();
+        final Dependency expected = dependency(2, 2, 4);
 
         given(repository.save(any(Dependency.class))).willReturn(expected);
 
-        Dependency persistent = service.update(
-            new DependencyBuilder()
-                .withId(2L)
-                .withSource(2L)
-                .withTarget(4L)
-                .build());
+        Dependency persistent = service.update(dependency(2, 2, 4));
 
         assertThat(persistent).isEqualTo(expected);
 
         then(repository).should().save(any(Dependency.class));
+    }
+
+    private Dependency dependency(final Integer id, final Integer sourceId, final Integer targetId) {
+        DependencyBuilder builder = new DependencyBuilder();
+
+        if (sourceId != null) {
+            builder.withSource(Long.valueOf(sourceId));
+        }
+        if (targetId != null) {
+            builder.withTarget(Long.valueOf(targetId));
+        }
+        if (id != null) {
+            builder.withId(Long.valueOf(id));
+        }
+
+        return builder.build();
     }
 }

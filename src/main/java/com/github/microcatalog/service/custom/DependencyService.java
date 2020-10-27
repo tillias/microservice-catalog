@@ -75,9 +75,9 @@ public class DependencyService {
             return;
         }
 
-        final Long sourceId = dependency.getSource().getId();
-        if (Objects.equals(sourceId, dependency.getTarget().getId())) {
-            throw new SelfCircularException(String.format("Source id is the same as target id: %s", sourceId));
+        final Microservice source = dependency.getSource();
+        if (Objects.equals(source.getId(), dependency.getTarget().getId())) {
+            throw new SelfCircularException("Source of dependency can't be the same as target", source);
         }
     }
 
@@ -109,7 +109,7 @@ public class DependencyService {
             final Set<Microservice> cycles = cycleDetector.findCycles();
             log.debug("Cycles: {}", cycles);
 
-            throw new CircularDependenciesException("Circular dependency will be introduced.", cycles);
+            throw new CircularDependenciesException("Circular dependency will be introduced", cycles);
         }
     }
 }

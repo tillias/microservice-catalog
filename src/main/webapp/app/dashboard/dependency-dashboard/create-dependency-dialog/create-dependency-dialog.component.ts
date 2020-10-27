@@ -17,7 +17,7 @@ export class CreateDependencyDialogComponent implements OnInit {
   name: string;
   isSaving = false;
 
-  constructor(public eventManager: JhiEventManager, public activeModal: NgbActiveModal, public dependencyService: DependencyService) {
+  constructor(protected eventManager: JhiEventManager, protected activeModal: NgbActiveModal, public dependencyService: DependencyService) {
     this.name = 'Please specify source & target';
   }
 

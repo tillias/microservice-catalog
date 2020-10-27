@@ -1,5 +1,6 @@
 package com.github.microcatalog.web.rest.errors;
 
+import com.github.microcatalog.web.rest.errors.custom.ReleasePathAdviceTrait;
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.web.util.HeaderUtil;
 
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
  * The error response follows RFC7807 - Problem Details for HTTP APIs (https://tools.ietf.org/html/rfc7807).
  */
 @ControllerAdvice
-public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait {
+public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait, ReleasePathAdviceTrait {
 
     private static final String FIELD_ERRORS_KEY = "fieldErrors";
     private static final String MESSAGE_KEY = "message";
