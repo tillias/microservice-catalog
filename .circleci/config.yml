@@ -1,15 +1,70 @@
 version: 2.1
-
-orbs:
-  maven: circleci/maven@0.0.12
-
 jobs:
-  build:
-    docker:
-      - image: cimg/openjdk:13.0
+    build:
+        machine:
+            image: circleci/classic:201808-01
+        steps:
+            - checkout
 
-workflows:
-  maven_test:
-    jobs:
-      - maven/test # checkout, build, test, and upload test results
+            # Download and cache dependencies
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+                    # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
+                    - v1-dependencies-
+            - run:
+                name: Install OpenJDK 11
+                command: |
+                    sudo rm /var/lib/apt/lists/lock
+                    sudo rm /var/cache/apt/archives/lock
+                    sudo rm /var/lib/dpkg/lock
+                    sudo apt install openjdk-11-jdk
+                    echo 'export PATH="/usr/lib/jvm/java-11-openjdk-amd64/bin:$PATH"' >> $BASH_ENV
+            - run:
+                name: Setup NVM
+                command: |
+                    echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+                    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+            - run:
+                name: Install Node 12.16.1
+                command: |
+                    nvm install 12.16.1
+                    nvm alias default 12.16.1
+            - run:
+                name: Print Java Version
+                command: 'java -version'
+            - run:
+                name: Print Node Version
+                command: 'node -v'
+            - run:
+                name: Print NPM Version
+                command: 'npm -v'
+            - run:
+                name: Install Node Modules
+                command: 'npm install'
 
+            - save_cache:
+                paths:
+                    - node
+                    - node_modules
+                    - ~/.m2
+                key: v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+
+            - run:
+                name: Give Executable Power
+                command: 'chmod +x mvnw'
+            - run:
+                name: Run Style Checks
+                command: './mvnw -ntp checkstyle:check'
+            - run:
+                name: Clean and Verify
+                command: './mvnw -ntp clean verify'
+            - run:
+                name: Run Front End Tests
+                command: npm run test
+            - run:
+                name: Verify with Prod Profile
+                command: './mvnw -ntp verify -Pprod -DskipTests'
+ #           - run:
+ #               name: Deploy to Heroku
+ #               command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
