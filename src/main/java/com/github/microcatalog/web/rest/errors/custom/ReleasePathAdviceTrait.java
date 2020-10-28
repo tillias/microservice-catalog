@@ -1,7 +1,9 @@
 package com.github.microcatalog.web.rest.errors.custom;
 
+import com.github.microcatalog.domain.Dependency;
 import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
+import com.github.microcatalog.service.custom.exceptions.DuplicateDependencyException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,18 +21,33 @@ import static org.zalando.problem.Status.UNPROCESSABLE_ENTITY;
  */
 public interface ReleasePathAdviceTrait extends AdviceTrait {
 
-    String HEADER_KEY = "BusinessException";
-    String PAYLOAD_KEY = "BusinessPayload";
+    String EXCEPTION_KEY = "BusinessException";
     String MESSAGE_KEY = "BusinessMessage";
+
+    @ExceptionHandler
+    default ResponseEntity<Problem> handleDuplicateDependencyException(final DuplicateDependencyException exception, final NativeWebRequest request) {
+        final Dependency dependency = exception.getDependency();
+
+        final Problem problem = Problem.builder()
+            .withStatus(UNPROCESSABLE_ENTITY)
+            .with(EXCEPTION_KEY, DuplicateDependencyException.class.getSimpleName())
+            .with(MESSAGE_KEY, exception.getMessage())
+            .with("dependencyId", String.valueOf(dependency.getId()))
+            .with("dependencyName", dependency.getName())
+            .build();
+
+        return create(exception, problem, request);
+
+    }
 
     @ExceptionHandler
     default ResponseEntity<Problem> handleSelfCircularException(final SelfCircularException exception, final NativeWebRequest request) {
         final Microservice source = exception.getSource();
         final Problem problem = Problem.builder()
             .withStatus(UNPROCESSABLE_ENTITY)
-            .with(HEADER_KEY, SelfCircularException.class.getName())
-            .with(PAYLOAD_KEY, String.format("id = %s, name = %s", source.getId(), source.getName()))
+            .with(EXCEPTION_KEY, SelfCircularException.class.getSimpleName())
             .with(MESSAGE_KEY, exception.getMessage())
+            .with("microserviceName", source.getName())
             .build();
 
         return create(exception, problem, request);
@@ -38,13 +55,13 @@ public interface ReleasePathAdviceTrait extends AdviceTrait {
 
     @ExceptionHandler
     default ResponseEntity<Problem> handleCircularDependenciesException(final CircularDependenciesException exception, final NativeWebRequest request) {
-        final List<String> microserviceIds = exception.getCycles().stream().map(m -> String.valueOf(m.getId())).collect(Collectors.toList());
+        final List<String> microservices = exception.getCycles().stream().map(Microservice::getName).collect(Collectors.toList());
 
         final Problem problem = Problem.builder()
             .withStatus(UNPROCESSABLE_ENTITY)
-            .with(HEADER_KEY, CircularDependenciesException.class.getName())
-            .with(PAYLOAD_KEY, String.join(",", microserviceIds))
+            .with(EXCEPTION_KEY, CircularDependenciesException.class.getSimpleName())
             .with(MESSAGE_KEY, exception.getMessage())
+            .with("microservices", String.join(",", microservices))
             .build();
 
         return create(exception, problem, request);

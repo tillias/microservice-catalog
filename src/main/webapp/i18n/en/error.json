@@ -1,4 +1,9 @@
 {
+  "business": {
+    "DuplicateDependencyException": "Dependency already exists: {{dependencyName}}",
+    "CircularDependenciesException": "Circular dependency will be introduced. Cycle: {{microservices}}",
+    "SelfCircularException": "Source of dependency can't be the same as target. Source: {{microserviceName}}"
+  },
   "error": {
     "title": "Error page!",
     "http": {

@@ -73,7 +73,7 @@ export class AlertErrorComponent implements OnDestroy {
           break;
 
         case 422:
-          this.addErrorAlert(httpErrorResponse.error.BusinessMessage);
+          this.addErrorAlert('', 'business.' + httpErrorResponse.error.BusinessException, httpErrorResponse.error);
           break;
 
         default:
