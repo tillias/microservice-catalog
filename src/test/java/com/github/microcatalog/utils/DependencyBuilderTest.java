@@ -11,8 +11,14 @@ class DependencyBuilderTest {
     @Test
     void build() {
         DependencyBuilder builder = new DependencyBuilder();
-        Dependency dependency = builder.withId(1L).withSource(2L).withTarget(3L).build();
-        assertThat(dependency).isNotNull().extracting(Dependency::getId).isEqualTo(1L);
+        Dependency dependency = builder
+            .withId(1L)
+            .withName("test")
+            .withSource(2L)
+            .withTarget(3L)
+            .build();
+
+        assertThat(dependency).isNotNull().extracting(Dependency::getId, Dependency::getName).containsExactly(1L, "test");
         assertThat(dependency.getSource()).isNotNull().extracting(Microservice::getId).isEqualTo(2L);
         assertThat(dependency.getTarget()).isNotNull().extracting(Microservice::getId).isEqualTo(3L);
     }

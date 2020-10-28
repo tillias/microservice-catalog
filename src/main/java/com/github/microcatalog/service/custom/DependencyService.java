@@ -4,6 +4,7 @@ import com.github.microcatalog.domain.Dependency;
 import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
+import com.github.microcatalog.service.custom.exceptions.DuplicateDependencyException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.cycle.CycleDetector;
@@ -83,6 +84,9 @@ public class DependencyService {
 
     private void validateIfAdded(final Dependency toBeAdded) {
         final Graph<Microservice, DefaultEdge> graph = graphLoaderService.loadGraph();
+
+        checkDuplicateWillBeIntroduced(graph,toBeAdded);
+
         graph.addEdge(toBeAdded.getSource(), toBeAdded.getTarget());
 
         checkCycles(graph);
@@ -98,9 +102,18 @@ public class DependencyService {
         final DefaultEdge currentEdge = graph.getEdge(persistent.getSource(), persistent.getTarget());
         graph.removeEdge(currentEdge);
 
+        checkDuplicateWillBeIntroduced(graph,dependency);
+
         graph.addEdge(dependency.getSource(), dependency.getTarget());
 
         checkCycles(graph);
+    }
+
+    private void checkDuplicateWillBeIntroduced(final Graph<Microservice, DefaultEdge> graph, final Dependency dependency){
+        final DefaultEdge existingEdge = graph.getEdge(dependency.getSource(), dependency.getTarget());
+        if (existingEdge != null) {
+            throw new DuplicateDependencyException("Dependency already exists", dependency);
+        }
     }
 
     private void checkCycles(final Graph<Microservice, DefaultEdge> graph) {

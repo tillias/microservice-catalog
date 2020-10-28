@@ -4,8 +4,10 @@ import com.github.microcatalog.domain.Dependency;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.service.GraphUtils;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
+import com.github.microcatalog.service.custom.exceptions.DuplicateDependencyException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
 import com.github.microcatalog.utils.DependencyBuilder;
+import com.github.microcatalog.utils.MicroserviceBuilder;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +106,32 @@ class DependencyServiceTest {
     }
 
     @Test
+    void create_DuplicateWillBeIntroduced_ExceptionIsThrown() {
+        given(graphLoaderService.loadGraph()).willReturn(
+            GraphUtils.createGraph(
+                String.join("\n",
+                    "strict digraph G { ",
+                    "1; 2; 3;",
+                    "1 -> 2;",
+                    "2 -> 3;}"
+                )
+            )
+        );
+
+        final Dependency dependency = dependency(null, 1, 2);
+
+        assertThatThrownBy(() -> service.create(dependency))
+            .isInstanceOf(DuplicateDependencyException.class)
+            .hasMessageStartingWith("Dependency already exists")
+            .extracting("dependency", InstanceOfAssertFactories.type(Dependency.class))
+            .extracting(Dependency::getSource, Dependency::getTarget)
+            .containsExactlyInAnyOrder(
+                new MicroserviceBuilder().withId(1L).build(),
+                new MicroserviceBuilder().withId(2L).build()
+            );
+    }
+
+    @Test
     void create_Success() {
         given(graphLoaderService.loadGraph()).willReturn(
             GraphUtils.createGraph(
@@ -169,6 +197,36 @@ class DependencyServiceTest {
             .extracting("cycles", InstanceOfAssertFactories.ITERABLE)
             .extracting("id")
             .containsExactlyInAnyOrder(1L, 2L, 3L);
+    }
+
+    @Test
+    void update_DuplicateWillBeIntroduced_ExceptionIsThrown() {
+        given(graphLoaderService.loadGraph()).willReturn(
+            GraphUtils.createGraph(
+                String.join("\n",
+                    "strict digraph G { ",
+                    "1; 2; 3;",
+                    "1 -> 2;",
+                    "2 -> 3;}" // has id = 2L
+                )
+            )
+        );
+
+        given(repository.findById(2L))
+            .willReturn(Optional.of(dependency(2, 2, 3)));
+
+        final Dependency dependency = dependency(2, 1, 2);
+
+
+        assertThatThrownBy(() -> service.update(dependency))
+            .isInstanceOf(DuplicateDependencyException.class)
+            .hasMessageStartingWith("Dependency already exists")
+            .extracting("dependency", InstanceOfAssertFactories.type(Dependency.class))
+            .extracting(Dependency::getSource, Dependency::getTarget)
+            .containsExactlyInAnyOrder(
+                new MicroserviceBuilder().withId(1L).build(),
+                new MicroserviceBuilder().withId(2L).build()
+            );
     }
 
     @Test
