@@ -39,13 +39,16 @@ public class ReleasePathCustomService {
 
     public Optional<ReleasePath> getReleasePath(final Long microserviceId) {
         final Graph<Microservice, DefaultEdge> graph = graphLoaderService.loadGraph();
-        final Microservice target = new Microservice();
-        target.setId(microserviceId);
+
+        final Optional<Microservice> maybeTarget = graph.vertexSet()
+            .stream().filter(v -> Objects.equals(v.getId(), microserviceId)).findFirst();
 
         // can't build release path, cause microservice with given id is not present in graph
-        if (!graph.containsVertex(target)) {
+        if (!maybeTarget.isPresent()) {
             return Optional.empty();
         }
+
+        final Microservice target = maybeTarget.get();
 
         final ConnectivityInspector<Microservice, DefaultEdge> inspector = new ConnectivityInspector<>(graph);
         final Set<Microservice> connectedSet = inspector.connectedSetOf(target);
