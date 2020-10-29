@@ -6,6 +6,7 @@ jobs:
     steps:
       - checkout
       - run
+        name: Parse version
         command: |
           OLD_VERSION=$(mvn -s .circleci/settings.xml -q \
           -Dexec.executable="echo" -Dexec.args='${project.version}' \
