@@ -51,7 +51,7 @@ jobs:
           command: npm run test
       - run:
           name: Sonar
-          command: './mvnw -ntp verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+          command: './mvnw -ntp org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
       - run:
           name: Verify with Prod Profile
           command: './mvnw -ntp verify -Pprod -DskipTests'
