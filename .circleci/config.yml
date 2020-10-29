@@ -42,10 +42,7 @@ jobs:
           command: 'chmod +x mvnw'
       - run:
           name: Run Style Checks
-          command: './mvnw -ntp checkstyle:check'
-      - run:
-          name: Clean and Verify
-          command: './mvnw -ntp clean verify'
+          command: './mvnw -ntp clean checkstyle:check'
       - run:
           name: Run Front End Tests
           command: npm run test
@@ -55,11 +52,22 @@ jobs:
       - run:
           name: Verify with Prod Profile
           command: './mvnw -ntp verify -Pprod -DskipTests'
-
       - when:
           condition:
             equal: [ master, << pipeline.git.branch >> ]
           steps:
+            - setup_remote_docker:
+                version: 19.03.13
+                docker_layer_caching: true
+            - run:
+                name: Docker push
+                command: |
+                  SNAPSHOT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+                  DOCKER_TAG="${OLD_VERSION/-SNAPSHOT/}"
+                  docker build -t tillias/microcatalog .
+                  docker tag tillias/microcatalog tillias/microcatalog:$DOCKER_TAG
+                  echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                  docker push tillias/microcatalog
             - run:
                 name: Deploy to Heroku
                 command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
