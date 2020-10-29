@@ -59,6 +59,8 @@ jobs:
           condition:
             equal: [ dev, << pipeline.git.branch >> ]
           steps:
+            - setup_remote_docker:
+                version: 19.03.13
             - run:
                 name: Docker push
                 command: |
