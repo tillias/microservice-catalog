@@ -5,6 +5,12 @@ jobs:
       - image: cimg/openjdk:11.0.8-node
     steps:
       - checkout
+      command: |
+        OLD_VERSION=$(mvn -s .circleci/settings.xml -q \
+        -Dexec.executable="echo" -Dexec.args='${project.version}' \
+        --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec)
+        NEW_VERSION="${OLD_VERSION/-SNAPSHOT/}"
+        echo $NEW_VERSION
 
       # Download and cache dependencies
       - restore_cache:
@@ -42,10 +48,7 @@ jobs:
           command: 'chmod +x mvnw'
       - run:
           name: Run Style Checks
-          command: './mvnw -ntp checkstyle:check'
-      - run:
-          name: Clean and Verify
-          command: './mvnw -ntp clean verify'
+          command: './mvnw -ntp clean checkstyle:check'
       - run:
           name: Run Front End Tests
           command: npm run test
@@ -57,10 +60,11 @@ jobs:
           command: './mvnw -ntp verify -Pprod -DskipTests'
       - when:
           condition:
-            equal: [ dev, << pipeline.git.branch >> ]
+            equal: [ master, << pipeline.git.branch >> ]
           steps:
             - setup_remote_docker:
                 version: 19.03.13
+                docker_layer_caching: true
             - run:
                 name: Docker push
                 command: |
@@ -68,10 +72,6 @@ jobs:
                   docker tag tillias/microcatalog tillias/microcatalog:$DOCKER_TAG
                   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
                   docker push tillias/microcatalog
-      - when:
-          condition:
-            equal: [ master, << pipeline.git.branch >> ]
-          steps:
             - run:
                 name: Deploy to Heroku
                 command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
