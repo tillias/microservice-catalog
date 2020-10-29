@@ -54,9 +54,9 @@ jobs:
           command: './mvnw -ntp verify -Pprod -DskipTests'
       - when:
           condition:
-            - equal: [ circleci-project-setup, << pipeline.git.branch >> ]
+            equal: [ circleci-project-setup, << pipeline.git.branch >> ]
           steps:
-            - run: echo "This is condition in master"
+            - run: echo "This is condition in branch"
 
 #      - run:
 #          name: Deploy to Heroku
