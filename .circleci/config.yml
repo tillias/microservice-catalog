@@ -58,13 +58,14 @@ jobs:
       - when:
           condition:
             equal: [ dev, << pipeline.git.branch >> ]
-              - run:
-                  name: Docker push
-                  command: |
-                    docker build -t tillias/microcatalog .
-                    docker tag tillias/microcatalog tillias/microcatalog:$DOCKER_TAG
-                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-                    docker push tillias/microcatalog
+          steps:
+            - run:
+                name: Docker push
+                command: |
+                  docker build -t tillias/microcatalog .
+                  docker tag tillias/microcatalog tillias/microcatalog:$DOCKER_TAG
+                  echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                  docker push tillias/microcatalog
       - when:
           condition:
             equal: [ master, << pipeline.git.branch >> ]
