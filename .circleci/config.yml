@@ -5,7 +5,7 @@ jobs:
       - image: cimg/openjdk:11.0.8-node
     steps:
       - checkout
-      - run
+      - run:
           name: Parse version
           command: |
             OLD_VERSION=$(mvn -s .circleci/settings.xml -q \
