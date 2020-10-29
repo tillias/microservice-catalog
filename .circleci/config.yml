@@ -1,0 +1,69 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: cimg/openjdk:11.0.8-node
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+            # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
+            - v1-dependencies-
+      - run:
+          name: Setup NVM
+          command: |
+            echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+      - run:
+          name: Print Java Version
+          command: 'java -version'
+      - run:
+          name: Print Node Version
+          command: 'node -v'
+      - run:
+          name: Print NPM Version
+          command: 'npm -v'
+      - run:
+          name: Install Node Modules
+          command: 'npm install'
+
+      - save_cache:
+          paths:
+            - node
+            - node_modules
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+
+      - run:
+          name: Give Executable Power
+          command: 'chmod +x mvnw'
+      - run:
+          name: Run Style Checks
+          command: './mvnw -ntp checkstyle:check'
+      - run:
+          name: Clean and Verify
+          command: './mvnw -ntp clean verify'
+      - run:
+          name: Run Front End Tests
+          command: npm run test
+      - run:
+          name: Sonar
+          command: './mvnw -ntp org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+      - run:
+          name: Verify with Prod Profile
+          command: './mvnw -ntp verify -Pprod -DskipTests'
+
+      - when:
+          condition:
+            equal: [ master, << pipeline.git.branch >> ]
+          steps:
+            - run:
+                name: Deploy to Heroku
+                command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
+workflows:
+  build:
+    jobs:
+      - build

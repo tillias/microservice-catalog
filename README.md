@@ -1,5 +1,5 @@
 [![Join the chat at https://gitter.im/microservice-catalog/community](https://badges.gitter.im/microservice-catalog/community.svg)](https://gitter.im/microservice-catalog/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/tillias/microservice-catalog.svg?branch=master)](https://travis-ci.org/tillias/microservice-catalog)
+[![CircleCI](https://circleci.com/gh/tillias/microservice-catalog.svg?style=shield)](https://circleci.com/gh/circleci/circleci-docs)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=microcatalog)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=coverage)](https://sonarcloud.io/dashboard?id=microcatalog)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=alert_status)](https://sonarcloud.io/dashboard?id=microcatalog)

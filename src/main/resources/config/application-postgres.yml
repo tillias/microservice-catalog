@@ -1,5 +1,5 @@
 # ===================================================================
-# Spring Boot configuration for the "heroku" profile.
+# Spring Boot configuration for the "postgres" profile.
 #
 # This configuration overrides the application.yml file.
 # ===================================================================
@@ -11,6 +11,10 @@
 # ===================================================================
 
 spring:
+  profiles:
+    active: dev
+    include:
+      - swagger
   liquibase:
     enabled: true
   datasource:
