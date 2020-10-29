@@ -2,7 +2,7 @@ version: 2.1
 jobs:
     build:
         machine:
-            image: circleci/classic:201808-01
+            image: cimg/openjdk:15.0
         steps:
             - checkout
 
