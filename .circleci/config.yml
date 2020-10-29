@@ -63,7 +63,7 @@ jobs:
                 name: Docker push
                 command: |
                   SNAPSHOT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-                  DOCKER_TAG="${OLD_VERSION/-SNAPSHOT/}"
+                  DOCKER_TAG="${SNAPSHOT_VERSION/-SNAPSHOT/}"
                   docker build -t tillias/microcatalog .
                   docker tag tillias/microcatalog tillias/microcatalog:$DOCKER_TAG
                   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
