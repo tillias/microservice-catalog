@@ -4,6 +4,16 @@ jobs:
     docker:
       - image: cimg/openjdk:11.0.8-node
     steps:
+      - when:
+          condition:
+            equal: [ circleci-project-setup, << pipeline.git.branch >> ]
+          steps:
+            - run: echo "This is condition in branch"
+      - when:
+          condition:
+            equal: [ master, << pipeline.git.branch >> ]
+          steps:
+            - run: echo "This is condition in master"
       - checkout
 
       # Download and cache dependencies
@@ -52,11 +62,6 @@ jobs:
       - run:
           name: Verify with Prod Profile
           command: './mvnw -ntp verify -Pprod -DskipTests'
-      - when:
-          condition:
-            equal: [ circleci-project-setup, << pipeline.git.branch >> ]
-          steps:
-            - run: echo "This is condition in branch"
 
 #      - run:
 #          name: Deploy to Heroku
