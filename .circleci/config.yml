@@ -2,7 +2,7 @@ version: 2.1
 jobs:
     build:
         machine:
-            image: cimg/openjdk:15.0
+            image: cimg/openjdk:11.0.8-node
         steps:
             - checkout
 
@@ -13,23 +13,9 @@ jobs:
                     # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
                     - v1-dependencies-
             - run:
-                name: Install OpenJDK 11
-                command: |
-                    sudo rm /var/lib/apt/lists/lock
-                    sudo rm /var/cache/apt/archives/lock
-                    sudo rm /var/lib/dpkg/lock
-                    sudo apt install openjdk-11-jdk
-                    echo 'export PATH="/usr/lib/jvm/java-11-openjdk-amd64/bin:$PATH"' >> $BASH_ENV
-            - run:
                 name: Setup NVM
                 command: |
                     echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
-                    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-            - run:
-                name: Install Node 12.16.1
-                command: |
-                    nvm install 12.16.1
-                    nvm alias default 12.16.1
             - run:
                 name: Print Java Version
                 command: 'java -version'
