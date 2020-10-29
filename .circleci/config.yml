@@ -55,7 +55,14 @@ jobs:
       - run:
           name: Verify with Prod Profile
           command: './mvnw -ntp verify -Pprod -DskipTests'
-
+      - when:
+          condition:
+            equal: [ dev, << pipeline.git.branch >> ]
+              - run: |
+                  docker build -t tillias/microcatalog .
+                  docker tag tillias/microcatalog tillias/microcatalog:$DOCKER_TAG
+                  echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                  docker push tillias/microcatalog
       - when:
           condition:
             equal: [ master, << pipeline.git.branch >> ]
