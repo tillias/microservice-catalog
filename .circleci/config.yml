@@ -57,11 +57,10 @@ jobs:
             - equal: [ master, << pipeline.git.branch >> ]
           steps:
             - run: echo "This is condition in master"
-      - when:
-          condition:
-            - equal: [ circleci-project-setup, << pipeline.git.branch >> ]
-          steps:
-            - run: echo "This is condition in circleci-project-setup branch"
+
+  test-branch:
+        steps:
+          - run: echo "This is condition in circleci-project-setup"
 
 #      - run:
 #          name: Deploy to Heroku
@@ -70,3 +69,7 @@ workflows:
   build:
     jobs:
       - build
+      - test-branch:
+        - when:
+            condition:
+              - equal: [ circleci-project-setup, << pipeline.git.branch >> ]
