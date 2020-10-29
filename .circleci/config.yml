@@ -52,6 +52,17 @@ jobs:
       - run:
           name: Verify with Prod Profile
           command: './mvnw -ntp verify -Pprod -DskipTests'
+      - when:
+          condition:
+            - equal: [ master, << pipeline.git.branch >> ]
+          steps:
+            - run: echo "This is condition in master"
+      - when:
+          condition:
+            - equal: [ circleci-project-setup, << pipeline.git.branch >> ]
+          steps:
+            - run: echo "This is condition in circleci-project-setup branch"
+
 #      - run:
 #          name: Deploy to Heroku
 #          command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
