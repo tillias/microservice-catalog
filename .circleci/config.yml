@@ -5,13 +5,6 @@ jobs:
       - image: cimg/openjdk:11.0.8-node
     steps:
       - checkout
-      - run:
-          name: Parse version
-          command: |
-            OLD_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-            NEW_VERSION="${OLD_VERSION/-SNAPSHOT/}"
-            echo $OLD_VERSION
-            echo $NEW_VERSION
 
       # Download and cache dependencies
       - restore_cache:
@@ -69,6 +62,8 @@ jobs:
             - run:
                 name: Docker push
                 command: |
+                  SNAPSHOT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+                  DOCKER_TAG="${OLD_VERSION/-SNAPSHOT/}"
                   docker build -t tillias/microcatalog .
                   docker tag tillias/microcatalog tillias/microcatalog:$DOCKER_TAG
                   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
