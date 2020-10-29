@@ -6,13 +6,13 @@ jobs:
     steps:
       - checkout
       - run
-        name: Parse version
-        command: |
-          OLD_VERSION=$(mvn -s .circleci/settings.xml -q \
-          -Dexec.executable="echo" -Dexec.args='${project.version}' \
-          --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec)
-          NEW_VERSION="${OLD_VERSION/-SNAPSHOT/}"
-          echo $NEW_VERSION
+          name: Parse version
+          command: |
+            OLD_VERSION=$(mvn -s .circleci/settings.xml -q \
+            -Dexec.executable="echo" -Dexec.args='${project.version}' \
+            --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec)
+            NEW_VERSION="${OLD_VERSION/-SNAPSHOT/}"
+            echo $NEW_VERSION
 
       # Download and cache dependencies
       - restore_cache:
