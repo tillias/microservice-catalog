@@ -126,6 +126,14 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     return -1;
   }
 
+  selectedEdgeId(): number {
+    if (this.edgeSelection && this.edgeSelection.hasEdges()) {
+      return this.edgeSelection.firstEdge();
+    }
+
+    return -1;
+  }
+
   createDependency(): void {
     // Use selected microservice as dependency's start
     if (this.nodeSelection && this.nodeSelection.hasNodes()) {
@@ -164,6 +172,14 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
         .subscribe(m => {
           this.deleteDialogService.openForMicroservice(m);
         });
+    }
+  }
+
+  onDeleteKey(): void {
+    if (this.selectedNodeId() > 0) {
+      this.deleteMicroservice();
+    } else if (this.selectedEdgeId() > 0) {
+      this.deleteDependency();
     }
   }
 }

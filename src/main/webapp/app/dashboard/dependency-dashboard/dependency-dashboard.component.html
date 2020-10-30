@@ -62,7 +62,7 @@
 
     </div>
     <div class="col-6">
-        <div class="p3 vis-network-full-height" #visNetwork></div>
+        <div class="p3 vis-network-full-height" #visNetwork (keydown.delete)="onDeleteKey()"></div>
     </div>
     <div class="col-3">
         <jhi-node-legend [nodeSelection]="nodeSelection" [edgeSelection]="edgeSelection"></jhi-node-legend>
