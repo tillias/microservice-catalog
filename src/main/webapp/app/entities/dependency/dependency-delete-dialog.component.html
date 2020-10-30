@@ -2,7 +2,7 @@
     <div class="modal-header">
         <h4 class="modal-title" jhiTranslate="entity.delete.title">Confirm delete operation</h4>
 
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" tabindex="-1"
                 (click)="cancel()">&times;</button>
     </div>
 
@@ -13,7 +13,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" tabindex="-1" (click)="cancel()">
             <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
 
