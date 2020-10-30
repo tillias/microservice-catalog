@@ -4,7 +4,7 @@ import { IMicroservice } from '../../shared/model/microservice.model';
 import { EXPERIMENTAL_FEATURE } from '../../app.constants';
 import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
 import { JhiEventManager } from 'ng-jhipster';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { MicroserviceService } from '../../entities/microservice/microservice.service';
 import { map } from 'rxjs/operators';
 import { ISelectPayload, SelectPayload } from '../../shared/vis/events/VisEvents';
@@ -137,18 +137,42 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   createDependency(): void {
     // Use selected microservice as dependency's start
     if (this.nodeSelection && this.nodeSelection.hasNodes()) {
-      const id = this.nodeSelection.firstNode();
-      this.microserviceService
-        .find(id)
-        .pipe(map(r => r.body || undefined))
-        .subscribe(r => this.openCreateDependencyDialog(r));
+      this.createDependencyWithInitialValues(this.nodeSelection.nodes);
     } else {
       this.openCreateDependencyDialog(this.searchValue);
     }
   }
 
-  openCreateDependencyDialog(initialSource?: IMicroservice): void {
-    this.createDependencyDialogService.open(initialSource);
+  createDependencyWithInitialValues(nodes: number[]): void {
+    const sourceId = nodes[0];
+
+    if (nodes.length > 1) {
+      const targetId = nodes[1];
+      forkJoin({
+        source$: this.microserviceService.find(sourceId),
+        target$: this.microserviceService.find(targetId),
+      })
+        .pipe(
+          map(result => {
+            return {
+              source: result.source$.body || undefined,
+              target: result.target$.body || undefined,
+            };
+          })
+        )
+        .subscribe(results => {
+          this.openCreateDependencyDialog(results.source, results.target);
+        });
+    } else {
+      this.microserviceService
+        .find(sourceId)
+        .pipe(map(r => r.body || undefined))
+        .subscribe(r => this.openCreateDependencyDialog(r));
+    }
+  }
+
+  openCreateDependencyDialog(initialSource?: IMicroservice, initialTarget?: IMicroservice): void {
+    this.createDependencyDialogService.open(initialSource, initialTarget);
   }
 
   deleteDependency(): void {

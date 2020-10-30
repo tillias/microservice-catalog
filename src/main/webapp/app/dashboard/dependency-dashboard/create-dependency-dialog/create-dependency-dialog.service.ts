@@ -9,7 +9,7 @@ export class CreateDependencyDialogService {
 
   constructor(private modalService: NgbModal) {}
 
-  open(initialSource?: IMicroservice): void {
+  open(initialSource?: IMicroservice, initialTarget?: IMicroservice): void {
     if (this.isOpen) {
       return;
     }
@@ -21,6 +21,7 @@ export class CreateDependencyDialogService {
 
     const modalRef: NgbModalRef = this.modalService.open(CreateDependencyDialogComponent, options);
     modalRef.componentInstance.source = initialSource;
+    modalRef.componentInstance.target = initialTarget;
     modalRef.result.finally(() => (this.isOpen = false));
   }
 }
