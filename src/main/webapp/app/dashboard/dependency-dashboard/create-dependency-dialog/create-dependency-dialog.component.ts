@@ -67,4 +67,12 @@ export class CreateDependencyDialogComponent implements OnInit {
   updateName(): void {
     this.name = `${this.source?.name} -> ${this.target?.name}`;
   }
+
+  swap(): void {
+    const tmp = this.target;
+    this.target = this.source;
+    this.source = tmp;
+
+    this.updateName();
+  }
 }
