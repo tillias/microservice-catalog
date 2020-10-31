@@ -17,16 +17,16 @@ export class MicroserviceSearchComponent implements OnInit {
    * Enables advanced search capabilities. Default: false
    */
   @Input() advanced = false;
-  @Input() initialValue?: IMicroservice;
   @Output() itemSelected = new EventEmitter<IMicroservice>();
   @Output() groupFilterChanged = new EventEmitter<IMicroserviceGroupFilter>();
 
   constructor(protected microserviceService: MicroserviceService) {}
 
-  ngOnInit(): void {
-    if (this.initialValue) {
-      this.model = this.initialValue;
-    }
+  ngOnInit(): void {}
+
+  @Input()
+  set initialValue(value: IMicroservice) {
+    this.model = value;
   }
 
   search = (text$: Observable<string>) =>
