@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -91,36 +92,36 @@ class ImpactAnalysisServiceTest {
 
         Group group = groups.get(0);
         assertThat(group.getItems()).isNotEmpty().hasSize(1);
-        Item item = group.findByTargetId(5L).orElseThrow();
+        Item item = group.findByTargetId(5L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasSiblings(item, 4L, 7L);
 
         group = groups.get(1);
         assertThat(group.getItems()).isNotEmpty().hasSize(1);
-        item = group.findByTargetId(7L).orElseThrow();
+        item = group.findByTargetId(7L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasSiblings(item, 4L);
 
         group = groups.get(2);
         assertThat(group.getItems()).isNotEmpty().hasSize(1);
-        item = group.findByTargetId(4L).orElseThrow();
+        item = group.findByTargetId(4L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasSiblings(item, 2L, 6L);
 
         group = groups.get(3);
         assertThat(group.getItems()).isNotEmpty().hasSize(2);
-        item = group.findByTargetId(6L).orElseThrow();
+        item = group.findByTargetId(6L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasNoSiblings(item);
-        item = group.findByTargetId(2L).orElseThrow();
+        item = group.findByTargetId(2L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasSiblings(item, 1L);
 
         group = groups.get(4);
         assertThat(group.getItems()).isNotEmpty().hasSize(1);
-        item = group.findByTargetId(1L).orElseThrow();
+        item = group.findByTargetId(1L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasSiblings(item, 10L, 12L);
 
         group = groups.get(5);
         assertThat(group.getItems()).isNotEmpty().hasSize(2);
-        item = group.findByTargetId(10L).orElseThrow();
+        item = group.findByTargetId(10L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasNoSiblings(item);
-        item = group.findByTargetId(12L).orElseThrow();
+        item = group.findByTargetId(12L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasNoSiblings(item);
     }
 
@@ -176,26 +177,27 @@ class ImpactAnalysisServiceTest {
 
         Group group = groups.get(0);
         assertThat(group.getItems()).isNotEmpty().hasSize(1);
-        Item item = group.findByTargetId(4L).orElseThrow();
+        Item item = group.findByTargetId(4L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasSiblings(item, 2L);
 
         group = groups.get(1);
         assertThat(group.getItems()).isNotEmpty().hasSize(1);
-        item = group.findByTargetId(2L).orElseThrow();
+        item = group.findByTargetId(2L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasSiblings(item, 1L);
 
         group = groups.get(2);
         assertThat(group.getItems()).isNotEmpty().hasSize(1);
-        item = group.findByTargetId(1L).orElseThrow();
+        item = group.findByTargetId(1L).orElseThrow(NoSuchElementException::new);
         assertThatItemHasNoSiblings(item);
     }
 
     private void assertThatItemHasNoSiblings(Item item) {
-        assertThat(item.getSiblings()).isEmpty();
+        assertThat(item.getSiblings()).isNotNull().isEmpty();
     }
 
     private void assertThatItemHasSiblings(Item item, Long... siblingsIds) {
         assertThat(item.getSiblings())
+            .isNotNull()
             .extracting(Microservice::getId)
             .containsExactlyInAnyOrder(siblingsIds);
     }

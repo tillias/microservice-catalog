@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -92,29 +93,29 @@ class ReleasePathCustomServiceTest {
 
         ReleaseGroup group = groups.get(0);
         assertThat(group.getSteps()).isNotEmpty().hasSize(2);
-        ReleaseStep step = group.findByTargetId(5L).orElseThrow();
+        ReleaseStep step = group.findByTargetId(5L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L, 7L);
-        step = group.findByTargetId(8L).orElseThrow();
+        step = group.findByTargetId(8L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L);
 
         group = groups.get(1);
         assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(7L).orElseThrow();
+        step = group.findByTargetId(7L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L);
 
         group = groups.get(2);
         assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(4L).orElseThrow();
+        step = group.findByTargetId(4L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
 
         group = groups.get(3);
         assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(2L).orElseThrow();
+        step = group.findByTargetId(2L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(1L);
 
         group = groups.get(4);
         assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(1L).orElseThrow();
+        step = group.findByTargetId(1L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).isEmpty();
     }
 
@@ -169,19 +170,19 @@ class ReleasePathCustomServiceTest {
 
         ReleaseGroup group = groups.get(0);
         assertThat(group.getSteps()).isNotEmpty().hasSize(2);
-        ReleaseStep step = group.findByTargetId(3L).orElseThrow();
+        ReleaseStep step = group.findByTargetId(3L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
-        step = group.findByTargetId(4L).orElseThrow();
+        step = group.findByTargetId(4L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
 
         group = groups.get(1);
         assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(2L).orElseThrow();
+        step = group.findByTargetId(2L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(1L);
 
         group = groups.get(2);
         assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(1L).orElseThrow();
+        step = group.findByTargetId(1L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).isEmpty();
     }
 }
