@@ -88,7 +88,7 @@ class ReleasePathCustomServiceTest {
 
         final List<ReleaseGroup> groups = path.getGroups();
 
-        assertThat(groups).isNotEmpty().hasSize(3);
+        assertThat(groups).isNotEmpty().hasSize(5);
 
         ReleaseGroup group = groups.get(0);
         assertThat(group.getSteps()).isNotEmpty().hasSize(2);
