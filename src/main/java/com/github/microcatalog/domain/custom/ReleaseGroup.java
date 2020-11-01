@@ -4,6 +4,8 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -34,5 +36,11 @@ public class ReleaseGroup {
 
     public void setSteps(Set<ReleaseStep> releaseSteps) {
         this.steps = releaseSteps;
+    }
+
+    public Optional<ReleaseStep> findByTargetId(final long targetId) {
+        return steps.stream()
+            .filter(i -> Objects.equals(targetId, i.getWorkItem().getId()))
+            .findAny();
     }
 }

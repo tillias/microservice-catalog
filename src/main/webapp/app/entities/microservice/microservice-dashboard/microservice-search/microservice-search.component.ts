@@ -25,7 +25,7 @@ export class MicroserviceSearchComponent implements OnInit {
   ngOnInit(): void {}
 
   @Input()
-  set initialValue(value: IMicroservice) {
+  set selectedValue(value: IMicroservice) {
     this.model = value;
   }
 

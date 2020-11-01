@@ -1,9 +1,9 @@
 package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.domain.Microservice;
-import com.github.microcatalog.domain.custom.ReleaseGroup;
-import com.github.microcatalog.domain.custom.ReleasePath;
-import com.github.microcatalog.domain.custom.ReleaseStep;
+import com.github.microcatalog.domain.custom.impact.analysis.Group;
+import com.github.microcatalog.domain.custom.impact.analysis.Item;
+import com.github.microcatalog.domain.custom.impact.analysis.Result;
 import com.github.microcatalog.service.GraphUtils;
 import com.github.microcatalog.service.custom.exceptions.MicroserviceNotFoundException;
 import org.assertj.core.api.InstanceOfAssertFactories;
@@ -20,26 +20,26 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest(classes = {ReleasePathCustomService.class})
-class ReleasePathCustomServiceTest {
+@SpringBootTest(classes = {ImpactAnalysisService.class})
+class ImpactAnalysisServiceTest {
 
     @MockBean
     private GraphLoaderService graphLoaderService;
 
     @Autowired
-    private ReleasePathCustomService sut;
+    private ImpactAnalysisService sut;
 
     @Test
     void calculate_EmptyGraph_EmptyResult() {
         given(graphLoaderService.loadGraph())
             .willReturn(new DefaultDirectedGraph<>(DefaultEdge.class));
 
-        Optional<ReleasePath> path = sut.getReleasePath(4L);
-        assertThat(path).isNotNull().isNotPresent();
+        Optional<Result> result = sut.calculate(4L);
+        assertThat(result).isNotNull().isNotPresent();
     }
 
     @Test
-    void getReleasePath_NodeOutsideGraph_EmptyPath() {
+    void calculate_NodeOutsideGraph_EmptyResult() {
         given(graphLoaderService.loadGraph())
             .willReturn(
                 GraphUtils.createGraph(String.join("\n",
@@ -51,7 +51,7 @@ class ReleasePathCustomServiceTest {
                 )
             );
 
-        assertThatThrownBy(() -> sut.getReleasePath(4L))
+        assertThatThrownBy(() -> sut.calculate(4L))
             .isInstanceOf(MicroserviceNotFoundException.class)
             .hasMessageStartingWith("Microservice not found")
             .asInstanceOf(InstanceOfAssertFactories.type(MicroserviceNotFoundException.class))
@@ -60,7 +60,7 @@ class ReleasePathCustomServiceTest {
     }
 
     @Test
-    void getReleasePath_NoCycles_Success() {
+    void calculate_NoCycles_Success() {
         given(graphLoaderService.loadGraph())
             .willReturn(
                 GraphUtils.createGraph(String.join("\n",
@@ -81,45 +81,51 @@ class ReleasePathCustomServiceTest {
                 )
             );
 
-        Optional<ReleasePath> maybePath = sut.getReleasePath(1L);
-        assertThat(maybePath).isPresent();
+        final Optional<Result> maybeResult = sut.calculate(5L);
+        assertThat(maybeResult).isNotNull().isPresent();
 
-        final ReleasePath path = maybePath.get();
+        final Result result = maybeResult.get();
+        assertThat(result.getGroups()).isNotEmpty().hasSize(6);
 
-        final List<ReleaseGroup> groups = path.getGroups();
+        final List<Group> groups = result.getGroups();
 
-        assertThat(groups).isNotEmpty().hasSize(3);
-
-        ReleaseGroup group = groups.get(0);
-        assertThat(group.getSteps()).isNotEmpty().hasSize(2);
-        ReleaseStep step = group.findByTargetId(5L).orElseThrow();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L, 7L);
-        step = group.findByTargetId(8L).orElseThrow();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L);
+        Group group = groups.get(0);
+        assertThat(group.getItems()).isNotEmpty().hasSize(1);
+        Item item = group.findByTargetId(5L).orElseThrow();
+        assertThatItemHasSiblings(item, 4L, 7L);
 
         group = groups.get(1);
-        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(7L).orElseThrow();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L);
+        assertThat(group.getItems()).isNotEmpty().hasSize(1);
+        item = group.findByTargetId(7L).orElseThrow();
+        assertThatItemHasSiblings(item, 4L);
 
         group = groups.get(2);
-        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(4L).orElseThrow();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
+        assertThat(group.getItems()).isNotEmpty().hasSize(1);
+        item = group.findByTargetId(4L).orElseThrow();
+        assertThatItemHasSiblings(item, 2L, 6L);
 
         group = groups.get(3);
-        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(2L).orElseThrow();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(1L);
+        assertThat(group.getItems()).isNotEmpty().hasSize(2);
+        item = group.findByTargetId(6L).orElseThrow();
+        assertThatItemHasNoSiblings(item);
+        item = group.findByTargetId(2L).orElseThrow();
+        assertThatItemHasSiblings(item, 1L);
 
         group = groups.get(4);
-        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(1L).orElseThrow();
-        assertThat(step.getParentWorkItems()).isEmpty();
+        assertThat(group.getItems()).isNotEmpty().hasSize(1);
+        item = group.findByTargetId(1L).orElseThrow();
+        assertThatItemHasSiblings(item, 10L, 12L);
+
+        group = groups.get(5);
+        assertThat(group.getItems()).isNotEmpty().hasSize(2);
+        item = group.findByTargetId(10L).orElseThrow();
+        assertThatItemHasNoSiblings(item);
+        item = group.findByTargetId(12L).orElseThrow();
+        assertThatItemHasNoSiblings(item);
     }
 
     @Test
-    void getReleasePath_ContainsCyclesInSameComponent_ExceptionIsThrown() {
+    void calculate_ContainsCyclesInSameComponent_ExceptionIsThrown() {
         given(graphLoaderService.loadGraph())
             .willReturn(
                 GraphUtils.createGraph(String.join("\n",
@@ -136,13 +142,14 @@ class ReleasePathCustomServiceTest {
 
         assertThatIllegalArgumentException()
             .isThrownBy(() ->
-                sut.getReleasePath(1L)
+                sut.calculate(1L)
             )
             .withMessageStartingWith("There are cyclic dependencies between microservices");
     }
 
+
     @Test
-    void getReleasePath_ContainsCyclesInOtherComponent_Success() {
+    void calculate_ContainsCyclesInOtherComponent_Success() {
         given(graphLoaderService.loadGraph())
             .willReturn(
                 GraphUtils.createGraph(String.join("\n",
@@ -159,29 +166,37 @@ class ReleasePathCustomServiceTest {
                 )
             );
 
-        Optional<ReleasePath> maybePath = sut.getReleasePath(1L);
-        assertThat(maybePath).isPresent();
+        Optional<Result> maybeResult = sut.calculate(4L);
+        assertThat(maybeResult).isPresent();
 
-        final ReleasePath path = maybePath.get();
-        final List<ReleaseGroup> groups = path.getGroups();
+        Result result = maybeResult.get();
+        assertThat(result.getGroups()).isNotEmpty().hasSize(3);
 
-        assertThat(groups).isNotEmpty().hasSize(3);
+        final List<Group> groups = result.getGroups();
 
-        ReleaseGroup group = groups.get(0);
-        assertThat(group.getSteps()).isNotEmpty().hasSize(2);
-        ReleaseStep step = group.findByTargetId(3L).orElseThrow();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
-        step = group.findByTargetId(4L).orElseThrow();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
+        Group group = groups.get(0);
+        assertThat(group.getItems()).isNotEmpty().hasSize(1);
+        Item item = group.findByTargetId(4L).orElseThrow();
+        assertThatItemHasSiblings(item, 2L);
 
         group = groups.get(1);
-        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(2L).orElseThrow();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(1L);
+        assertThat(group.getItems()).isNotEmpty().hasSize(1);
+        item = group.findByTargetId(2L).orElseThrow();
+        assertThatItemHasSiblings(item, 1L);
 
         group = groups.get(2);
-        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
-        step = group.findByTargetId(1L).orElseThrow();
-        assertThat(step.getParentWorkItems()).isEmpty();
+        assertThat(group.getItems()).isNotEmpty().hasSize(1);
+        item = group.findByTargetId(1L).orElseThrow();
+        assertThatItemHasNoSiblings(item);
+    }
+
+    private void assertThatItemHasNoSiblings(Item item) {
+        assertThat(item.getSiblings()).isEmpty();
+    }
+
+    private void assertThatItemHasSiblings(Item item, Long... siblingsIds) {
+        assertThat(item.getSiblings())
+            .extracting(Microservice::getId)
+            .containsExactlyInAnyOrder(siblingsIds);
     }
 }

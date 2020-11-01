@@ -5,8 +5,6 @@ import com.github.microcatalog.domain.custom.ReleaseGroup;
 import com.github.microcatalog.domain.custom.ReleasePath;
 import com.github.microcatalog.domain.custom.ReleaseStep;
 import org.jgrapht.Graph;
-import org.jgrapht.alg.connectivity.ConnectivityInspector;
-import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.EdgeReversedGraph;
@@ -16,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,58 +22,31 @@ import java.util.stream.Collectors;
  * Service for release path calculation
  */
 @Service
-@Transactional
-public class ReleasePathCustomService {
+public class ReleasePathCustomService extends GraphOperationsService {
 
     private final Logger log = LoggerFactory.getLogger(ReleasePathCustomService.class);
 
-    private final GraphLoaderService graphLoaderService;
-
     public ReleasePathCustomService(GraphLoaderService graphLoaderService) {
-        this.graphLoaderService = graphLoaderService;
+        super(graphLoaderService);
     }
 
-
     public Optional<ReleasePath> getReleasePath(final Long microserviceId) {
-        final Graph<Microservice, DefaultEdge> graph = graphLoaderService.loadGraph();
-
-        final Optional<Microservice> maybeTarget = graph.vertexSet()
-            .stream().filter(v -> Objects.equals(v.getId(), microserviceId)).findFirst();
-
-        // can't build release path, cause microservice with given id is not present in graph
-        if (!maybeTarget.isPresent()) {
+        final GraphContext context = getConnectedSubgraphWithoutCycles(microserviceId);
+        if (context.hasEmptyGraph()) {
             return Optional.empty();
         }
 
-        final Microservice target = maybeTarget.get();
-
-        final ConnectivityInspector<Microservice, DefaultEdge> inspector = new ConnectivityInspector<>(graph);
-        final Set<Microservice> connectedSet = inspector.connectedSetOf(target);
-
-        // Connected subgraph, that contains target microservice
-        final AsSubgraph<Microservice, DefaultEdge> targetSubgraph = new AsSubgraph<>(graph, connectedSet);
-        log.debug("Connected subgraph, that contains target microservice: {}", targetSubgraph);
-
-        final CycleDetector<Microservice, DefaultEdge> cycleDetector = new CycleDetector<>(targetSubgraph);
-        if (cycleDetector.detectCycles()) {
-            final Set<Microservice> cycles = cycleDetector.findCycles();
-            throw new IllegalArgumentException(String.format("There are cyclic dependencies between microservices : %s", cycles));
-        }
-
         final Set<Microservice> pathMicroservices = new HashSet<>();
-        GraphIterator<Microservice, DefaultEdge> iterator = new DepthFirstIterator<>(targetSubgraph, target);
+        GraphIterator<Microservice, DefaultEdge> iterator = new DepthFirstIterator<>(context.getGraph(), context.getTarget());
         while (iterator.hasNext()) {
             pathMicroservices.add(iterator.next());
         }
 
-        // TODO new use-case and visualisation
-        // For each element of pathSet calculate all nodes who depends on items from pathSet. Microservices which will be possibly affected if we build target and it's direct dependencies
-
-        final Graph<Microservice, DefaultEdge> pathGraph = new AsSubgraph<>(targetSubgraph, pathMicroservices);
+        final Graph<Microservice, DefaultEdge> pathGraph = new AsSubgraph<>(context.getGraph(), pathMicroservices);
         log.debug("Connected subgraph, which contains all paths from target microservice to it's dependencies {}", pathGraph);
 
         final Graph<Microservice, DefaultEdge> reversed = new EdgeReversedGraph<>(pathGraph);
-        return Optional.of(convert(reversed, target));
+        return Optional.of(convert(reversed, context.getTarget()));
     }
 
     private ReleasePath convert(final Graph<Microservice, DefaultEdge> graph, final Microservice target) {
