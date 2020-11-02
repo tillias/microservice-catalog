@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ public class ImpactAnalysisService extends GraphOperationsService {
 
     public Optional<Result> calculate(final Long microserviceId) {
         final GraphContext context = getConnectedSubgraphWithoutCycles(microserviceId);
-        if (context.hasEmptyGraph()){
+        if (context.hasEmptyGraph()) {
             return Optional.empty();
         }
 
@@ -45,7 +46,7 @@ public class ImpactAnalysisService extends GraphOperationsService {
 
         final Graph<Microservice, DefaultEdge> affectedGraph = new AsSubgraph<>(reversed, affectedMicroservices);
 
-        final Result result = new Result().target(context.getTarget());
+        final Result result = new Result().createdOn(Instant.now()).target(context.getTarget());
 
         do {
             final List<Microservice> verticesWithoutIncomingEdges = affectedGraph.vertexSet().stream()
