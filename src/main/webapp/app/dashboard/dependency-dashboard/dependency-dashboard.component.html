@@ -23,7 +23,7 @@
                         </button>
                     </div>
                     <div class="pt-2">
-                        <button class="btn btn-block btn-success btn-sm" [routerLink]="['/microservice',selectedNodeId(), 'edit']">
+                        <button class="btn btn-block btn-success btn-sm"  [disabled]="!nodeSelection?.hasNodes()" [routerLink]="['/microservice',selectedNodeId(), 'edit']">
                             Edit microservice
                         </button>
                     </div>
