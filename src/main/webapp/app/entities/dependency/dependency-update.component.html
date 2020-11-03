@@ -33,7 +33,7 @@
                     <label class="form-control-label" jhiTranslate="microcatalogApp.dependency.source" for="field_source">Source</label>
                     <select class="form-control" id="field_source" name="source" formControlName="source">
                         <option *ngIf="!editForm.get('source')!.value" [ngValue]="null" selected></option>
-                        <option [ngValue]="microserviceOption.id === editForm.get('source')!.value?.id ? editForm.get('source')!.value : microserviceOption" *ngFor="let microserviceOption of microservices; trackBy: trackById">{{ microserviceOption.id }}</option>
+                        <option [ngValue]="microserviceOption.id === editForm.get('source')!.value?.id ? editForm.get('source')!.value : microserviceOption" *ngFor="let microserviceOption of microservices; trackBy: trackById">{{ microserviceOption.name }}</option>
                     </select>
                 </div>
                 <div *ngIf="editForm.get('source')!.invalid && (editForm.get('source')!.dirty || editForm.get('source')!.touched)">
@@ -47,7 +47,7 @@
                     <label class="form-control-label" jhiTranslate="microcatalogApp.dependency.target" for="field_target">Target</label>
                     <select class="form-control" id="field_target" name="target" formControlName="target">
                         <option *ngIf="!editForm.get('target')!.value" [ngValue]="null" selected></option>
-                        <option [ngValue]="microserviceOption.id === editForm.get('target')!.value?.id ? editForm.get('target')!.value : microserviceOption" *ngFor="let microserviceOption of microservices; trackBy: trackById">{{ microserviceOption.id }}</option>
+                        <option [ngValue]="microserviceOption.id === editForm.get('target')!.value?.id ? editForm.get('target')!.value : microserviceOption" *ngFor="let microserviceOption of microservices; trackBy: trackById">{{ microserviceOption.name }}</option>
                     </select>
                 </div>
                 <div *ngIf="editForm.get('target')!.invalid && (editForm.get('target')!.dirty || editForm.get('target')!.touched)">

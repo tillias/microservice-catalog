@@ -35,13 +35,13 @@
                 <dt><span jhiTranslate="microcatalogApp.microservice.team">Team</span></dt>
                 <dd>
                     <div *ngIf="microservice.team">
-                        <a [routerLink]="['/team', microservice.team?.id, 'view']">{{ microservice.team?.id }}</a>
+                        <a [routerLink]="['/team', microservice.team?.id, 'view']">{{ microservice.team?.name }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="microcatalogApp.microservice.status">Status</span></dt>
                 <dd>
                     <div *ngIf="microservice.status">
-                        <a [routerLink]="['/status', microservice.status?.id, 'view']">{{ microservice.status?.id }}</a>
+                        <a [routerLink]="['/status', microservice.status?.id, 'view']">{{ microservice.status?.name }}</a>
                     </div>
                 </dd>
             </dl>
