@@ -55,6 +55,9 @@
                         <button type="submit" [routerLink]="['/dashboard','release-path', selectedNodeId()]" class="btn btn-block btn-success btn-sm"
                                 [disabled]="!nodeSelection">Build release path
                         </button>
+                        <button type="submit" [routerLink]="['/dashboard','impact-analysis', selectedNodeId()]" class="btn btn-block btn-success btn-sm"
+                                [disabled]="!nodeSelection">Impact analysis
+                        </button>
                     </div>
                 </ng-template>
             </ngb-panel>

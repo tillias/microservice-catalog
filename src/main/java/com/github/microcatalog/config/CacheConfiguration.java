@@ -5,6 +5,9 @@ import java.time.Duration;
 import com.github.microcatalog.domain.custom.ReleaseGroup;
 import com.github.microcatalog.domain.custom.ReleasePath;
 import com.github.microcatalog.domain.custom.ReleaseStep;
+import com.github.microcatalog.domain.custom.impact.analysis.Group;
+import com.github.microcatalog.domain.custom.impact.analysis.Item;
+import com.github.microcatalog.domain.custom.impact.analysis.Result;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
 
@@ -60,6 +63,11 @@ public class CacheConfiguration {
             createCache(cm, ReleaseGroup.class.getName() + ".steps");
             createCache(cm, ReleasePath.class.getName());
             createCache(cm, ReleasePath.class.getName() + ".groups");
+            createCache(cm, Item.class.getName());
+            createCache(cm, Group.class.getName());
+            createCache(cm, Group.class.getName() + ".items");
+            createCache(cm, Result.class.getName());
+            createCache(cm, Result.class.getName() + ".groups");
             // jhipster-needle-ehcache-add-entry
         };
     }

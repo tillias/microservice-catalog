@@ -12,6 +12,10 @@ import { RouterModule } from '@angular/router';
         path: 'release-path',
         loadChildren: () => import('./release-path-dashboard/release-path-dashboard.module').then(m => m.ReleasePathDashboardModule),
       },
+      {
+        path: 'impact-analysis',
+        loadChildren: () => import('./impact-analysis/impact-analysis-dashboard.module').then(m => m.ImpactAnalysisDashboardModule),
+      },
     ]),
   ],
 })

@@ -5,17 +5,20 @@ import com.github.microcatalog.domain.custom.ReleaseGroup;
 import com.github.microcatalog.domain.custom.ReleasePath;
 import com.github.microcatalog.domain.custom.ReleaseStep;
 import com.github.microcatalog.service.GraphUtils;
+import com.github.microcatalog.service.custom.exceptions.MicroserviceNotFoundException;
+import org.assertj.core.api.InstanceOfAssertFactories;
+import org.jgrapht.graph.DefaultDirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @SpringBootTest(classes = {ReleasePathCustomService.class})
@@ -25,7 +28,16 @@ class ReleasePathCustomServiceTest {
     private GraphLoaderService graphLoaderService;
 
     @Autowired
-    private ReleasePathCustomService service;
+    private ReleasePathCustomService sut;
+
+    @Test
+    void calculate_EmptyGraph_EmptyResult() {
+        given(graphLoaderService.loadGraph())
+            .willReturn(new DefaultDirectedGraph<>(DefaultEdge.class));
+
+        Optional<ReleasePath> path = sut.getReleasePath(4L);
+        assertThat(path).isNotNull().isNotPresent();
+    }
 
     @Test
     void getReleasePath_NodeOutsideGraph_EmptyPath() {
@@ -40,8 +52,12 @@ class ReleasePathCustomServiceTest {
                 )
             );
 
-        Optional<ReleasePath> maybePath = service.getReleasePath(4L);
-        assertThat(maybePath).isEmpty();
+        assertThatThrownBy(() -> sut.getReleasePath(4L))
+            .isInstanceOf(MicroserviceNotFoundException.class)
+            .hasMessageStartingWith("Microservice not found")
+            .asInstanceOf(InstanceOfAssertFactories.type(MicroserviceNotFoundException.class))
+            .extracting(MicroserviceNotFoundException::getMicroserviceId)
+            .isEqualTo(4L);
     }
 
     @Test
@@ -66,33 +82,40 @@ class ReleasePathCustomServiceTest {
                 )
             );
 
-        Optional<ReleasePath> maybePath = service.getReleasePath(1L);
+        Optional<ReleasePath> maybePath = sut.getReleasePath(1L);
         assertThat(maybePath).isPresent();
 
-        ReleasePath path = maybePath.get();
+        final ReleasePath path = maybePath.get();
 
-        ReleaseStep step = getStep(path, 0, 5L);
-        assertThat(step).isNotNull();
+        final List<ReleaseGroup> groups = path.getGroups();
+
+        assertThat(groups).isNotEmpty().hasSize(5);
+
+        ReleaseGroup group = groups.get(0);
+        assertThat(group.getSteps()).isNotEmpty().hasSize(2);
+        ReleaseStep step = group.findByTargetId(5L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L, 7L);
-
-        step = getStep(path, 0, 8L);
-        assertThat(step).isNotNull();
+        step = group.findByTargetId(8L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L);
 
-        step = getStep(path, 1, 7L);
-        assertThat(step).isNotNull();
+        group = groups.get(1);
+        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
+        step = group.findByTargetId(7L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(4L);
 
-        step = getStep(path, 2, 4L);
-        assertThat(step).isNotNull();
+        group = groups.get(2);
+        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
+        step = group.findByTargetId(4L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
 
-        step = getStep(path, 3, 2L);
-        assertThat(step).isNotNull();
+        group = groups.get(3);
+        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
+        step = group.findByTargetId(2L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(1L);
 
-        step = getStep(path, 4, 1L);
-        assertThat(step).isNotNull();
+        group = groups.get(4);
+        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
+        step = group.findByTargetId(1L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).isEmpty();
     }
 
@@ -114,7 +137,7 @@ class ReleasePathCustomServiceTest {
 
         assertThatIllegalArgumentException()
             .isThrownBy(() ->
-                service.getReleasePath(1L)
+                sut.getReleasePath(1L)
             )
             .withMessageStartingWith("There are cyclic dependencies between microservices");
     }
@@ -137,55 +160,29 @@ class ReleasePathCustomServiceTest {
                 )
             );
 
-        Optional<ReleasePath> maybePath = service.getReleasePath(1L);
+        Optional<ReleasePath> maybePath = sut.getReleasePath(1L);
         assertThat(maybePath).isPresent();
 
-        ReleasePath path = maybePath.get();
+        final ReleasePath path = maybePath.get();
+        final List<ReleaseGroup> groups = path.getGroups();
 
-        ReleaseStep step = getStep(path, 0, 3);
-        assertThat(step).isNotNull();
+        assertThat(groups).isNotEmpty().hasSize(3);
+
+        ReleaseGroup group = groups.get(0);
+        assertThat(group.getSteps()).isNotEmpty().hasSize(2);
+        ReleaseStep step = group.findByTargetId(3L).orElseThrow(NoSuchElementException::new);
+        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
+        step = group.findByTargetId(4L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
 
-        step = getStep(path, 0, 4);
-        assertThat(step).isNotNull();
-        assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(2L);
-
-        step = getStep(path, 1, 2);
-        assertThat(step).isNotNull();
+        group = groups.get(1);
+        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
+        step = group.findByTargetId(2L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).extracting(Microservice::getId).containsExactlyInAnyOrder(1L);
 
-        step = getStep(path, 2, 1L);
-        assertThat(step).isNotNull();
+        group = groups.get(2);
+        assertThat(group.getSteps()).isNotEmpty().hasSize(1);
+        step = group.findByTargetId(1L).orElseThrow(NoSuchElementException::new);
         assertThat(step.getParentWorkItems()).isEmpty();
-    }
-
-    private ReleaseStep getStep(final ReleasePath path, int groupIndex, long microserviceId) {
-        final Set<ReleaseStep> steps = getSteps(path, groupIndex);
-        if (steps != null) {
-            Optional<ReleaseStep> maybeStep = steps.stream()
-                .filter(s -> s.getWorkItem() != null && microserviceId == s.getWorkItem().getId()).findFirst();
-            if (maybeStep.isPresent()) {
-                return maybeStep.get();
-            }
-        }
-
-        return null;
-    }
-
-    private Set<ReleaseStep> getSteps(ReleasePath path, int groupIndex) {
-        if (path.getGroups() == null) {
-            return null;
-        }
-
-        if (groupIndex > path.getGroups().size()) {
-            return null;
-        }
-
-        ReleaseGroup first = path.getGroups().get(groupIndex);
-        if (first != null) {
-            return first.getSteps();
-        } else {
-            return Collections.emptySet();
-        }
     }
 }

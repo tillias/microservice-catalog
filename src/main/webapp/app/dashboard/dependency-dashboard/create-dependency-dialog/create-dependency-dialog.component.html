@@ -10,14 +10,14 @@
     <div class="form-group">
         <label>Source: </label>
         <div>
-            <jhi-microservice-search [initialValue]="source!"
+            <jhi-microservice-search [selectedValue]="source!"
                                      (itemSelected)="onSourceSelected($event)"></jhi-microservice-search>
         </div>
     </div>
     <div class="form-group">
         <label>Target: </label>
         <div>
-            <jhi-microservice-search [initialValue]="target!"
+            <jhi-microservice-search [selectedValue]="target!"
                                      (itemSelected)="onTargetSelected($event)"></jhi-microservice-search>
         </div>
     </div>
