@@ -87,7 +87,7 @@
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.team" for="field_team">Team</label>
                     <select class="form-control" id="field_team" name="team" formControlName="team">
                         <option *ngIf="!editForm.get('team')!.value" [ngValue]="null" selected></option>
-                        <option [ngValue]="teamOption.id === editForm.get('team')!.value?.id ? editForm.get('team')!.value : teamOption" *ngFor="let teamOption of teams; trackBy: trackById">{{ teamOption.id }}</option>
+                        <option [ngValue]="teamOption.id === editForm.get('team')!.value?.id ? editForm.get('team')!.value : teamOption" *ngFor="let teamOption of teams; trackBy: trackById">{{ teamOption.name }}</option>
                     </select>
                 </div>
                 <div *ngIf="editForm.get('team')!.invalid && (editForm.get('team')!.dirty || editForm.get('team')!.touched)">
@@ -101,7 +101,7 @@
                     <label class="form-control-label" jhiTranslate="microcatalogApp.microservice.status" for="field_status">Status</label>
                     <select class="form-control" id="field_status" name="status" formControlName="status">
                         <option *ngIf="!editForm.get('status')!.value" [ngValue]="null" selected></option>
-                        <option [ngValue]="statusOption.id === editForm.get('status')!.value?.id ? editForm.get('status')!.value : statusOption" *ngFor="let statusOption of statuses; trackBy: trackById">{{ statusOption.id }}</option>
+                        <option [ngValue]="statusOption.id === editForm.get('status')!.value?.id ? editForm.get('status')!.value : statusOption" *ngFor="let statusOption of statuses; trackBy: trackById">{{ statusOption.name }}</option>
                     </select>
                 </div>
                 <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">

@@ -25,7 +25,14 @@ export class ImpactAnalysisLegendComponent implements OnInit {
   }
 
   initDependencies(): void {
+    const targetId = this.analysisResult?.target?.id;
     this.dependencies = [];
-    this.analysisResult?.groups?.forEach(v => v.items?.forEach(i => this.dependencies.push(i.target)));
+    this.analysisResult?.groups?.forEach(v =>
+      v.items?.forEach(i => {
+        if (i.target.id !== targetId) {
+          this.dependencies.push(i.target);
+        }
+      })
+    );
   }
 }

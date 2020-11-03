@@ -19,13 +19,13 @@
                 <dt><span jhiTranslate="microcatalogApp.dependency.source">Source</span></dt>
                 <dd>
                     <div *ngIf="dependency.source">
-                        <a [routerLink]="['/microservice', dependency.source?.id, 'view']">{{ dependency.source?.id }}</a>
+                        <a [routerLink]="['/microservice', dependency.source?.id, 'view']">{{ dependency.source?.name }}</a>
                     </div>
                 </dd>
                 <dt><span jhiTranslate="microcatalogApp.dependency.target">Target</span></dt>
                 <dd>
                     <div *ngIf="dependency.target">
-                        <a [routerLink]="['/microservice', dependency.target?.id, 'view']">{{ dependency.target?.id }}</a>
+                        <a [routerLink]="['/microservice', dependency.target?.id, 'view']">{{ dependency.target?.name }}</a>
                     </div>
                 </dd>
             </dl>
