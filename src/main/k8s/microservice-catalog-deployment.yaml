@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: microservice-catalog
+    namespace: microservice-catalog
+    labels:
+        app: microservice-catalog
+        tier: business
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: microservice-catalog
+            tier: business
+    template:
+        metadata:
+            labels:
+                app: microservice-catalog
+                tier: business
+        spec:
+            containers:
+                -   name: microservice-catalog
+                    image: tillias/microcatalog
+                    env:
+                        -   name: DB_HOST
+                            value: postgres-service
+                        -   name: DB_PORT
+                            value: "5432"
+                        -   name: DB_NAME
+                            valueFrom:
+                                configMapKeyRef:
+                                    key: POSTGRES_DB
+                                    name: postgres-config
+                        -   name: DB_PASSWORD
+                            valueFrom:
+                                secretKeyRef:
+                                    key: POSTGRES_PASSWORD
+                                    name: postgres-secret
+                        -   name: DB_USER
+                            valueFrom:
+                                configMapKeyRef:
+                                    key: POSTGRES_USER
+                                    name: postgres-config
+                        -   name: CSP_IMAGE_SRC
+                            value: "'*'"
+                        -   name: SERVER_PORT
+                            value: "8081"
+                    ports:
+                        -   containerPort: 8081
+                            protocol: TCP
