@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: postgres-deployment
+    namespace: microservice-catalog
+    labels:
+        app: microservice-catalog
+        tier: database
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: microservice-catalog
+            tier: database
+    template:
+        metadata:
+            labels:
+                app: microservice-catalog
+                tier: database
+        spec:
+            containers:
+                -   name: postgres
+                    image: postgres
+                    envFrom:
+                        -   configMapRef:
+                                name: postgres-config
+                    env:
+                        -   name: POSTGRES_PASSWORD
+                            valueFrom:
+                                secretKeyRef:
+                                    key: POSTGRES_PASSWORD
+                                    name: postgres-secret
+                    volumeMounts:
+                        -   mountPath: /var/lib/postgresql/data
+                            name: postgres-pv-claim
+                    ports:
+                        -   containerPort: 5432
+                            protocol: TCP
+            volumes:
+                -   name: postgres-pv-claim
+                    persistentVolumeClaim:
+                        claimName: postgres-pv-claim
