@@ -21,6 +21,12 @@ Latest version and deployment instructions are always available on [Docker Hub](
 
 You can also test it with only one mouse click on [Play with Docker](https://labs.play-with-docker.com/?stack=https://raw.githubusercontent.com/tillias/microservice-catalog/master/docker-compose.yml)
 
+Or if you prefer kubernetes:
+
+```
+kubectl apply -k src\main\k8s
+```
+
 ## Development
 
 This application was generated using JHipster 6.10.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.3](https://www.jhipster.tech/documentation-archive/v6.10.3).
