@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ISelectPayload } from '../../../shared/vis/events/VisEvents';
+import { ISelectPayload } from 'app/shared/vis/events/VisEvents';
 
 @Component({
   selector: 'jhi-node-legend',

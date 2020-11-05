@@ -25,8 +25,7 @@ export class ImpactAnalysisResultResolve implements Resolve<IResult> {
             return EMPTY;
           }
         }),
-        catchError(error => {
-          alert('Error building release path. ' + error.error.detail);
+        catchError(() => {
           return EMPTY;
         })
       );

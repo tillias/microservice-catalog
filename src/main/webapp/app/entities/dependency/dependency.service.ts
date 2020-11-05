@@ -32,6 +32,10 @@ export class DependencyService {
     return this.http.get<IDependency[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
+  findAllById(ids: number[]): Observable<EntityArrayResponseType> {
+    return this.http.get<IDependency[]>(`${this.resourceUrl}/by/${ids}`, { observe: 'response' });
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
