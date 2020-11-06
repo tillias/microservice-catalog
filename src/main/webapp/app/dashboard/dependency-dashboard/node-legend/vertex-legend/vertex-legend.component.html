@@ -1,0 +1,8 @@
+<div>
+    <h5>Selected microservices:</h5>
+</div>
+<div>
+    <div class="text-primary" *ngFor="let m of microservices">
+        <a [routerLink]="['/microservice', m.id, 'view']">{{m.name}}</a>
+    </div>
+</div>

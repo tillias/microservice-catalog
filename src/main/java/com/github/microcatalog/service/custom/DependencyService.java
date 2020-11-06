@@ -6,6 +6,8 @@ import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
 import com.github.microcatalog.service.custom.exceptions.DuplicateDependencyException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
+import com.github.microcatalog.service.dto.custom.DependencyDto;
+import com.github.microcatalog.service.mapper.DependencyMapper;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.cycle.CycleDetector;
 import org.jgrapht.graph.DefaultEdge;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -27,10 +30,12 @@ public class DependencyService {
 
     private final GraphLoaderService graphLoaderService;
     private final DependencyRepository repository;
+    private final DependencyMapper dependencyMapper;
 
-    public DependencyService(GraphLoaderService graphLoaderService, DependencyRepository repository) {
+    public DependencyService(GraphLoaderService graphLoaderService, DependencyRepository repository, DependencyMapper dependencyMapper) {
         this.graphLoaderService = graphLoaderService;
         this.repository = repository;
+        this.dependencyMapper = dependencyMapper;
     }
 
     public Dependency create(final Dependency dependency) {
@@ -63,6 +68,12 @@ public class DependencyService {
         return repository.findById(id);
     }
 
+    public List<DependencyDto> findAllById(final List<Long> ids) {
+        return repository.findAllById(ids).stream()
+            .map(dependencyMapper::dependencyToDto)
+            .collect(Collectors.toList());
+    }
+
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
@@ -85,7 +96,7 @@ public class DependencyService {
     private void validateIfAdded(final Dependency toBeAdded) {
         final Graph<Microservice, DefaultEdge> graph = graphLoaderService.loadGraph();
 
-        checkDuplicateWillBeIntroduced(graph,toBeAdded);
+        checkDuplicateWillBeIntroduced(graph, toBeAdded);
 
         graph.addEdge(toBeAdded.getSource(), toBeAdded.getTarget());
 
@@ -102,14 +113,14 @@ public class DependencyService {
         final DefaultEdge currentEdge = graph.getEdge(persistent.getSource(), persistent.getTarget());
         graph.removeEdge(currentEdge);
 
-        checkDuplicateWillBeIntroduced(graph,dependency);
+        checkDuplicateWillBeIntroduced(graph, dependency);
 
         graph.addEdge(dependency.getSource(), dependency.getTarget());
 
         checkCycles(graph);
     }
 
-    private void checkDuplicateWillBeIntroduced(final Graph<Microservice, DefaultEdge> graph, final Dependency dependency){
+    private void checkDuplicateWillBeIntroduced(final Graph<Microservice, DefaultEdge> graph, final Dependency dependency) {
         final DefaultEdge existingEdge = graph.getEdge(dependency.getSource(), dependency.getTarget());
         if (existingEdge != null) {
             throw new DuplicateDependencyException("Dependency already exists", dependency);

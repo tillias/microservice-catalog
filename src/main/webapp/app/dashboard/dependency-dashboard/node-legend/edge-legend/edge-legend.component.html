@@ -1,0 +1,8 @@
+<div>
+    <h5>Selected dependencies:</h5>
+</div>
+<div>
+    <div class="text-primary" *ngFor="let d of dependencies">
+        <a [routerLink]="['/dependency', d.id, 'view']">{{d.name}}</a>
+    </div>
+</div>

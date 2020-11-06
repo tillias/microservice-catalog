@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { IResult } from '../../../shared/model/impact/analysis/result.model';
+import { IResult } from 'app/shared/model/impact/analysis/result.model';
 import { ActivatedRoute } from '@angular/router';
-import { IMicroservice } from '../../../shared/model/microservice.model';
+import { IMicroservice } from 'app/shared/model/microservice.model';
 
 @Component({
   selector: 'jhi-impact-analysis-legend',
   templateUrl: './impact-analysis-legend.component.html',
-  styleUrls: ['./impact-analysis-legend.component.scss'],
 })
 export class ImpactAnalysisLegendComponent implements OnInit {
   analysisResult?: IResult;
-  dependencies: IMicroservice[] = [];
+  microservices: IMicroservice[] = [];
   page = 1;
   pageSize = 15;
 
@@ -26,11 +25,11 @@ export class ImpactAnalysisLegendComponent implements OnInit {
 
   initDependencies(): void {
     const targetId = this.analysisResult?.target?.id;
-    this.dependencies = [];
+    this.microservices = [];
     this.analysisResult?.groups?.forEach(v =>
       v.items?.forEach(i => {
         if (i.target.id !== targetId) {
-          this.dependencies.push(i.target);
+          this.microservices.push(i.target);
         }
       })
     );

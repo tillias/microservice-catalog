@@ -8,7 +8,6 @@ import { IMicroserviceGroupFilter } from 'app/shared/model/util/microservice-gro
 @Component({
   selector: 'jhi-microservice-search',
   templateUrl: './microservice-search.component.html',
-  styleUrls: ['./microservice-search.component.scss'],
 })
 export class MicroserviceSearchComponent implements OnInit {
   model: any;

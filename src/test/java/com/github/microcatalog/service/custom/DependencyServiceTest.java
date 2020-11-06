@@ -1,12 +1,15 @@
 package com.github.microcatalog.service.custom;
 
+import com.github.microcatalog.MappersConfig;
+import com.github.microcatalog.TestUtils;
 import com.github.microcatalog.domain.Dependency;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.service.GraphUtils;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
 import com.github.microcatalog.service.custom.exceptions.DuplicateDependencyException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
-import com.github.microcatalog.utils.DependencyBuilder;
+import com.github.microcatalog.service.dto.custom.DependencyDto;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import com.github.microcatalog.utils.MicroserviceBuilder;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
@@ -14,15 +17,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
+import static com.github.microcatalog.TestUtils.dependency;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-@SpringBootTest(classes = DependencyService.class)
+@SpringBootTest(classes = {DependencyService.class, MappersConfig.class})
 class DependencyServiceTest {
 
     @MockBean
@@ -54,6 +60,53 @@ class DependencyServiceTest {
         assertThat(maybeDependency.get()).extracting(Dependency::getId).isEqualTo(id);
 
         then(repository).should().findById(id);
+    }
+
+    @Test
+    void findAllById_EmptyList_NoException() {
+        given(repository.findAllById(any())).willReturn(Collections.emptyList());
+
+        final List<DependencyDto> dtos = service.findAllById(Arrays.asList(1L, 2L, 3L));
+        assertThat(dtos).isEmpty();
+    }
+
+    @Test
+    void findAllById() {
+        given(repository.findAllById(Arrays.asList(1L, 2L, 3L))).willReturn(
+            Arrays.asList(
+                dependency(1, 1, 2),
+                dependency(2, 2, 3),
+                dependency(3, 3, 4)
+            )
+        );
+        final List<DependencyDto> dtos = service.findAllById(Arrays.asList(1L, 2L, 3L));
+        assertThat(dtos).hasSize(3).extracting(DependencyDto::getId, DependencyDto::getName)
+            .containsExactlyInAnyOrder(
+                tuple(1L, "1->2"),
+                tuple(2L, "2->3"),
+                tuple(3L, "3->4"));
+
+
+        assertThat(TestUtils.getSource(dtos, 1L))
+            .extracting(MicroserviceDto::getId, MicroserviceDto::getName)
+            .containsExactly(1L, "1");
+        assertThat(TestUtils.getTarget(dtos, 1L))
+            .extracting(MicroserviceDto::getId, MicroserviceDto::getName)
+            .containsExactly(2L, "2");
+
+        assertThat(TestUtils.getSource(dtos, 2L))
+            .extracting(MicroserviceDto::getId, MicroserviceDto::getName)
+            .containsExactly(2L, "2");
+        assertThat(TestUtils.getTarget(dtos, 2L))
+            .extracting(MicroserviceDto::getId, MicroserviceDto::getName)
+            .containsExactly(3L, "3");
+
+        assertThat(TestUtils.getSource(dtos, 3L))
+            .extracting(MicroserviceDto::getId, MicroserviceDto::getName)
+            .containsExactly(3L, "3");
+        assertThat(TestUtils.getTarget(dtos, 3L))
+            .extracting(MicroserviceDto::getId, MicroserviceDto::getName)
+            .containsExactly(4L, "4");
     }
 
     @Test
@@ -257,19 +310,4 @@ class DependencyServiceTest {
         then(repository).should().save(any(Dependency.class));
     }
 
-    private Dependency dependency(final Integer id, final Integer sourceId, final Integer targetId) {
-        DependencyBuilder builder = new DependencyBuilder();
-
-        if (sourceId != null) {
-            builder.withSource(Long.valueOf(sourceId));
-        }
-        if (targetId != null) {
-            builder.withTarget(Long.valueOf(targetId));
-        }
-        if (id != null) {
-            builder.withId(Long.valueOf(id));
-        }
-
-        return builder.build();
-    }
 }

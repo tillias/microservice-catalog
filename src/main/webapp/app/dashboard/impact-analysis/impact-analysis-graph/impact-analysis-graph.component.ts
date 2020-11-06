@@ -1,14 +1,13 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IResult } from '../../../shared/model/impact/analysis/result.model';
-import { VisNetworkService } from '../../../shared/vis/vis-network.service';
+import { IResult } from 'app/shared/model/impact/analysis/result.model';
+import { VisNetworkService } from 'app/shared/vis/vis-network.service';
 import { DataSet } from 'vis-data/peer';
-import { NodeColorsService } from '../../release-path-dashboard/node-colors.service';
+import { NodeColorsService } from 'app/dashboard/release-path-dashboard/node-colors.service';
 
 @Component({
   selector: 'jhi-impact-analysis-graph',
   templateUrl: './impact-analysis-graph.component.html',
-  styleUrls: ['./impact-analysis-graph.component.scss'],
 })
 export class ImpactAnalysisGraphComponent implements OnInit, AfterViewInit {
   @ViewChild('visNetwork', { static: false })

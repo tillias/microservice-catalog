@@ -1,22 +1,21 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DependencyService } from '../../entities/dependency/dependency.service';
-import { IMicroservice } from '../../shared/model/microservice.model';
-import { EXPERIMENTAL_FEATURE } from '../../app.constants';
+import { DependencyService } from 'app/entities/dependency/dependency.service';
+import { IMicroservice } from 'app/shared/model/microservice.model';
+import { EXPERIMENTAL_FEATURE } from 'app/app.constants';
 import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
 import { JhiEventManager } from 'ng-jhipster';
 import { forkJoin, Subscription } from 'rxjs';
-import { MicroserviceService } from '../../entities/microservice/microservice.service';
+import { MicroserviceService } from 'app/entities/microservice/microservice.service';
 import { map } from 'rxjs/operators';
 import { ISelectPayload, SelectPayload } from '../../shared/vis/events/VisEvents';
 import { DeleteDialogService } from './delete-dialog.service';
 import { FilterContext, GraphBuilderService } from './graph-builder.service';
-import { ReleasePathCustomService } from '../../entities/release-path/custom/release-path-custom.service';
-import { VisNetworkService } from '../../shared/vis/vis-network.service';
+import { ReleasePathCustomService } from 'app/entities/release-path/custom/release-path-custom.service';
+import { VisNetworkService } from 'app/shared/vis/vis-network.service';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
   templateUrl: './dependency-dashboard.component.html',
-  styleUrls: ['./dependency-dashboard.component.scss'],
 })
 export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('visNetwork', { static: false })

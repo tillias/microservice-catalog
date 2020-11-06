@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { IMicroservice } from '../../../shared/model/microservice.model';
+import { IMicroservice } from 'app/shared/model/microservice.model';
 import { JhiDataUtils } from 'ng-jhipster';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-microservice-details',
   templateUrl: './microservice-custom-details.component.html',
-  styleUrls: ['./microservice-custom-details.component.scss'],
 })
 export class MicroserviceCustomDetailsComponent implements OnInit {
   microservice: IMicroservice | null = null;

@@ -10,9 +10,14 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+logging:
+  level:
+    ROOT: INFO
+    io.github.jhipster: INFO
+    com.github.microcatalog: DEBUG
+
 spring:
   profiles:
-    active: dev
     include:
       - swagger
   liquibase:

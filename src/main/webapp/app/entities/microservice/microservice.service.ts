@@ -27,6 +27,10 @@ export class MicroserviceService {
     return this.http.get<IMicroservice>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
+  findAllById(ids: number[]): Observable<EntityArrayResponseType> {
+    return this.http.get<IMicroservice[]>(`${this.resourceUrl}/by/${ids}`, { observe: 'response' });
+  }
+
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http.get<IMicroservice[]>(this.resourceUrl, { params: options, observe: 'response' });
