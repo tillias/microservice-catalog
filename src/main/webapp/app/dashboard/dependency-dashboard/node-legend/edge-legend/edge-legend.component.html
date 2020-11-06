@@ -2,9 +2,7 @@
     <h5>Selected dependencies:</h5>
 </div>
 <div>
-    <ul>
-        <li *ngFor="let d of dependencies">
-            <span>{{d.name}}</span>
-        </li>
-    </ul>
+    <div class="text-primary" *ngFor="let d of dependencies">
+        <a [routerLink]="['/dependency', d.id, 'view']">{{d.name}}</a>
+    </div>
 </div>

@@ -4,6 +4,11 @@ public class MicroserviceDto {
     private Long id;
     private String name;
 
+    public MicroserviceDto id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public Long getId() {
         return id;
     }

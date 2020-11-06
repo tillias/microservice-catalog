@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.github.microcatalog.TestUtils.dependency;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -59,6 +60,14 @@ class DependencyServiceTest {
         assertThat(maybeDependency.get()).extracting(Dependency::getId).isEqualTo(id);
 
         then(repository).should().findById(id);
+    }
+
+    @Test
+    void findAllById_EmptyList_NoException() {
+        given(repository.findAllById(any())).willReturn(Collections.emptyList());
+
+        final List<DependencyDto> dtos = service.findAllById(Arrays.asList(1L, 2L, 3L));
+        assertThat(dtos).isEmpty();
     }
 
     @Test
@@ -301,28 +310,4 @@ class DependencyServiceTest {
         then(repository).should().save(any(Dependency.class));
     }
 
-    private Dependency dependency(final Integer id, final Integer sourceId, final Integer targetId) {
-        final Dependency dependency = new Dependency();
-        dependency.setName(String.format("%s->%s", sourceId, targetId));
-
-        if (id != null) {
-            dependency.setId(Long.valueOf(id));
-        }
-
-        if (sourceId != null) {
-            dependency.setSource(new MicroserviceBuilder()
-                .withId(Long.valueOf(sourceId))
-                .withName(String.valueOf(sourceId))
-                .build());
-        }
-
-        if (targetId != null) {
-            dependency.setTarget(new MicroserviceBuilder()
-                .withId(Long.valueOf(targetId))
-                .withName(String.valueOf(targetId))
-                .build());
-        }
-
-        return dependency;
-    }
 }

@@ -1,7 +1,7 @@
 package com.github.microcatalog.web.rest.custom;
 
-import com.github.microcatalog.service.custom.DependencyService;
-import com.github.microcatalog.service.dto.custom.DependencyDto;
+import com.github.microcatalog.service.custom.MicroserviceService;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,17 +15,16 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
-public class DependencyCustomResource {
+public class MicroserviceCustomResource {
+    private final MicroserviceService service;
 
-    private final DependencyService service;
-
-    public DependencyCustomResource(DependencyService service) {
+    public MicroserviceCustomResource(MicroserviceService service) {
         this.service = service;
     }
 
-    @GetMapping("/dependencies/by/{ids}")
-    public ResponseEntity<List<DependencyDto>> findByIds(@PathVariable List<Long> ids) {
-        final List<DependencyDto> dependencies = service.findAllById(ids);
+    @GetMapping("/microservices/by/{ids}")
+    public ResponseEntity<List<MicroserviceDto>> findByIds(@PathVariable List<Long> ids) {
+        final List<MicroserviceDto> dependencies = service.findAllById(ids);
         return ResponseEntity.ok(dependencies);
     }
 }

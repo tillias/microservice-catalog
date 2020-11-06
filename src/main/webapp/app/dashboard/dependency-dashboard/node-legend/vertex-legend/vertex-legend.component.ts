@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ISelectPayload } from 'app/shared/vis/events/VisEvents';
 import { IMicroservice } from 'app/shared/model/microservice.model';
-import { MicroserviceService } from '../../../../entities/microservice/microservice.service';
+import { MicroserviceService } from 'app/entities/microservice/microservice.service';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 })
 export class VertexLegendComponent implements OnInit {
   selection?: ISelectPayload;
-  microservice?: IMicroservice;
+  microservices?: IMicroservice[];
 
   constructor(protected service: MicroserviceService) {}
 
@@ -23,9 +23,9 @@ export class VertexLegendComponent implements OnInit {
 
     if (selection && selection.hasNodes()) {
       this.service
-        .find(selection.firstNode())
-        .pipe(map(r => r.body || undefined))
-        .subscribe(m => (this.microservice = m));
+        .findAllById(selection.nodes)
+        .pipe(map(r => r.body || []))
+        .subscribe(r => (this.microservices = r));
     }
   }
 }

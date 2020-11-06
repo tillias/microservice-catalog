@@ -1,8 +1,8 @@
 package com.github.microcatalog.web.rest.custom;
 
 import com.github.microcatalog.MockMvcWithUser;
-import com.github.microcatalog.service.custom.DependencyService;
-import com.github.microcatalog.service.dto.custom.DependencyDto;
+import com.github.microcatalog.service.custom.MicroserviceService;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +19,27 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(classes = DependencyCustomResource.class)
+@SpringBootTest(classes = MicroserviceCustomResource.class)
 @MockMvcWithUser
-class DependencyCustomResourceTest {
+class MicroserviceCustomResourceTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private DependencyService service;
+    private MicroserviceService service;
 
     @Test
     void findAllById_Found_Success() throws Exception {
 
         given(service.findAllById(Arrays.asList(1L, 2L, 3L)))
             .willReturn(Arrays.asList(
-                new DependencyDto().id(1L),
-                new DependencyDto().id(2L),
-                new DependencyDto().id(3L))
+                new MicroserviceDto().id(1L),
+                new MicroserviceDto().id(2L),
+                new MicroserviceDto().id(3L))
             );
 
-        mockMvc.perform(get("/api/dependencies/by/1,2,3"))
+        mockMvc.perform(get("/api/microservices/by/1,2,3"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[0].id").value(1L))
@@ -52,7 +52,7 @@ class DependencyCustomResourceTest {
         given(service.findAllById(any()))
             .willReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/api/dependencies/by/1,2,3"))
+        mockMvc.perform(get("/api/microservices/by/1,2,3"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$", Matchers.empty()));

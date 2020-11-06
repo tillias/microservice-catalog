@@ -26,9 +26,7 @@ export class EdgeLegendComponent implements OnInit {
       this.service
         .findAllById(selection.edges)
         .pipe(map(response => response.body || undefined))
-        .subscribe(d => {
-          this.dependencies = d;
-        });
+        .subscribe(d => (this.dependencies = d));
     }
   }
 }

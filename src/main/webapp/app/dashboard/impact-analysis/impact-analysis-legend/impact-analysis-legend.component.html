@@ -1,23 +1,26 @@
 <div class="row">
     <p class="font-weight-bold">Analysis target:</p>
-    <p class="pl-3">{{analysisResult?.target?.name}}</p>
+    <div class="pl-2">
+        <a [routerLink]="['/microservice', analysisResult?.target?.id, 'view']">{{analysisResult?.target?.name}}</a>
+    </div>
 </div>
 <div class="row">
 
 </div>
 <div class="row">
-    <p class="font-weight-bold">Dependencies of target (total {{dependencies.length}}):</p>
+    <p class="font-weight-bold">Dependencies of target (total {{microservices.length}}):</p>
 </div>
 <div class="row">
-        <ul>
-            <li *ngFor="let d of dependencies | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
-                <span>{{d.name}}</span>
-            </li>
-        </ul>
+    <div>
+        <div class="text-primary"
+             *ngFor="let d of microservices | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+            <a [routerLink]="['/microservice', d.id, 'view']">{{d.name}}</a>
+        </div>
+    </div>
 </div>
 <div class="row pl-4">
-    <ngb-pagination *ngIf="dependencies.length > pageSize"
-        [(page)]="page"
-        [pageSize]="pageSize"
-        [collectionSize]="dependencies.length"></ngb-pagination>
+    <ngb-pagination *ngIf="microservices.length > pageSize"
+                    [(page)]="page"
+                    [pageSize]="pageSize"
+                    [collectionSize]="microservices.length"></ngb-pagination>
 </div>
