@@ -3,6 +3,7 @@ package com.github.microcatalog.web.rest.custom;
 import com.github.microcatalog.MockMvcWithUser;
 import com.github.microcatalog.service.custom.DependencyService;
 import com.github.microcatalog.service.dto.custom.DependencyDto;
+import com.github.microcatalog.service.dto.custom.builder.DependencyDtoBuilder;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.github.microcatalog.service.dto.custom.builder.DependencyDtoBuilder.aDependencyDto;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,9 +36,9 @@ class DependencyCustomResourceTest {
 
         given(service.findAllById(Arrays.asList(1L, 2L, 3L)))
             .willReturn(Arrays.asList(
-                new DependencyDto().id(1L),
-                new DependencyDto().id(2L),
-                new DependencyDto().id(3L))
+                aDependencyDto().withId(1L).build(),
+                aDependencyDto().withId(2L).build(),
+                aDependencyDto().withId(3L).build())
             );
 
         mockMvc.perform(get("/api/dependencies/by/1,2,3"))

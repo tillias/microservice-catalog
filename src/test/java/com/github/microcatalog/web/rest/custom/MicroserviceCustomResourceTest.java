@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.github.microcatalog.service.dto.custom.builder.MicroserviceDtoBuilder.aMicroserviceDto;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,9 +35,9 @@ class MicroserviceCustomResourceTest {
 
         given(service.findAllById(Arrays.asList(1L, 2L, 3L)))
             .willReturn(Arrays.asList(
-                new MicroserviceDto().id(1L),
-                new MicroserviceDto().id(2L),
-                new MicroserviceDto().id(3L))
+                aMicroserviceDto().withId(1L).build(),
+                aMicroserviceDto().withId(2L).build(),
+                aMicroserviceDto().withId(3L).build())
             );
 
         mockMvc.perform(get("/api/microservices/by/1,2,3"))
