@@ -7,7 +7,6 @@ import { IDependency } from 'app/shared/model/dependency.model';
 @Component({
   selector: 'jhi-edge-legend',
   templateUrl: './edge-legend.component.html',
-  styleUrls: ['./edge-legend.component.scss'],
 })
 export class EdgeLegendComponent implements OnInit {
   selection?: ISelectPayload;

@@ -9,7 +9,6 @@ import { IMicroserviceGroupFilter, MicroserviceGroupFilter } from 'app/shared/mo
 @Component({
   selector: 'jhi-microservice-dashboard',
   templateUrl: './microservice-dashboard.component.html',
-  styleUrls: ['./microservice-dashboard.component.scss'],
 })
 export class MicroserviceDashboardComponent implements OnInit, OnDestroy {
   microservices: IMicroservice[];

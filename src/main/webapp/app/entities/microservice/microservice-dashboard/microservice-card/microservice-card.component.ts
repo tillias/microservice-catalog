@@ -6,7 +6,6 @@ import { EXPERIMENTAL_FEATURE } from 'app/app.constants';
 @Component({
   selector: 'jhi-microservice-card',
   templateUrl: './microservice-card.component.html',
-  styleUrls: ['./microservice-card.component.scss'],
 })
 export class MicroserviceCardComponent implements OnInit {
   @Input() microservice!: IMicroservice;

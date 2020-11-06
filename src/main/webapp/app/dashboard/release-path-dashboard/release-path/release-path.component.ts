@@ -1,15 +1,14 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { IReleasePath } from '../../../shared/model/release-path.model';
+import { IReleasePath } from 'app/shared/model/release-path.model';
 import { ActivatedRoute } from '@angular/router';
-import { VisNetworkService } from '../../../shared/vis/vis-network.service';
+import { VisNetworkService } from 'app/shared/vis/vis-network.service';
 import { NodeColorsService } from '../node-colors.service';
 import { DataSet } from 'vis-data/peer';
-import { IReleaseGroup } from '../../../shared/model/release-group.model';
+import { IReleaseGroup } from 'app/shared/model/release-group.model';
 
 @Component({
   selector: 'jhi-release-path',
   templateUrl: './release-path.component.html',
-  styleUrls: ['./release-path.component.scss'],
 })
 export class ReleasePathComponent implements OnInit, AfterViewInit {
   @ViewChild('visNetwork', { static: false })

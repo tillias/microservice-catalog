@@ -9,7 +9,6 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'jhi-create-dependency-dialog',
   templateUrl: './create-dependency-dialog.component.html',
-  styleUrls: ['./create-dependency-dialog.component.scss'],
 })
 export class CreateDependencyDialogComponent implements OnInit {
   source?: IMicroservice;

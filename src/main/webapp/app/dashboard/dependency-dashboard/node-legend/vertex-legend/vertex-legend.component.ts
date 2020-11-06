@@ -7,7 +7,6 @@ import { map } from 'rxjs/operators';
 @Component({
   selector: 'jhi-vertex-legend',
   templateUrl: './vertex-legend.component.html',
-  styleUrls: ['./vertex-legend.component.scss'],
 })
 export class VertexLegendComponent implements OnInit {
   selection?: ISelectPayload;
