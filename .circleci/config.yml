@@ -7,11 +7,11 @@ jobs:
       - checkout
 
       # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
-            # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
-            - v1-dependencies-
+#      - restore_cache:
+#          keys:
+#            - v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+#            # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
+#            - v1-dependencies-
       - run:
           name: Setup NVM
           command: |
