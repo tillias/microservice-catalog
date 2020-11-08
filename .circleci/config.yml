@@ -94,7 +94,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - build:
+      - build
       - cypress:
           requires:
             - build
