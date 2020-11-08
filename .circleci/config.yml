@@ -7,19 +7,16 @@ jobs:
       - checkout
 
       # Download and cache dependencies
-#      - restore_cache:
-#          keys:
-#            - v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
-#            # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
-#            - v1-dependencies-
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
+            # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
+            - v1-dependencies-
       - run:
           name: Setup NVM
           command: |
             echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
             echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-      - run:
-          name: Install xvfb
-          command: 'sudo apt-get update -y && sudo apt-get install -y xvfb'
       - run:
           name: Print Java Version
           command: 'java -version'
@@ -32,17 +29,12 @@ jobs:
       - run:
           name: Install Node Modules
           command: 'npm install'
-      - run:
-          name: Test Cypress
-          command: npm run cypress
-
       - save_cache:
           paths:
             - node
             - node_modules
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
-
       - run:
           name: Give Executable Power
           command: 'chmod +x mvnw'
