@@ -1,17 +1,17 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DependencyService } from 'app/entities/dependency/dependency.service';
 import { IMicroservice } from 'app/shared/model/microservice.model';
-import { EXPERIMENTAL_FEATURE } from 'app/app.constants';
 import { CreateDependencyDialogService } from './create-dependency-dialog/create-dependency-dialog.service';
 import { JhiEventManager } from 'ng-jhipster';
 import { forkJoin, Subscription } from 'rxjs';
 import { MicroserviceService } from 'app/entities/microservice/microservice.service';
-import { map } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 import { ISelectPayload, SelectPayload } from '../../shared/vis/events/VisEvents';
 import { DeleteDialogService } from './delete-dialog.service';
 import { FilterContext, GraphBuilderService } from './graph-builder.service';
 import { ReleasePathCustomService } from 'app/entities/release-path/custom/release-path-custom.service';
 import { VisNetworkService } from 'app/shared/vis/vis-network.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'jhi-dependency-dashboard',
@@ -24,12 +24,12 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
 
   subscription?: Subscription;
 
+  isLoading = false;
   searchValue?: IMicroservice;
   onlyIncomingFilter = true;
   onlyOutgoingFilter = true;
   nodeSelection?: ISelectPayload;
   edgeSelection?: ISelectPayload;
-  experimentalFeatures = EXPERIMENTAL_FEATURE;
 
   constructor(
     protected eventManager: JhiEventManager,
@@ -39,7 +39,8 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
     protected visNetworkService: VisNetworkService,
     protected graphBuilderService: GraphBuilderService,
     protected createDependencyDialogService: CreateDependencyDialogService,
-    protected deleteDialogService: DeleteDialogService
+    protected deleteDialogService: DeleteDialogService,
+    protected spinnerService: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -109,7 +110,14 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
 
   refreshGraph(): void {
     const filterContext = new FilterContext(this.onlyIncomingFilter, this.onlyOutgoingFilter, this.searchValue);
-    this.graphBuilderService.refreshGraph(this.networkInstance, filterContext);
+    this.spinnerService.show();
+
+    this.graphBuilderService
+      .refreshGraph(filterContext)
+      .pipe(finalize(() => this.spinnerService.hide()))
+      .subscribe(r => {
+        this.networkInstance.setData(r);
+      });
   }
 
   onMicroserviceSelected(microservice?: IMicroservice): any {
