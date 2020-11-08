@@ -69,18 +69,18 @@ jobs:
             - run:
                 name: Deploy to Heroku
                 command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
-
   cypress:
     docker:
       - image: cypress/browsers:node12.14.1-chrome83-ff77
-          steps:
-            - checkout
-            - run:
-                name: Install Node Modules
-                command: 'npm install'
-            - run:
-                name: cypress run
-                command: 'npm run cypress'
+    steps:
+      - checkout
+      - run:
+          name: Install Node Modules
+          command: 'npm install'
+      - run:
+          name: cypress run
+          command: 'npm run cypress'
+
 workflows:
   test-cypress:
     jobs:
