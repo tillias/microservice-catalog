@@ -19,7 +19,7 @@ jobs:
             echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
       - run:
           name: Install xvfb
-          command: 'sudo apt-get install -y xvfb'
+          command: 'apt-get install -y xvfb'
       - run:
           name: Print Java Version
           command: 'java -version'
