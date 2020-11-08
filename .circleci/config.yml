@@ -28,7 +28,7 @@ jobs:
           command: 'npm -v'
       - run:
           name: Install Node Modules
-          command: 'npm install'
+          command: 'npm install && cypress run'
 
       - save_cache:
           paths:
@@ -71,9 +71,6 @@ jobs:
             - run:
                 name: Deploy to Heroku
                 command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
-            - run:
-                name: Run e2e tests
-                command: 'cypress run'
 workflows:
   build:
     jobs:
