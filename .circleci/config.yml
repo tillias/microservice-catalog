@@ -69,7 +69,35 @@ jobs:
             - run:
                 name: Deploy to Heroku
                 command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
+  cypress:
+    docker:
+      - image: cypress/browsers:node12.14.1-chrome83-ff77
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v2-cypress-dependencies-{{ checksum "package-lock.json" }}
+            # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
+            - v2-cypress-dependencies-
+      - run:
+          name: Install Node Modules
+          command: 'npm install'
+      - save_cache:
+          paths:
+            - node
+            - node_modules
+            - /root/.cache/Cypress
+          key: v2-cypress-dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: cypress run
+          command: 'npm run cypress'
 workflows:
   build:
     jobs:
       - build
+      - cypress:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
