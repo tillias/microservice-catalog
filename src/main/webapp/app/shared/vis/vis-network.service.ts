@@ -15,7 +15,7 @@ export class VisNetworkService {
 
   createNetwork(element: ElementRef, options?: Options): Network {
     if (this.fixedSeed) {
-      this.seed = 1;
+      this.seed = 7;
     }
 
     const defaultOptions = {

@@ -1,11 +1,15 @@
 id;name;description;source_id;target_id
-1;Associate;../fake-data/blob/hipster.txt;1;1
-2;Consultant system Sleek Soft Bike;../fake-data/blob/hipster.txt;2;2
-3;Cambridgeshire;../fake-data/blob/hipster.txt;3;3
-4;South Dakota azure;../fake-data/blob/hipster.txt;4;4
-5;copy;../fake-data/blob/hipster.txt;5;5
-6;Chicken Rubber;../fake-data/blob/hipster.txt;6;6
-7;Frozen Suriname Gorgeous;../fake-data/blob/hipster.txt;7;7
-8;Lao People's Democratic Republic;../fake-data/blob/hipster.txt;8;8
-9;Qatar Wisconsin Product;../fake-data/blob/hipster.txt;9;9
-10;Cuba application;../fake-data/blob/hipster.txt;10;10
+1;1->2;../fake-data/blob/hipster.txt;1;2
+2;1->8;../fake-data/blob/hipster.txt;1;8
+3;9->1;../fake-data/blob/hipster.txt;9;1
+4;Some old service->1;../fake-data/blob/hipster.txt;11;1
+5;2->4;../fake-data/blob/hipster.txt;2;4
+6;4->8;../fake-data/blob/hipster.txt;4;8
+7;6->4;../fake-data/blob/hipster.txt;6;4
+8;4->5;../fake-data/blob/hipster.txt;4;5
+9;4->7;../fake-data/blob/hipster.txt;4;7
+10;4->10;../fake-data/blob/hipster.txt;4;10
+11;7->10;../fake-data/blob/hipster.txt;7;10
+12;10->5;../fake-data/blob/hipster.txt;10;5
+13;3->5;../fake-data/blob/hipster.txt;3;5
+20;20->21;../fake-data/blob/hipster.txt;20;21
