@@ -28,7 +28,10 @@ jobs:
           command: 'npm -v'
       - run:
           name: Install Node Modules
-          command: 'npm install && cypress run'
+          command: 'npm install'
+      - run:
+          name: Test Cypress
+          command: npm run cypress
 
       - save_cache:
           paths:
