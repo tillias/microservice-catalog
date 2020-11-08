@@ -105,7 +105,7 @@
   },
   "scripts": {
     "prettier:format": "prettier --write \"{,src/**/}*.{md,json,ts,css,scss,yml}\"",
-    "lint": "eslint . --ext .js,.ts",
+    "lint": "eslint src/test --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
     "ngc": "ngc -p tsconfig.app.json",
     "cleanup": "rimraf target/classes/static/",

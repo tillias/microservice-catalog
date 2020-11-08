@@ -148,3 +148,4 @@ Desktop.ini
 .eslintcache
 /env.list
 /src/main/resources/config/liquibase/elephantsql.properties
+/cypress/videos/*.mp4
