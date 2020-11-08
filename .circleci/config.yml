@@ -98,3 +98,6 @@ workflows:
       - cypress:
           requires:
             - build
+          filters:
+            branches:
+              only: master
