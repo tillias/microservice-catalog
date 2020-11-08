@@ -1,24 +1,22 @@
 import { Injectable } from '@angular/core';
 import { DataSet } from 'vis-data/peer';
-import { IDependency } from '../../shared/model/dependency.model';
-import { IMicroservice } from '../../shared/model/microservice.model';
-import { Network } from 'vis-network/peer';
-import { DependencyService } from '../../entities/dependency/dependency.service';
-import { MicroserviceService } from '../../entities/microservice/microservice.service';
-import { forkJoin } from 'rxjs';
+import { IDependency } from 'app/shared/model/dependency.model';
+import { IMicroservice } from 'app/shared/model/microservice.model';
+import { DependencyService } from 'app/entities/dependency/dependency.service';
+import { MicroserviceService } from 'app/entities/microservice/microservice.service';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export class FilterContext {
   constructor(public onlyIncomingFilter: boolean, public onlyOutgoingFilter: boolean, public filter?: IMicroservice) {}
 }
 
+export class GraphData {
+  constructor(public nodes: DataSet<any>, public edges: DataSet<any>) {}
+}
+
 class GraphContext {
-  constructor(
-    public network: Network,
-    public microservices: IMicroservice[],
-    public dependencies: IDependency[],
-    public filterContext: FilterContext
-  ) {}
+  constructor(public microservices: IMicroservice[], public dependencies: IDependency[], public filterContext: FilterContext) {}
 }
 
 @Injectable({
@@ -27,11 +25,11 @@ class GraphContext {
 export class GraphBuilderService {
   constructor(protected dependencyService: DependencyService, protected microserviceService: MicroserviceService) {}
 
-  refreshGraph(network: Network, filterContext: FilterContext): void {
+  refreshGraph(filterContext: FilterContext): Observable<GraphData> {
     const dependencies$ = this.dependencyService.query();
     const microservices$ = this.microserviceService.query();
 
-    forkJoin({ dependencies$, microservices$ })
+    return forkJoin({ dependencies$, microservices$ })
       .pipe(
         map(result => {
           return {
@@ -40,12 +38,14 @@ export class GraphBuilderService {
           };
         })
       )
-      .subscribe(results => {
-        this.build(new GraphContext(network, results.microservices, results.dependencies, filterContext));
-      });
+      .pipe(
+        map(r => {
+          return this.build(new GraphContext(r.microservices, r.dependencies, filterContext));
+        })
+      );
   }
 
-  private build(context: GraphContext): void {
+  private build(context: GraphContext): GraphData {
     let filteredDependencies = context.dependencies;
 
     const filterContext = context.filterContext;
@@ -94,8 +94,7 @@ export class GraphBuilderService {
     }
 
     const nodes = new DataSet<any>(filteredMicroservices.map(m => this.convertToGraphNode(m)));
-
-    context.network.setData({ nodes, edges });
+    return new GraphData(nodes, edges);
   }
 
   protected convertToGraphNode(microservice: IMicroservice): any {

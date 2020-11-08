@@ -38,7 +38,7 @@ export class SelectPayload implements ISelectPayload {
   constructor(json: any) {
     this.pointer = new Pointer(
       new Coordinates(json.pointer.DOM.x, json.pointer.DOM.y),
-      new Coordinates(json.pointer.canvas.x, json.pointer.canvas.x)
+      new Coordinates(json.pointer.canvas.x, json.pointer.canvas.y)
     );
 
     this.nodes = json.nodes;

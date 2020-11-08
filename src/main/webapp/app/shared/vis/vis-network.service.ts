@@ -1,11 +1,23 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { Network, Options } from 'vis-network/peer';
+import { GRAPH_FIXED_SEED } from 'app/app.constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VisNetworkService {
+  fixedSeed = GRAPH_FIXED_SEED;
+  seed?: number;
+
+  constructor() {
+    this.seed = undefined; // use random by default
+  }
+
   createNetwork(element: ElementRef, options?: Options): Network {
+    if (this.fixedSeed) {
+      this.seed = 7;
+    }
+
     const defaultOptions = {
       height: '100%',
       width: '100%',
@@ -27,6 +39,9 @@ export class VisNetworkService {
       },
       interaction: {
         multiselect: true,
+      },
+      layout: {
+        randomSeed: this.seed,
       },
     };
 

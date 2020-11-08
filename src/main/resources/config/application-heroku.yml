@@ -10,20 +10,11 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
-eureka:
-  instance:
-    hostname: microcatalog.herokuapp.com
-    non-secure-port: 80
-    prefer-ip-address: false
-
 csp:
   image-src: ${CSP_IMAGE_SRC}
 
 spring:
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
-    hikari:
-      maximumPoolSize: 8
+  # we're running on a free tier with automatic suspension after inactivity, thus having fresh data for demo is important
+  liquibase:
+    drop-first: true
+    contexts: prod, faker
