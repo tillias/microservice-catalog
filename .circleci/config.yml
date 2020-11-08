@@ -71,6 +71,9 @@ jobs:
             - run:
                 name: Deploy to Heroku
                 command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
+            - run:
+                name: Run e2e tests
+                command: 'cypress run'
 workflows:
   build:
     jobs:
