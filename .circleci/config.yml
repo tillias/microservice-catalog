@@ -76,9 +76,9 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-cypress-dependencies-{{ checksum "package-lock.json" }}
+            - v2-cypress-dependencies-{{ checksum "package-lock.json" }}
             # Perform a Partial Cache Restore (https://circleci.com/docs/2.0/caching/#restoring-cache)
-            - v1-cypress-dependencies-
+            - v2-cypress-dependencies-
       - run:
           name: Install Node Modules
           command: 'npm install'
@@ -86,7 +86,8 @@ jobs:
           paths:
             - node
             - node_modules
-          key: v1-cypress-dependencies-{{ checksum "package-lock.json" }}
+            - /root/.cache/Cypress
+          key: v2-cypress-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: cypress run
           command: 'npm run cypress'
