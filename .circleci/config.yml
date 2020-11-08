@@ -95,11 +95,6 @@ workflows:
   build:
     jobs:
       - build:
-  cypress-e2e:
-    jobs:
       - cypress:
-        #        filters:
-        #          branches:
-        #            only: master
-        requires:
-          - build
+          requires:
+            - build
