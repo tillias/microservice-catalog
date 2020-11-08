@@ -98,8 +98,8 @@ workflows:
   cypress-e2e:
     jobs:
       - cypress:
-          #        filters:
-          #          branches:
-          #            only: master
-          requires:
-            - build
+        #        filters:
+        #          branches:
+        #            only: master
+        requires:
+          - build
