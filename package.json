@@ -125,7 +125,7 @@
     "webpack:test": "npm run test",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
-    "cypress": "cypress run --config video=false"
+    "cypress": "cypress run --record --config video=false"
   },
   "jestSonar": {
     "reportPath": "target/test-results/jest",
