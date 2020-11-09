@@ -94,10 +94,10 @@ jobs:
 workflows:
   build:
     jobs:
-      - cypress
-#      - cypress:
-#          requires:
-#            - build
-#          filters:
-#            branches:
-#              only: master
+      - build
+      - cypress:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
