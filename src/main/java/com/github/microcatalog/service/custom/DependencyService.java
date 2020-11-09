@@ -74,6 +74,10 @@ public class DependencyService {
             .collect(Collectors.toList());
     }
 
+    public Long deleteByName(final String name) {
+        return repository.deleteByName(name);
+    }
+
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
