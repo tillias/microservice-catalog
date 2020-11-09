@@ -17,6 +17,8 @@ import java.util.Collections;
 import static com.github.microcatalog.service.dto.custom.builder.MicroserviceDtoBuilder.aMicroserviceDto;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -29,6 +31,18 @@ class MicroserviceCustomResourceTest {
 
     @MockBean
     private MicroserviceService service;
+
+    @Test
+    void deleteByName_Success() throws Exception {
+        final String name = "Name";
+        given(service.deleteByName(name)).willReturn(4L);
+
+        mockMvc.perform(delete("/api/microservices/by/name/{name}", name)
+            .with(csrf()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").value(4L));
+    }
 
     @Test
     void findAllById_Found_Success() throws Exception {

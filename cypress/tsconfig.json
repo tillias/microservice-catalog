@@ -6,6 +6,12 @@
     "types": ["cypress"]
   },
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "../node_modules/cypress",
+    "../node_modules/cypress-commands"
+  ],
+  "types": [
+    "cypress-commands",
+    "cypress"
   ]
 }

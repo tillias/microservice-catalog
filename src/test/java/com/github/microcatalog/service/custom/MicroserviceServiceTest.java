@@ -1,10 +1,7 @@
 package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.MappersConfig;
-import com.github.microcatalog.TestUtils;
-import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.repository.MicroserviceRepository;
-import com.github.microcatalog.service.dto.custom.DependencyDto;
 import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest(classes = {MicroserviceService.class, MappersConfig.class})
 class MicroserviceServiceTest {
@@ -53,5 +51,16 @@ class MicroserviceServiceTest {
                 tuple(1L, "1"),
                 tuple(2L, "2"),
                 tuple(3L, "3"));
+    }
+
+    @Test
+    void deleteByName() {
+        final String name = "Name";
+
+        given(service.deleteByName(name)).willReturn(4L);
+
+        assertThat(service.deleteByName("Name")).isEqualTo(4L);
+
+        verify(repository).deleteByName("Name");
     }
 }

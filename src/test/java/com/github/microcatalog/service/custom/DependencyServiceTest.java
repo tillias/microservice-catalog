@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest(classes = {DependencyService.class, MappersConfig.class})
 class DependencyServiceTest {
@@ -310,4 +311,14 @@ class DependencyServiceTest {
         then(repository).should().save(any(Dependency.class));
     }
 
+    @Test
+    void deleteByName() {
+        final String name = "Name";
+
+        given(service.deleteByName(name)).willReturn(4L);
+
+        assertThat(service.deleteByName("Name")).isEqualTo(4L);
+
+        verify(repository).deleteByName("Name");
+    }
 }

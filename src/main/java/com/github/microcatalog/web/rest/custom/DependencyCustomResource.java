@@ -3,10 +3,7 @@ package com.github.microcatalog.web.rest.custom;
 import com.github.microcatalog.service.custom.DependencyService;
 import com.github.microcatalog.service.dto.custom.DependencyDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +24,10 @@ public class DependencyCustomResource {
     public ResponseEntity<List<DependencyDto>> findByIds(@PathVariable List<Long> ids) {
         final List<DependencyDto> dependencies = service.findAllById(ids);
         return ResponseEntity.ok(dependencies);
+    }
+
+    @DeleteMapping("/dependencies/by/name/{name}")
+    public ResponseEntity<Long> deleteByName(@PathVariable String name) {
+        return ResponseEntity.ok(service.deleteByName(name));
     }
 }

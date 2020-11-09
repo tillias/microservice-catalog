@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface DependencyRepository extends JpaRepository<Dependency, Long> {
+    Long deleteByName(String name);
 }

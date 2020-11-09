@@ -26,4 +26,8 @@ public class MicroserviceService {
             .map(mapper::microserviceToDto)
             .collect(Collectors.toList());
     }
+
+    public long deleteByName(final String name) {
+        return repository.deleteByName(name);
+    }
 }

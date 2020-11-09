@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface MicroserviceRepository extends JpaRepository<Microservice, Long> {
+    Long deleteByName(String name);
 }
