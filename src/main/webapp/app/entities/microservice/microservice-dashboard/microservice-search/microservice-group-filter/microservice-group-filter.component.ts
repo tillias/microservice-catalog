@@ -9,7 +9,6 @@ import { HttpResponse } from '@angular/common/http';
 @Component({
   selector: 'jhi-microservice-group-filter',
   templateUrl: './microservice-group-filter.component.html',
-  styleUrls: ['./microservice-group-filter.component.scss'],
 })
 export class MicroserviceGroupFilterComponent implements OnInit {
   groupFilter: IMicroserviceGroupFilter;

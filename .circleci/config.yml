@@ -90,14 +90,14 @@ jobs:
           key: v2-cypress-dependencies-{{ checksum "package-lock.json" }}
       - run:
           name: cypress run
-          command: 'npm run cypress'
+          command: 'npm run cypress --record --key ${CYPRESS_recordKey}'
 workflows:
   build:
     jobs:
-      - build
+#      - build
       - cypress:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
+#          requires:
+#            - build
+#          filters:
+#            branches:
+#              only: master
