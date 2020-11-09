@@ -129,9 +129,16 @@ describe('dependency dashboard', () => {
 
     // click on firstMicroservice and validate edge is added in edge legend
     cy.get('ngx-spinner').should('not.be.visible');
+
+    cy.server();
+    cy.route('GET', '/api/microservices').as('apiRequest');
+    cy.wait('@apiRequest');
+
     cy.get('canvas').click();
-    cy.get('canvas').click(331, 300, {force: true});
-    cy.get('jhi-edge-legend.ng-star-inserted > :nth-child(2) > .text-primary > a').should('have.text', newDependency);
+    cy.get('canvas').click(331, 303, {force: true});
+
+    cy.get('jhi-edge-legend.ng-star-inserted > :nth-child(2) > .text-primary > a')
+      .should('have.text', newDependency);
   })
 
   xit('delete dependency', function () {
