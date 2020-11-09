@@ -130,7 +130,7 @@ describe('dependency dashboard', () => {
     // click on firstMicroservice and validate edge is added in edge legend
     cy.get('ngx-spinner').should('not.be.visible');
     cy.get('canvas').click();
-    cy.get('canvas').click(412, 289, {force: true});
+    cy.get('canvas').click(331, 300, {force: true});
     cy.get('jhi-edge-legend.ng-star-inserted > :nth-child(2) > .text-primary > a').should('have.text', newDependency);
   })
 
