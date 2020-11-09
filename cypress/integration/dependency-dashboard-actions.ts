@@ -43,7 +43,7 @@ describe('dependency dashboard', () => {
     });
   }
 
-  it('create microservice', function () {
+  xit('create microservice', function () {
 
     cy.visit('/dashboard/dependencies');
 
@@ -72,7 +72,7 @@ describe('dependency dashboard', () => {
     cy.get('jhi-vertex-legend a').should('have.text', firstMicroservice);
   })
 
-  it('delete microservice', function () {
+  xit('delete microservice', function () {
     createMicroserviceRequest(firstMicroservice);
 
     cy.visit('/dashboard/dependencies');
@@ -87,7 +87,7 @@ describe('dependency dashboard', () => {
     cy.get('#jhi-confirm-delete-microservice').click();
   })
 
-  it('edit microservice', function () {
+  xit('edit microservice', function () {
     createMicroserviceRequest(firstMicroservice);
 
     cy.visit('/dashboard/dependencies');
