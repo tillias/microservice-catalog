@@ -43,7 +43,7 @@ describe('dependency dashboard', () => {
     });
   }
 
-  it('create microservice', function () {
+  xit('create microservice', function () {
 
     cy.visit('/dashboard/dependencies');
 
@@ -72,7 +72,7 @@ describe('dependency dashboard', () => {
     cy.get('jhi-vertex-legend a').should('have.text', firstMicroservice);
   })
 
-  it('delete microservice', function () {
+  xit('delete microservice', function () {
     createMicroserviceRequest(firstMicroservice);
 
     cy.visit('/dashboard/dependencies');
@@ -87,7 +87,7 @@ describe('dependency dashboard', () => {
     cy.get('#jhi-confirm-delete-microservice').click();
   })
 
-  it('edit microservice', function () {
+  xit('edit microservice', function () {
     createMicroserviceRequest(firstMicroservice);
 
     cy.visit('/dashboard/dependencies');
@@ -129,9 +129,16 @@ describe('dependency dashboard', () => {
 
     // click on firstMicroservice and validate edge is added in edge legend
     cy.get('ngx-spinner').should('not.be.visible');
+
+    cy.server();
+    cy.route('GET', '/api/microservices').as('apiRequest');
+    cy.wait('@apiRequest');
+
     cy.get('canvas').click();
-    cy.get('canvas').click(414, 292, {force: true});
-    cy.get('jhi-edge-legend.ng-star-inserted > :nth-child(2) > .text-primary > a').should('have.text', newDependency);
+    cy.get('canvas').click(331, 303, {force: true});
+
+    cy.get('jhi-edge-legend.ng-star-inserted > :nth-child(2) > .text-primary > a')
+      .should('have.text', newDependency);
   })
 
   xit('delete dependency', function () {
