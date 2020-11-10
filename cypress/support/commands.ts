@@ -6,16 +6,17 @@ declare namespace Cypress {
     loginUser: typeof loginUser
     createMicroservice: typeof createMicroservice
     deleteMicroservice: typeof deleteMicroservice
+    createDependency: typeof createDependency
     deleteDependency: typeof deleteDependency
   }
 }
 
-function getTokenWithoutQuotationMarks() : string {
+function getTokenWithoutQuotationMarks(): string {
   const token = window.sessionStorage.getItem('jhi-authenticationtoken');
   return token.slice(1, token.length - 1);
 }
 
-function getBearerHeader() : string {
+function getBearerHeader(): string {
   return "Bearer " + getTokenWithoutQuotationMarks();
 }
 
@@ -38,7 +39,7 @@ function logout(): void {
   window.sessionStorage.clear();
 }
 
-function createMicroservice(microservice: any): void{
+function createMicroservice(microservice: any): void {
   cy.request({
     url: '/api/microservices',
     body: microservice,
@@ -53,6 +54,17 @@ function deleteMicroservice(name: string): void {
   cy.request({
     url: '/api/microservices/by/name/' + name,
     method: 'DELETE',
+    headers: {
+      Authorization: getBearerHeader()
+    }
+  });
+}
+
+function createDependency(dependency: any): void {
+  cy.request({
+    url: '/api/dependencies',
+    body: dependency,
+    method: 'POST',
     headers: {
       Authorization: getBearerHeader()
     }
@@ -75,4 +87,5 @@ Cypress.Commands.add('loginUser', () => loginUser());
 Cypress.Commands.add('logout', () => logout());
 Cypress.Commands.add('createMicroservice', (body) => createMicroservice(body));
 Cypress.Commands.add('deleteMicroservice', (name) => deleteMicroservice(name));
+Cypress.Commands.add('createDependency', (body) => createDependency(body));
 Cypress.Commands.add('deleteDependency', (name) => deleteDependency(name));

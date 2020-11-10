@@ -3,20 +3,17 @@ package com.github.microcatalog.domain.custom.impact.analysis;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Group {
-    private Set<Item> items = new HashSet<>();
+    private List<Item> items = new ArrayList<>();
 
-    public Set<Item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public Group items(Set<Item> items) {
+    public Group items(List<Item> items) {
         this.items = items;
         return this;
     }
@@ -29,7 +26,11 @@ public class Group {
         this.items.add(item);
     }
 
-    public void setItems(Set<Item> items) {
+    public void sortItemsById() {
+        items.sort(Comparator.comparing(a -> a.getTarget().getId()));
+    }
+
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 

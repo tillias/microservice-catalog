@@ -8,10 +8,12 @@
   "include": [
     "**/*.ts",
     "../node_modules/cypress",
-    "../node_modules/cypress-commands"
+    "../node_modules/cypress-commands",
+    "../node_modules/@percy/cypress"
   ],
   "types": [
     "cypress-commands",
-    "cypress"
+    "cypress",
+    "@percy/cypress"
   ]
 }

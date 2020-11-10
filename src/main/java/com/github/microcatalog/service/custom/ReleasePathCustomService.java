@@ -64,6 +64,7 @@ public class ReleasePathCustomService extends GraphOperationsService {
 
             final ReleaseGroup group = new ReleaseGroup();
             group.setSteps(convertSteps(verticesWithoutIncomingEdges, graph));
+            group.sortStepsById();
             groups.add(group);
 
             verticesWithoutIncomingEdges.forEach(graph::removeVertex);
@@ -74,9 +75,9 @@ public class ReleasePathCustomService extends GraphOperationsService {
         return result;
     }
 
-    private Set<ReleaseStep> convertSteps(final List<Microservice> verticesWithoutIncomingEdges,
-                                          final Graph<Microservice, DefaultEdge> graph) {
-        final Set<ReleaseStep> result = new HashSet<>();
+    private List<ReleaseStep> convertSteps(final List<Microservice> verticesWithoutIncomingEdges,
+                                           final Graph<Microservice, DefaultEdge> graph) {
+        final List<ReleaseStep> result = new ArrayList<>();
 
         verticesWithoutIncomingEdges.forEach(microservice -> {
             final List<Microservice> parentWorkItems = new ArrayList<>();

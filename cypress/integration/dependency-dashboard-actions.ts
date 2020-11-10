@@ -43,7 +43,7 @@ describe('dependency dashboard', () => {
     });
   }
 
-  xit('create microservice', function () {
+  it('create microservice', function () {
 
     cy.visit('/dashboard/dependencies');
 
@@ -72,7 +72,7 @@ describe('dependency dashboard', () => {
     cy.get('jhi-vertex-legend a').should('have.text', firstMicroservice);
   })
 
-  xit('delete microservice', function () {
+  it('delete microservice', function () {
     createMicroserviceRequest(firstMicroservice);
 
     cy.visit('/dashboard/dependencies');
@@ -87,7 +87,7 @@ describe('dependency dashboard', () => {
     cy.get('#jhi-confirm-delete-microservice').click();
   })
 
-  xit('edit microservice', function () {
+  it('edit microservice', function () {
     createMicroserviceRequest(firstMicroservice);
 
     cy.visit('/dashboard/dependencies');
@@ -125,13 +125,15 @@ describe('dependency dashboard', () => {
       .type(secondMicroservice);
     cy.get('.ngb-highlight').click();
 
+    cy.server();
+    cy.route('GET', '/api/microservices').as('apiRequest');
+
     cy.get('.btn-primary').click();
 
     // click on firstMicroservice and validate edge is added in edge legend
     cy.get('ngx-spinner').should('not.be.visible');
 
-    cy.server();
-    cy.route('GET', '/api/microservices').as('apiRequest');
+
     cy.wait('@apiRequest');
 
     cy.get('canvas').click();
