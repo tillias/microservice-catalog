@@ -128,7 +128,7 @@
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
     "cypress": "cypress run --config video=true --browser chrome",
-    "percy": "percy exec -- cypress run --browser chrome --config video=false"
+    "percy": "percy exec -- cypress run --record --browser chrome"
   },
   "jestSonar": {
     "reportPath": "target/test-results/jest",

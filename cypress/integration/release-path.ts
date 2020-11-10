@@ -13,6 +13,9 @@ describe.only('release path', () => {
 
     cy.wait('@apiRequest');
     cy.get('jhi-release-path > .p3 > .vis-network > canvas');
+
+    cy.wait(1000); // dirty hack, community help is needed
+
     cy.get('jhi-release-graph > .p3 > .vis-network > canvas');
 
     cy.percySnapshot('release-path', { widths: [1024] });
