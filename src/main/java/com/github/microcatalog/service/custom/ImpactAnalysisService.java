@@ -77,6 +77,9 @@ public class ImpactAnalysisService extends GraphOperationsService {
             group.addItem(new Item().target(v).siblings(siblings));
         });
 
+        group.sortItemsById();
+
+
         return group;
     }
 

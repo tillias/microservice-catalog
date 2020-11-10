@@ -46,6 +46,7 @@
     "@angular/compiler-cli": "10.0.0",
     "@ngtools/webpack": "10.0.0",
     "@openapitools/openapi-generator-cli": "1.0.13-4.3.1",
+    "@percy/cypress": "^2.3.2",
     "@types/jest": "26.0.3",
     "@types/node": "13.13.4",
     "@typescript-eslint/eslint-plugin": "2.30.0",
@@ -126,8 +127,8 @@
     "webpack:test": "npm run test",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
-    "cypress": "cypress run --record --browser chrome --config video=true",
-    "cypress-no-record": "cypress run --config video=true"
+    "cypress": "cypress run --config video=true --browser chrome",
+    "percy": "percy exec -- cypress run --browser chrome --config video=false"
   },
   "jestSonar": {
     "reportPath": "target/test-results/jest",

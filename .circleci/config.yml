@@ -89,8 +89,8 @@ jobs:
             - /root/.cache/Cypress
           key: v2-cypress-dependencies-{{ checksum "package-lock.json" }}
       - run:
-          name: cypress run
-          command: 'npm run cypress'
+          name: percy run
+          command: 'npm run percy'
 workflows:
   build:
     jobs:

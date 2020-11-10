@@ -3,23 +3,20 @@ package com.github.microcatalog.domain.custom;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A ReleaseGroup.
  */
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ReleaseGroup {
-    private Set<ReleaseStep> steps = new HashSet<>();
+    private List<ReleaseStep> steps = new ArrayList<>();
 
-    public Set<ReleaseStep> getSteps() {
+    public List<ReleaseStep> getSteps() {
         return steps;
     }
 
-    public ReleaseGroup steps(Set<ReleaseStep> releaseSteps) {
+    public ReleaseGroup steps(List<ReleaseStep> releaseSteps) {
         this.steps = releaseSteps;
         return this;
     }
@@ -34,7 +31,7 @@ public class ReleaseGroup {
         return this;
     }
 
-    public void setSteps(Set<ReleaseStep> releaseSteps) {
+    public void setSteps(List<ReleaseStep> releaseSteps) {
         this.steps = releaseSteps;
     }
 
@@ -42,5 +39,9 @@ public class ReleaseGroup {
         return steps.stream()
             .filter(i -> Objects.equals(targetId, i.getWorkItem().getId()))
             .findAny();
+    }
+
+    public void sortStepsById() {
+        steps.sort(Comparator.comparing(a -> a.getWorkItem().getId()));
     }
 }
