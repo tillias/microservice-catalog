@@ -48,8 +48,16 @@ export class DependencyDashboardComponent implements OnInit, AfterViewInit, OnDe
   }
 
   registerChangeInDependencies(): void {
-    this.subscription = this.eventManager.subscribe('dependencyListModification', () => this.refreshGraph());
-    this.subscription.add(this.eventManager.subscribe('microserviceListModification', () => this.refreshGraph()));
+    this.subscription = this.eventManager.subscribe('dependencyListModification', () => {
+      this.refreshGraph();
+      this.edgeSelection = undefined;
+    });
+    this.subscription.add(
+      this.eventManager.subscribe('microserviceListModification', () => {
+        this.refreshGraph();
+        this.nodeSelection = undefined;
+      })
+    );
   }
 
   ngAfterViewInit(): void {
