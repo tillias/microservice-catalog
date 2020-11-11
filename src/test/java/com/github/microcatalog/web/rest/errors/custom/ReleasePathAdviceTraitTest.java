@@ -3,8 +3,6 @@ package com.github.microcatalog.web.rest.errors.custom;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
 import com.github.microcatalog.service.custom.exceptions.DuplicateDependencyException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
-import com.github.microcatalog.utils.DependencyBuilder;
-import com.github.microcatalog.utils.MicroserviceBuilder;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +17,10 @@ import org.zalando.problem.Problem;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static org.assertj.core.api.Assertions.*;
+import static com.github.microcatalog.service.dto.custom.builder.DependencyDtoBuilder.aDependencyDto;
+import static com.github.microcatalog.service.dto.custom.builder.MicroserviceDtoBuilder.aMicroserviceDto;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Mockito.spy;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,11 +34,11 @@ class ReleasePathAdviceTraitTest {
     @Test
     void handleDuplicateDependencyException() {
         final DuplicateDependencyException exception = new DuplicateDependencyException("Test message",
-            new DependencyBuilder()
+            aDependencyDto()
                 .withId(1L)
                 .withName("Test Dependency")
-                .withSource(1L)
-                .withTarget(2L)
+                .withSource(aMicroserviceDto().withId(1L).build())
+                .withTarget(aMicroserviceDto().withId(2L).build())
                 .build());
 
         ResponseEntity<Problem> response = cut.handleDuplicateDependencyException(exception, webRequest);
@@ -60,7 +61,7 @@ class ReleasePathAdviceTraitTest {
     void handleSelfCircularException() {
 
         final SelfCircularException exception =
-            new SelfCircularException("Test message", new MicroserviceBuilder().withId(1L).withName("Test").build());
+            new SelfCircularException("Test message", aMicroserviceDto().withId(1L).withName("Test").build());
         ResponseEntity<Problem> response = cut.handleSelfCircularException(exception, webRequest);
 
         assertThat(response).isNotNull()
@@ -81,9 +82,9 @@ class ReleasePathAdviceTraitTest {
     void handleCircularDependenciesException() {
         final CircularDependenciesException exception =
             new CircularDependenciesException("Test message", new HashSet<>(Arrays.asList(
-                new MicroserviceBuilder().withId(1L).withName("First").build(),
-                new MicroserviceBuilder().withId(2L).withName("Second").build(),
-                new MicroserviceBuilder().withId(3L).withName("Third").build()
+                aMicroserviceDto().withId(1L).withName("First").build(),
+                aMicroserviceDto().withId(2L).withName("Second").build(),
+                aMicroserviceDto().withId(3L).withName("Third").build()
             )));
 
         ResponseEntity<Problem> response = cut.handleCircularDependenciesException(exception, webRequest);

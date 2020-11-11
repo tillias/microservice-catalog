@@ -1,9 +1,10 @@
 package com.github.microcatalog.service.custom;
 
-import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.domain.custom.impact.analysis.Group;
 import com.github.microcatalog.domain.custom.impact.analysis.Item;
 import com.github.microcatalog.domain.custom.impact.analysis.Result;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
+import com.github.microcatalog.service.mapper.MicroserviceMapper;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -25,8 +26,12 @@ public class ImpactAnalysisService extends GraphOperationsService {
 
     private final Logger log = LoggerFactory.getLogger(ImpactAnalysisService.class);
 
-    public ImpactAnalysisService(GraphLoaderService graphLoaderService) {
+    private final MicroserviceMapper mapper;
+
+    public ImpactAnalysisService(GraphLoaderService graphLoaderService, MicroserviceMapper mapper) {
         super(graphLoaderService);
+
+        this.mapper = mapper;
     }
 
     public Optional<Result> calculate(final Long microserviceId) {
@@ -35,21 +40,21 @@ public class ImpactAnalysisService extends GraphOperationsService {
             return Optional.empty();
         }
 
-        final Graph<Microservice, DefaultEdge> reversed = new EdgeReversedGraph<>(context.getGraph());
+        final Graph<MicroserviceDto, DefaultEdge> reversed = new EdgeReversedGraph<>(context.getGraph());
 
         // Calculate all vertices, you can reach from target
-        final Set<Microservice> affectedMicroservices = new HashSet<>();
-        GraphIterator<Microservice, DefaultEdge> iterator = new DepthFirstIterator<>(reversed, context.getTarget());
+        final Set<MicroserviceDto> affectedMicroservices = new HashSet<>();
+        GraphIterator<MicroserviceDto, DefaultEdge> iterator = new DepthFirstIterator<>(reversed, context.getTarget());
         while (iterator.hasNext()) {
             affectedMicroservices.add(iterator.next());
         }
 
-        final Graph<Microservice, DefaultEdge> affectedGraph = new AsSubgraph<>(reversed, affectedMicroservices);
+        final Graph<MicroserviceDto, DefaultEdge> affectedGraph = new AsSubgraph<>(reversed, affectedMicroservices);
 
         final Result result = new Result().createdOn(Instant.now()).target(context.getTarget());
 
         do {
-            final List<Microservice> verticesWithoutIncomingEdges = affectedGraph.vertexSet().stream()
+            final List<MicroserviceDto> verticesWithoutIncomingEdges = affectedGraph.vertexSet().stream()
                 .filter(v -> affectedGraph.incomingEdgesOf(v).isEmpty())
                 .collect(Collectors.toList());
             log.debug("Leaves: {}", verticesWithoutIncomingEdges);
@@ -63,14 +68,14 @@ public class ImpactAnalysisService extends GraphOperationsService {
         return Optional.of(result);
     }
 
-    private Group createGroup(final Graph<Microservice, DefaultEdge> graph, final List<Microservice> verticesWithoutIncomingEdges) {
+    private Group createGroup(final Graph<MicroserviceDto, DefaultEdge> graph, final List<MicroserviceDto> verticesWithoutIncomingEdges) {
         final Group group = new Group();
 
         verticesWithoutIncomingEdges.forEach(v -> {
             final Set<DefaultEdge> outgoingEdgesOf = graph.outgoingEdgesOf(v);
-            final List<Microservice> siblings = new ArrayList<>();
+            final List<MicroserviceDto> siblings = new ArrayList<>();
             outgoingEdgesOf.forEach(e -> {
-                final Microservice sibling = graph.getEdgeTarget(e);
+                final MicroserviceDto sibling = graph.getEdgeTarget(e);
                 siblings.add(sibling);
             });
 
@@ -82,5 +87,4 @@ public class ImpactAnalysisService extends GraphOperationsService {
 
         return group;
     }
-
 }

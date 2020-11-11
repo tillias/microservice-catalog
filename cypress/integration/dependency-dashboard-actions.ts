@@ -40,7 +40,34 @@ describe('dependency dashboard', () => {
       team: {
         id: 1,
       }
-    });
+    })
+  }
+
+  function createDependencyUI(source: string, target: string) {
+    createMicroserviceRequest(source);
+    createMicroserviceRequest(target);
+
+    cy.visit('/dashboard/dependencies');
+
+    cy.get(':nth-child(6) > .btn').click();
+
+    cy.get(':nth-child(2) > :nth-child(2) > jhi-microservice-search > .d-flex > .form-control')
+      .type(firstMicroservice);
+    cy.get('.ngb-highlight').click();
+
+    cy.get(':nth-child(3) > :nth-child(2) > jhi-microservice-search > .d-flex > .form-control')
+      .type(secondMicroservice);
+    cy.get('.ngb-highlight').click();
+
+    cy.server();
+    cy.route('GET', '/api/dependencies').as('apiRequest');
+
+    cy.get('.btn-primary').click();
+
+    // click on firstMicroservice and validate edge is added in edge legend
+    cy.get('ngx-spinner').should('not.be.visible');
+
+    cy.wait('@apiRequest');
   }
 
   it('create microservice', function () {
@@ -110,11 +137,104 @@ describe('dependency dashboard', () => {
   })
 
   it('create dependency', function () {
+    createDependencyUI(firstMicroservice, secondMicroservice);
+
+    cy.get('canvas').click();
+    cy.get('canvas').click(331, 303, {force: true});
+
+    cy.get('jhi-edge-legend.ng-star-inserted > :nth-child(2) > .text-primary > a')
+      .should('have.text', newDependency);
+  })
+
+  it('delete dependency', function () {
+    createMicroserviceRequest(firstMicroservice);
+    createMicroserviceRequest(secondMicroservice);
+
+    cy.createDependency(newDependency, firstMicroservice, secondMicroservice);
+
+    cy.visit('/dashboard/dependencies');
+
+    cy.get('canvas').click();
+    cy.get('canvas').click(331, 303, {force: true});
+
+    cy.get(':nth-child(8) > .btn').click();
+
+    cy.get('#jhi-confirm-delete-dependency').click();
+
+    cy.get('canvas').click();
+    cy.get('canvas').click(269, 247, {force: true});
+
+    cy.get('jhi-edge-legend.ng-star-inserted > :nth-child(1) > h5').should('not.be.visible');
+  })
+
+  it('create dependency with start selected', function () {
+
     createMicroserviceRequest(firstMicroservice);
     createMicroserviceRequest(secondMicroservice);
 
     cy.visit('/dashboard/dependencies');
 
+    cy.get('canvas').click();
+    cy.get('canvas').click(412, 176, {force: true}); // firstMicroservice
+
+    cy.get(':nth-child(6) > .btn').click(); // create dependency
+
+    cy.get(':nth-child(1) > .text-primary').should('has.text', 'TestService1 -> undefined');
+  })
+
+  it('create dependency with start and end selected', function () {
+
+    createMicroserviceRequest(firstMicroservice);
+    createMicroserviceRequest(secondMicroservice);
+
+    cy.visit('/dashboard/dependencies');
+
+    cy.get('canvas').click();
+    cy.get('canvas').click(412, 176, {force: true}); // firstMicroservice
+    cy.get('canvas').click(261, 245, {force: true, ctrlKey: true}); // secondMicroservice
+
+    cy.get(':nth-child(6) > .btn').click(); // create dependency
+
+    cy.get(':nth-child(1) > .text-primary').should('has.text', 'TestService1 -> TestService2');
+    cy.get(':nth-child(4) > .btn-warning').click(); // swap
+    cy.get(':nth-child(1) > .text-primary').should('has.text', 'TestService2 -> TestService1');
+  })
+
+  it('dependency having same source and target is not allowed', function () {
+    createMicroserviceRequest(firstMicroservice);
+    cy.visit('/dashboard/dependencies');
+    cy.get(':nth-child(6) > .btn').click();
+
+    cy.get(':nth-child(2) > :nth-child(2) > jhi-microservice-search > .d-flex > .form-control')
+      .type(firstMicroservice);
+    cy.get('.ngb-highlight').click();
+
+    cy.get(':nth-child(3) > :nth-child(2) > jhi-microservice-search > .d-flex > .form-control')
+      .type(firstMicroservice);
+    cy.get('.ngb-highlight').click();
+
+    cy.server();
+    cy.route('POST', '/api/dependencies').as('apiRequest');
+
+    cy.get('.btn-primary').click();
+
+    cy.wait('@apiRequest').then((response) => {
+      expect(response.status).to.eq(422);
+    });
+
+    cy.get('.alert');
+  })
+
+  it('duplicate dependency now allowed', function () {
+
+    createMicroserviceRequest(firstMicroservice);
+    createMicroserviceRequest(secondMicroservice);
+
+    cy.createDependency(newDependency, firstMicroservice, secondMicroservice);
+
+    cy.visit('/dashboard/dependencies');
+
+    // create same dependency once again
     cy.get(':nth-child(6) > .btn').click();
 
     cy.get(':nth-child(2) > :nth-child(2) > jhi-microservice-search > .d-flex > .form-control')
@@ -126,48 +246,14 @@ describe('dependency dashboard', () => {
     cy.get('.ngb-highlight').click();
 
     cy.server();
-    cy.route('GET', '/api/microservices').as('apiRequest');
+    cy.route('POST', '/api/dependencies').as('apiRequest');
 
-    cy.get('.btn-primary').click();
+    cy.get('.btn-primary').click(); // create dependency
 
-    // click on firstMicroservice and validate edge is added in edge legend
-    cy.get('ngx-spinner').should('not.be.visible');
+    cy.wait('@apiRequest').then((response) => {
+      expect(response.status).to.eq(422);
+    });
 
-
-    cy.wait('@apiRequest');
-
-    cy.get('canvas').click();
-    cy.get('canvas').click(331, 303, {force: true});
-
-    cy.get('jhi-edge-legend.ng-star-inserted > :nth-child(2) > .text-primary > a')
-      .should('have.text', newDependency);
+    cy.get('.alert');
   })
-
-  xit('delete dependency', function () {
-    cy.visit('/dashboard/dependencies');
-
-    // TODO
-  })
-
-  xit('create dependency with start selected', function () {
-
-    cy.visit('/dashboard/dependencies');
-
-    // TODO
-  })
-
-  xit('create dependency with start and end selected', function () {
-
-    cy.visit('/dashboard/dependencies');
-
-    // TODO
-  })
-
-  xit('create dependency with swap', function () {
-
-    cy.visit('/dashboard/dependencies');
-
-    // TODO
-  })
-
 })

@@ -3,7 +3,6 @@ package com.github.microcatalog.web.rest.custom;
 import com.github.microcatalog.MockMvcWithUser;
 import com.github.microcatalog.domain.custom.ReleasePath;
 import com.github.microcatalog.service.custom.ReleasePathCustomService;
-import com.github.microcatalog.utils.MicroserviceBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
+import static com.github.microcatalog.service.dto.custom.builder.MicroserviceDtoBuilder.aMicroserviceDto;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,7 +33,7 @@ class ReleasePathCustomResourceTest {
         given(service.getReleasePath(3L))
             .willReturn(Optional.of(
                 new ReleasePath()
-                    .target(new MicroserviceBuilder().withId(3L).build())));
+                    .target(aMicroserviceDto().withId(3L).build())));
 
         mockMvc.perform(get("/api/release-path/microservice/3"))
             .andExpect(status().isOk())

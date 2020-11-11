@@ -1,6 +1,6 @@
 package com.github.microcatalog.domain.custom.impact.analysis;
 
-import com.github.microcatalog.domain.Microservice;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class Result {
     private Instant createdOn;
     private List<Group> groups = new ArrayList<>();
-    private Microservice target;
+    private MicroserviceDto target;
 
     public Instant getCreatedOn() {
         return createdOn;
@@ -48,16 +48,16 @@ public class Result {
         this.groups = releaseGroups;
     }
 
-    public Microservice getTarget() {
+    public MicroserviceDto getTarget() {
         return target;
     }
 
-    public Result target(Microservice microservice) {
+    public Result target(MicroserviceDto microservice) {
         this.target = microservice;
         return this;
     }
 
-    public void setTarget(Microservice microservice) {
+    public void setTarget(MicroserviceDto microservice) {
         this.target = microservice;
     }
 }

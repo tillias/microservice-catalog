@@ -1,6 +1,6 @@
 package com.github.microcatalog.service.custom.exceptions;
 
-import com.github.microcatalog.domain.Microservice;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 
 import java.util.Set;
 
@@ -8,15 +8,17 @@ import java.util.Set;
  * Occurs when adding new dependency will introduce cycle
  */
 public class CircularDependenciesException extends RuntimeException {
-    private final Set<Microservice> cycles;
+    private static final long serialVersionUID = -8709192334943830989L;
 
-    public CircularDependenciesException(String message, Set<Microservice> cycles) {
+    private final Set<MicroserviceDto> cycles;
+
+    public CircularDependenciesException(String message, Set<MicroserviceDto> cycles) {
         super(message);
 
         this.cycles = cycles;
     }
 
-    public Set<Microservice> getCycles() {
+    public Set<MicroserviceDto> getCycles() {
         return cycles;
     }
 }

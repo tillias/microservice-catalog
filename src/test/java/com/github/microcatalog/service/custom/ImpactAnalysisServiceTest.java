@@ -1,11 +1,12 @@
 package com.github.microcatalog.service.custom;
 
-import com.github.microcatalog.domain.Microservice;
+import com.github.microcatalog.MappersConfig;
 import com.github.microcatalog.domain.custom.impact.analysis.Group;
 import com.github.microcatalog.domain.custom.impact.analysis.Item;
 import com.github.microcatalog.domain.custom.impact.analysis.Result;
 import com.github.microcatalog.service.GraphUtils;
 import com.github.microcatalog.service.custom.exceptions.MicroserviceNotFoundException;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -21,7 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
-@SpringBootTest(classes = {ImpactAnalysisService.class})
+@SpringBootTest(classes = {ImpactAnalysisService.class, MappersConfig.class})
 class ImpactAnalysisServiceTest {
 
     @MockBean
@@ -198,7 +199,7 @@ class ImpactAnalysisServiceTest {
     private void assertThatItemHasSiblings(Item item, Long... siblingsIds) {
         assertThat(item.getSiblings())
             .isNotNull()
-            .extracting(Microservice::getId)
+            .extracting(MicroserviceDto::getId)
             .containsExactlyInAnyOrder(siblingsIds);
     }
 }

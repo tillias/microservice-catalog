@@ -1,9 +1,10 @@
 package com.github.microcatalog.service.custom;
 
-import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.domain.custom.ReleaseGroup;
 import com.github.microcatalog.domain.custom.ReleasePath;
 import com.github.microcatalog.domain.custom.ReleaseStep;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
+import com.github.microcatalog.service.mapper.MicroserviceMapper;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -26,8 +27,12 @@ public class ReleasePathCustomService extends GraphOperationsService {
 
     private final Logger log = LoggerFactory.getLogger(ReleasePathCustomService.class);
 
-    public ReleasePathCustomService(GraphLoaderService graphLoaderService) {
+    private final MicroserviceMapper mapper;
+
+    public ReleasePathCustomService(GraphLoaderService graphLoaderService, MicroserviceMapper mapper) {
         super(graphLoaderService);
+
+        this.mapper = mapper;
     }
 
     public Optional<ReleasePath> getReleasePath(final Long microserviceId) {
@@ -36,20 +41,20 @@ public class ReleasePathCustomService extends GraphOperationsService {
             return Optional.empty();
         }
 
-        final Set<Microservice> pathMicroservices = new HashSet<>();
-        GraphIterator<Microservice, DefaultEdge> iterator = new DepthFirstIterator<>(context.getGraph(), context.getTarget());
+        final Set<MicroserviceDto> pathMicroservices = new HashSet<>();
+        GraphIterator<MicroserviceDto, DefaultEdge> iterator = new DepthFirstIterator<>(context.getGraph(), context.getTarget());
         while (iterator.hasNext()) {
             pathMicroservices.add(iterator.next());
         }
 
-        final Graph<Microservice, DefaultEdge> pathGraph = new AsSubgraph<>(context.getGraph(), pathMicroservices);
+        final Graph<MicroserviceDto, DefaultEdge> pathGraph = new AsSubgraph<>(context.getGraph(), pathMicroservices);
         log.debug("Connected subgraph, which contains all paths from target microservice to it's dependencies {}", pathGraph);
 
-        final Graph<Microservice, DefaultEdge> reversed = new EdgeReversedGraph<>(pathGraph);
+        final Graph<MicroserviceDto, DefaultEdge> reversed = new EdgeReversedGraph<>(pathGraph);
         return Optional.of(convert(reversed, context.getTarget()));
     }
 
-    private ReleasePath convert(final Graph<Microservice, DefaultEdge> graph, final Microservice target) {
+    private ReleasePath convert(final Graph<MicroserviceDto, DefaultEdge> graph, final MicroserviceDto target) {
         final ReleasePath result = new ReleasePath();
         result.setCreatedOn(Instant.now());
         result.setTarget(target);
@@ -57,7 +62,7 @@ public class ReleasePathCustomService extends GraphOperationsService {
         final List<ReleaseGroup> groups = new ArrayList<>();
 
         do {
-            final List<Microservice> verticesWithoutIncomingEdges = graph.vertexSet().stream()
+            final List<MicroserviceDto> verticesWithoutIncomingEdges = graph.vertexSet().stream()
                 .filter(v -> graph.incomingEdgesOf(v).isEmpty())
                 .collect(Collectors.toList());
             log.debug("Leaves: {}", verticesWithoutIncomingEdges);
@@ -75,16 +80,16 @@ public class ReleasePathCustomService extends GraphOperationsService {
         return result;
     }
 
-    private List<ReleaseStep> convertSteps(final List<Microservice> verticesWithoutIncomingEdges,
-                                           final Graph<Microservice, DefaultEdge> graph) {
+    private List<ReleaseStep> convertSteps(final List<MicroserviceDto> verticesWithoutIncomingEdges,
+                                           final Graph<MicroserviceDto, DefaultEdge> graph) {
         final List<ReleaseStep> result = new ArrayList<>();
 
         verticesWithoutIncomingEdges.forEach(microservice -> {
-            final List<Microservice> parentWorkItems = new ArrayList<>();
+            final List<MicroserviceDto> parentWorkItems = new ArrayList<>();
 
             final Set<DefaultEdge> outgoingEdges = graph.outgoingEdgesOf(microservice);
             for (DefaultEdge e : outgoingEdges) {
-                final Microservice edgeTarget = graph.getEdgeTarget(e);
+                final MicroserviceDto edgeTarget = graph.getEdgeTarget(e);
                 parentWorkItems.add(edgeTarget);
             }
 

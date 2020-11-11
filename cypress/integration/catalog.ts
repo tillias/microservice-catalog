@@ -73,7 +73,7 @@ describe.only('catalog and search', () => {
     cy.get('.btn-primary:nth-child(1)').click();
 
     cy.get('.card-body').should('have.length', 1);
-    cy.get('h6').should('have.text', 'This is custom old service description\n');
+    cy.get('h6').contains('This is custom old service description');
 
   })
 
@@ -115,7 +115,7 @@ describe.only('catalog and search', () => {
     cy.get('.btn-primary:nth-child(1)').click();
 
     cy.get('.card-body').should('have.length', 1);
-    cy.get('h6').should('have.text', 'This is custom old service description\n');
+    cy.get('h6').contains('This is custom old service description');
   })
 
   it('advanced filter case insensitive search by swagger url', function () {

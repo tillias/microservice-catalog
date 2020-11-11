@@ -1,6 +1,6 @@
 package com.github.microcatalog.domain.custom;
 
-import com.github.microcatalog.domain.Microservice;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -11,32 +11,32 @@ import java.util.List;
  */
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ReleaseStep {
-    private Microservice workItem;
-    private List<Microservice> parentWorkItems;
+    private MicroserviceDto workItem;
+    private List<MicroserviceDto> parentWorkItems;
 
-    public Microservice getWorkItem() {
+    public MicroserviceDto getWorkItem() {
         return workItem;
     }
 
-    public ReleaseStep workItem(Microservice microservice) {
+    public ReleaseStep workItem(MicroserviceDto microservice) {
         this.workItem = microservice;
         return this;
     }
 
-    public void setWorkItem(Microservice microservice) {
+    public void setWorkItem(MicroserviceDto microservice) {
         this.workItem = microservice;
     }
 
-    public List<Microservice> getParentWorkItems() {
+    public List<MicroserviceDto> getParentWorkItems() {
         return parentWorkItems;
     }
 
-    public ReleaseStep parentWorkItems(List<Microservice> microservices) {
+    public ReleaseStep parentWorkItems(List<MicroserviceDto> microservices) {
         this.parentWorkItems = microservices;
         return this;
     }
 
-    public void setParentWorkItems(List<Microservice> parentWorkItems) {
+    public void setParentWorkItems(List<MicroserviceDto> parentWorkItems) {
         this.parentWorkItems = parentWorkItems;
     }
 }

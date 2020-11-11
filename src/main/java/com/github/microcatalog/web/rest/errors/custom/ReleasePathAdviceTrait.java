@@ -1,10 +1,10 @@
 package com.github.microcatalog.web.rest.errors.custom;
 
-import com.github.microcatalog.domain.Dependency;
-import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
 import com.github.microcatalog.service.custom.exceptions.DuplicateDependencyException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
+import com.github.microcatalog.service.dto.custom.DependencyDto;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -26,7 +26,7 @@ public interface ReleasePathAdviceTrait extends AdviceTrait {
 
     @ExceptionHandler
     default ResponseEntity<Problem> handleDuplicateDependencyException(final DuplicateDependencyException exception, final NativeWebRequest request) {
-        final Dependency dependency = exception.getDependency();
+        final DependencyDto dependency = exception.getDependency();
 
         final Problem problem = Problem.builder()
             .withStatus(UNPROCESSABLE_ENTITY)
@@ -42,7 +42,7 @@ public interface ReleasePathAdviceTrait extends AdviceTrait {
 
     @ExceptionHandler
     default ResponseEntity<Problem> handleSelfCircularException(final SelfCircularException exception, final NativeWebRequest request) {
-        final Microservice source = exception.getSource();
+        final MicroserviceDto source = exception.getSource();
         final Problem problem = Problem.builder()
             .withStatus(UNPROCESSABLE_ENTITY)
             .with(EXCEPTION_KEY, SelfCircularException.class.getSimpleName())
@@ -55,7 +55,7 @@ public interface ReleasePathAdviceTrait extends AdviceTrait {
 
     @ExceptionHandler
     default ResponseEntity<Problem> handleCircularDependenciesException(final CircularDependenciesException exception, final NativeWebRequest request) {
-        final List<String> microservices = exception.getCycles().stream().map(Microservice::getName).collect(Collectors.toList());
+        final List<String> microservices = exception.getCycles().stream().map(MicroserviceDto::getName).collect(Collectors.toList());
 
         final Problem problem = Problem.builder()
             .withStatus(UNPROCESSABLE_ENTITY)
