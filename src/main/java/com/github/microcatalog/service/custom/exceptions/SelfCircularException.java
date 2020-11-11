@@ -1,20 +1,22 @@
 package com.github.microcatalog.service.custom.exceptions;
 
-import com.github.microcatalog.domain.Microservice;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 
 /**
  * Occurs when there is attempt creating dependency with source and target pointing to the same microservice
  */
 public class SelfCircularException extends RuntimeException {
-    private final Microservice source;
+    private static final long serialVersionUID = 8533101069660472099L;
 
-    public SelfCircularException(String message, Microservice source) {
+    private final MicroserviceDto source;
+
+    public SelfCircularException(String message, MicroserviceDto source) {
         super(message);
 
         this.source = source;
     }
 
-    public Microservice getSource() {
+    public MicroserviceDto getSource() {
         return source;
     }
 }

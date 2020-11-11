@@ -4,13 +4,13 @@ import com.github.microcatalog.MappersConfig;
 import com.github.microcatalog.TestUtils;
 import com.github.microcatalog.domain.Dependency;
 import com.github.microcatalog.repository.DependencyRepository;
+import com.github.microcatalog.repository.MicroserviceRepository;
 import com.github.microcatalog.service.GraphUtils;
 import com.github.microcatalog.service.custom.exceptions.CircularDependenciesException;
 import com.github.microcatalog.service.custom.exceptions.DuplicateDependencyException;
 import com.github.microcatalog.service.custom.exceptions.SelfCircularException;
 import com.github.microcatalog.service.dto.custom.DependencyDto;
 import com.github.microcatalog.service.dto.custom.MicroserviceDto;
-import com.github.microcatalog.utils.MicroserviceBuilder;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.microcatalog.TestUtils.dependency;
+import static com.github.microcatalog.TestUtils.microservice;
+import static com.github.microcatalog.service.dto.custom.builder.MicroserviceDtoBuilder.aMicroserviceDto;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -34,6 +36,9 @@ class DependencyServiceTest {
 
     @MockBean
     private DependencyRepository repository;
+
+    @MockBean
+    private MicroserviceRepository microserviceRepository;
 
     @MockBean
     private GraphLoaderService graphLoaderService;
@@ -177,11 +182,11 @@ class DependencyServiceTest {
         assertThatThrownBy(() -> service.create(dependency))
             .isInstanceOf(DuplicateDependencyException.class)
             .hasMessageStartingWith("Dependency already exists")
-            .extracting("dependency", InstanceOfAssertFactories.type(Dependency.class))
-            .extracting(Dependency::getSource, Dependency::getTarget)
+            .extracting("dependency", InstanceOfAssertFactories.type(DependencyDto.class))
+            .extracting(DependencyDto::getSource, DependencyDto::getTarget)
             .containsExactlyInAnyOrder(
-                new MicroserviceBuilder().withId(1L).build(),
-                new MicroserviceBuilder().withId(2L).build()
+                aMicroserviceDto().withId(1L).build(),
+                aMicroserviceDto().withId(2L).build()
             );
     }
 
@@ -207,6 +212,58 @@ class DependencyServiceTest {
         assertThat(persistent).isEqualTo(expected);
 
         then(repository).should().save(any(Dependency.class));
+    }
+
+    @Test
+    void create_SourceNotExists_Exception() {
+        final String sourceName = "TestService1";
+
+        given(microserviceRepository.findByName(sourceName)).willReturn(Collections.emptyList());
+
+        assertThatIllegalArgumentException()
+            .isThrownBy(() -> service.create("New Dependency", sourceName, "some target"))
+            .withMessageStartingWith("Source microservice with name");
+    }
+
+    @Test
+    void create_TargetNotExists_Exception() {
+        final String sourceName = "TestService1";
+        final String targetName = "TestService2";
+
+        given(microserviceRepository.findByName(sourceName)).willReturn(Collections.singletonList(microservice(1)));
+        given(microserviceRepository.findByName(targetName)).willReturn(Collections.emptyList());
+
+        assertThatIllegalArgumentException()
+            .isThrownBy(() -> service.create("New Dependency", sourceName, targetName))
+            .withMessageStartingWith("Target microservice with name");
+    }
+
+    @Test
+    void create_ValidData_Success() {
+        final String dependencyName = "New Dependency";
+        final String sourceName = "TestService1";
+        final String targetName = "TestService2";
+
+        given(graphLoaderService.loadGraph()).willReturn(
+            GraphUtils.createGraph(
+                String.join("\n",
+                    "strict digraph G { ",
+                    "1; 2; 3; 4;",
+                    "2 -> 3;}"
+                )
+            )
+        );
+        given(microserviceRepository.findByName(sourceName)).willReturn(Collections.singletonList(microservice(1)));
+        given(microserviceRepository.findByName(targetName)).willReturn(Collections.singletonList(microservice(2)));
+        given(repository.save(any())).willReturn(dependency(1, 1, 2));
+
+        final DependencyDto actual = service.create(dependencyName, sourceName, targetName);
+        assertThat(actual).isNotNull();
+
+        verify(microserviceRepository).findByName(sourceName);
+        verify(microserviceRepository).findByName(targetName);
+        verify(repository).save(any(Dependency.class));
+
     }
 
     @Test
@@ -275,11 +332,11 @@ class DependencyServiceTest {
         assertThatThrownBy(() -> service.update(dependency))
             .isInstanceOf(DuplicateDependencyException.class)
             .hasMessageStartingWith("Dependency already exists")
-            .extracting("dependency", InstanceOfAssertFactories.type(Dependency.class))
-            .extracting(Dependency::getSource, Dependency::getTarget)
+            .extracting("dependency", InstanceOfAssertFactories.type(DependencyDto.class))
+            .extracting(DependencyDto::getSource, DependencyDto::getTarget)
             .containsExactlyInAnyOrder(
-                new MicroserviceBuilder().withId(1L).build(),
-                new MicroserviceBuilder().withId(2L).build()
+                aMicroserviceDto().withId(1L).build(),
+                aMicroserviceDto().withId(2L).build()
             );
     }
 

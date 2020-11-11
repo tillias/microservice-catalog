@@ -4,7 +4,7 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=coverage)](https://sonarcloud.io/dashboard?id=microcatalog)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=microcatalog&metric=alert_status)](https://sonarcloud.io/dashboard?id=microcatalog)
 [![microservice-catalog](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/simple/ge12oz&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/ge12oz/runs)
-[![microservice-catalog](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/count/ge12oz&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/ge12oz/runs)
+[![microservice-catalog](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/count/ge12oz/master&style=flat-square&logo=cypress)](https://dashboard.cypress.io/projects/ge12oz/runs)
 [![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/bb9225f6/microservice-catalog)
 [![Docker Image Version (latest by date)](https://img.shields.io/docker/v/tillias/microcatalog)](https://hub.docker.com/r/tillias/microcatalog)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

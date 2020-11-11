@@ -1,4 +1,5 @@
 // add new command to the existing Cypress interface
+
 declare namespace Cypress {
   interface Chainable {
     login: typeof login
@@ -60,10 +61,14 @@ function deleteMicroservice(name: string): void {
   });
 }
 
-function createDependency(dependency: any): void {
+function createDependency(name: string, source: string, target: string): void {
   cy.request({
-    url: '/api/dependencies',
-    body: dependency,
+    url: '/api/dependencies/with/name',
+    body: {
+      dependencyName: name,
+      sourceName: source,
+      targetName: target
+    },
     method: 'POST',
     headers: {
       Authorization: getBearerHeader()
@@ -87,5 +92,5 @@ Cypress.Commands.add('loginUser', () => loginUser());
 Cypress.Commands.add('logout', () => logout());
 Cypress.Commands.add('createMicroservice', (body) => createMicroservice(body));
 Cypress.Commands.add('deleteMicroservice', (name) => deleteMicroservice(name));
-Cypress.Commands.add('createDependency', (body) => createDependency(body));
+Cypress.Commands.add('createDependency', (name, source, target) => createDependency(name, source, target));
 Cypress.Commands.add('deleteDependency', (name) => deleteDependency(name));

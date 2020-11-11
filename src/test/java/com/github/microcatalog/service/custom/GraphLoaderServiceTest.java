@@ -1,9 +1,11 @@
 package com.github.microcatalog.service.custom;
 
+import com.github.microcatalog.MappersConfig;
 import com.github.microcatalog.domain.Dependency;
 import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.repository.MicroserviceRepository;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import com.github.microcatalog.utils.DependencyBuilder;
 import com.github.microcatalog.utils.MicroserviceBuilder;
 import org.jgrapht.Graph;
@@ -17,11 +19,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
+import static com.github.microcatalog.service.dto.custom.builder.MicroserviceDtoBuilder.aMicroserviceDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-@SpringBootTest(classes = GraphLoaderService.class)
+@SpringBootTest(classes = {GraphLoaderService.class, MappersConfig.class})
 class GraphLoaderServiceTest {
 
     @MockBean
@@ -38,7 +41,7 @@ class GraphLoaderServiceTest {
         given(microserviceRepository.findAll()).willReturn(Collections.emptyList());
         given(dependencyRepository.findAll()).willReturn(Collections.emptyList());
 
-        Graph<Microservice, DefaultEdge> graph = sut.loadGraph();
+        Graph<MicroserviceDto, DefaultEdge> graph = sut.loadGraph();
         assertThat(graph).isNotNull();
         assertThat(graph.vertexSet()).isEmpty();
         assertThat(graph.edgeSet()).isEmpty();
@@ -49,20 +52,23 @@ class GraphLoaderServiceTest {
 
     @Test
     void loadSampleGraph() {
-        final List<Microservice> microservices = createMicroservices();
-        given(microserviceRepository.findAll()).willReturn(microservices);
+        final List<Microservice> microservicesData = createMicroservicesData();
+        final List<MicroserviceDto> dtos = microservicesData.stream()
+            .map(m -> aMicroserviceDto().withId(m.getId()).build()).collect(Collectors.toList());
+
+        given(microserviceRepository.findAll()).willReturn(microservicesData);
         given(dependencyRepository.findAll()).willReturn(createDependenciesWithCycleInSameComponent());
 
-        Graph<Microservice, DefaultEdge> graph = sut.loadGraph();
+        Graph<MicroserviceDto, DefaultEdge> graph = sut.loadGraph();
         assertThat(graph).isNotNull();
-        assertThat(graph.vertexSet()).containsExactlyInAnyOrder(microservices.toArray(new Microservice[0]));
+        assertThat(graph.vertexSet()).containsExactlyInAnyOrder(dtos.toArray(new MicroserviceDto[0]));
 
         Set<DefaultEdge> expectedEdges = new HashSet<>();
-        expectedEdges.add(graph.getEdge(microservices.get(0), microservices.get(1)));
-        expectedEdges.add(graph.getEdge(microservices.get(1), microservices.get(2)));
-        expectedEdges.add(graph.getEdge(microservices.get(2), microservices.get(0)));
-        expectedEdges.add(graph.getEdge(microservices.get(3), microservices.get(4)));
-        expectedEdges.add(graph.getEdge(microservices.get(4), microservices.get(5)));
+        expectedEdges.add(graph.getEdge(dtos.get(0), dtos.get(1)));
+        expectedEdges.add(graph.getEdge(dtos.get(1), dtos.get(2)));
+        expectedEdges.add(graph.getEdge(dtos.get(2), dtos.get(0)));
+        expectedEdges.add(graph.getEdge(dtos.get(3), dtos.get(4)));
+        expectedEdges.add(graph.getEdge(dtos.get(4), dtos.get(5)));
 
         assertThat(graph.edgeSet()).containsExactlyInAnyOrder(expectedEdges.toArray(new DefaultEdge[0]));
 
@@ -75,11 +81,12 @@ class GraphLoaderServiceTest {
      *
      * @return microservices
      */
-    private List<Microservice> createMicroservices() {
+    private List<Microservice> createMicroservicesData() {
         return LongStream.rangeClosed(0, 5)
             .mapToObj(i -> new MicroserviceBuilder().withId(i).build())
             .collect(Collectors.toList());
     }
+
 
     /**
      * Graph will contain two connected components, one of them has cycle

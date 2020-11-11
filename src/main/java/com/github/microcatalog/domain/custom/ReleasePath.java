@@ -1,6 +1,6 @@
 package com.github.microcatalog.domain.custom;
 
-import com.github.microcatalog.domain.Microservice;
+import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class ReleasePath {
     private Instant createdOn;
     private List<ReleaseGroup> groups = new ArrayList<>();
-    private Microservice target;
+    private MicroserviceDto target;
 
     public Instant getCreatedOn() {
         return createdOn;
@@ -53,16 +53,16 @@ public class ReleasePath {
         this.groups = releaseGroups;
     }
 
-    public Microservice getTarget() {
+    public MicroserviceDto getTarget() {
         return target;
     }
 
-    public ReleasePath target(Microservice microservice) {
+    public ReleasePath target(MicroserviceDto microservice) {
         this.target = microservice;
         return this;
     }
 
-    public void setTarget(Microservice microservice) {
+    public void setTarget(MicroserviceDto microservice) {
         this.target = microservice;
     }
 }
