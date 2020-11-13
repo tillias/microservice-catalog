@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ISelectPayload } from 'app/shared/vis/events/VisEvents';
-import { GRAPH_FIXED_SEED } from 'app/app.constants';
+import { DEVELOPMENT_COMPONENTS, GRAPH_FIXED_SEED } from 'app/app.constants';
 
 @Component({
   selector: 'jhi-node-legend',
@@ -11,6 +11,7 @@ export class GraphLegendComponent implements OnInit {
   @Input() edgeSelection?: ISelectPayload;
 
   graphFixedSeed = GRAPH_FIXED_SEED;
+  developmentComponents = DEVELOPMENT_COMPONENTS;
 
   constructor() {}
 

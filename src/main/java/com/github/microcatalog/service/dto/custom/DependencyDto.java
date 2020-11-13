@@ -1,11 +1,8 @@
 package com.github.microcatalog.service.dto.custom;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.io.Serializable;
 
-public class DependencyDto extends BaseDto implements Serializable {
+public final class DependencyDto extends BaseDto implements Serializable {
     private static final long serialVersionUID = 984616324705586469L;
 
     private MicroserviceDto source;
@@ -25,25 +22,5 @@ public class DependencyDto extends BaseDto implements Serializable {
 
     public void setTarget(MicroserviceDto target) {
         this.target = target;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BaseDto baseDto = (BaseDto) o;
-
-        return new EqualsBuilder()
-            .append(getId(), baseDto.getId())
-            .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-            .append(getId())
-            .toHashCode();
     }
 }

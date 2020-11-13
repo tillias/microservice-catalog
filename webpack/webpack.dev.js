@@ -74,8 +74,9 @@ module.exports = (options) => webpackMerge(commonConfig({env: ENV}), {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        'EXPERIMENTAL_FEATURE': true,
-        'GRAPH_FIXED_SEED': false
+        'EXPERIMENTAL_FEATURE': false,
+        'DEVELOPMENT_COMPONENTS' : true,
+        'GRAPH_FIXED_SEED': true
       }
     }),
     process.env.JHI_DISABLE_WEBPACK_LOGS
