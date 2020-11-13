@@ -119,6 +119,7 @@ module.exports = webpackMerge(commonConfig({env: ENV}), {
     new webpack.DefinePlugin({
       'process.env': {
         'EXPERIMENTAL_FEATURE': false,
+        'DEVELOPMENT_COMPONENTS' : false,
         'GRAPH_FIXED_SEED': true
       }
     }),

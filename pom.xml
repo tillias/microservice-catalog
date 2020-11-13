@@ -5,7 +5,7 @@
 
     <groupId>com.github.microcatalog</groupId>
     <artifactId>microcatalog</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>Microcatalog</name>
 
@@ -346,6 +346,13 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-heroku-connector</artifactId>
         </dependency>
+        <dependency>
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <version>3.5</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 
