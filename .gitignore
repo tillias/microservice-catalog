@@ -149,3 +149,6 @@ Desktop.ini
 /env.list
 /src/main/resources/config/liquibase/elephantsql.properties
 /cypress/videos/*.mp4
+/src/main/tf/gcp-credentials.json
+/src/main/tf/.terraform/
+/src/main/tf/terraform.*
