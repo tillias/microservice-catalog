@@ -33,6 +33,8 @@ Or if you prefer kubernetes:
 kubectl apply -k src\main\k8s
 ```
 
+Finally here you can find [How to start microservice catalog inside GCE](https://github.com/tillias/microservice-catalog/wiki/How-to-start-microservice-catalog-inside-GCE)
+
 ## Development
 
 This application was generated using JHipster 6.10.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.3](https://www.jhipster.tech/documentation-archive/v6.10.3).
