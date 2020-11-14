@@ -9,8 +9,8 @@ terraform {
 provider "google" {
     version = "3.5.0"
 
-    credentials = file("gcp-credentials.json")
-
+    # Generate JSON using https://console.cloud.google.com/apis/credentials/serviceaccountkey
+    credentials = file("service-account.json")
     project = "compact-lacing-280811"
     zone = "us-central1-a"
 }
@@ -18,10 +18,9 @@ provider "google" {
 resource "google_compute_instance" "vm_instance" {
     name = "microcatalog-instance"
     machine_type = "e2-medium"
-    #metadata_startup_script = file("startup.sh")
+    metadata_startup_script = file("startup.sh")
 
     tags = [
-        "microcatalog",
         "http-server",
         "https-server"]
 
@@ -39,9 +38,4 @@ resource "google_compute_instance" "vm_instance" {
 
 output "gce_public_ip" {
     value = element(concat(google_compute_instance.vm_instance.*.network_interface.0.access_config.0.nat_ip, list("")), 0)
-}
-
-resource "local_file" "gce_public_ip" {
-    content     = element(concat(google_compute_instance.vm_instance.*.network_interface.0.access_config.0.nat_ip, list("")), 0)
-    filename = "${path.module}/gce_public_ip"
 }

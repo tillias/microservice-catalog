@@ -21,5 +21,6 @@ services:
       DB_USER: postgres
       CSP_IMAGE_SRC: '*'
       SERVER_PORT: 2080
+      SPRING_PROFILES_ACTIVE: prod,heroku
     ports:
       - 8080:2080
