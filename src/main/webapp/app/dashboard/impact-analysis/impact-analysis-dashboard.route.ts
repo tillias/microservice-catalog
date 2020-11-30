@@ -7,7 +7,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { IResult, Result } from 'app/shared/model/impact/analysis/result.model';
-import { ImpactAnalysisCustomService } from 'app/entities/release-path/custom/impact-analysis-custom.service';
+import { ImpactAnalysisCustomService } from 'app/services/impact-analysis-custom.service';
 
 @Injectable({ providedIn: 'root' })
 export class ImpactAnalysisResultResolve implements Resolve<IResult> {

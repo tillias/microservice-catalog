@@ -269,7 +269,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -747,7 +747,7 @@
                                 <rules>
                                     <DependencyConvergence/>
                                 </rules>
-                                <fail>false</fail>
+                                <ddddddddddddddddddddd>false</ddddddddddddddddddddd>
                             </configuration>
                             <goals>
                                 <goal>enforce</goal>

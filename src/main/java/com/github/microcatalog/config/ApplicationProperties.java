@@ -10,4 +10,39 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
+    private final ApplicationProperties.IntegrationTests integrationTests = new IntegrationTests();
+
+    public IntegrationTests getIntegrationTests() {
+        return integrationTests;
+    }
+
+    public static class IntegrationTests {
+
+        private final IntegrationTests.Jenkins jenkins = new Jenkins();
+
+        public Jenkins getJenkins() {
+            return jenkins;
+        }
+
+        public static class Jenkins {
+            private String user;
+            private String token;
+
+            public String getUser() {
+                return user;
+            }
+
+            public void setUser(String user) {
+                this.user = user;
+            }
+
+            public String getToken() {
+                return token;
+            }
+
+            public void setToken(String token) {
+                this.token = token;
+            }
+        }
+    }
 }

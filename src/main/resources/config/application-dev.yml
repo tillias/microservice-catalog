@@ -117,4 +117,8 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  integration-tests:
+    jenkins:
+      user: admin
+      token: 1118eceabc3598beaabe090b2a4128f840
