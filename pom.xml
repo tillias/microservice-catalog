@@ -747,7 +747,7 @@
                                 <rules>
                                     <DependencyConvergence/>
                                 </rules>
-                                <ddddddddddddddddddddd>false</ddddddddddddddddddddd>
+                                <fail>false</fail>
                             </configuration>
                             <goals>
                                 <goal>enforce</goal>
