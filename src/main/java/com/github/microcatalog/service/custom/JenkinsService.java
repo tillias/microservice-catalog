@@ -3,6 +3,7 @@ package com.github.microcatalog.service.custom;
 import com.github.microcatalog.config.ApplicationProperties;
 import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.service.dto.custom.JenkinsCrumbDto;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,14 @@ public class JenkinsService {
     }
 
     public void invokeJenkins(final Microservice microservice) {
+        if (microservice == null) {
+            throw new IllegalArgumentException("Microservice can't be null");
+        }
+
+        if (StringUtils.isBlank(microservice.getCiUrl())) {
+            throw new IllegalArgumentException("Microservice CI url can't be blank");
+        }
+
         try {
             String microserviceUrl = microservice.getCiUrl();
 
@@ -44,15 +53,8 @@ public class JenkinsService {
                 .bodyToMono(JenkinsCrumbDto.class).block();
 
             if (jenkinsCrumb != null) {
-
                 webClient.post().uri(microserviceUrl + "build")
                     .header(jenkinsCrumb.getCrumbRequestField(), jenkinsCrumb.getCrumb())
-                    .exchange()
-                    .block();
-
-                webClient
-                    .post()
-                    .uri(String.format("%s/build", microservice.getCiUrl()))
                     .exchange()
                     .block();
             } else {

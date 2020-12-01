@@ -121,4 +121,4 @@ application:
   integration-tests:
     jenkins:
       user: admin
-      token: 1118eceabc3598beaabe090b2a4128f840
+      token: 11d9533bf4d9afdd3a1bdf5b67a71bbbc1

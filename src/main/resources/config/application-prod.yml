@@ -132,4 +132,8 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  integration-tests:
+    jenkins:
+      user: ${JENKINS_USER:user}
+      token: ${JENKINS_TOKEN:changeme}
