@@ -5,9 +5,9 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { IReleasePath, ReleasePath } from 'app/shared/model/release-path.model';
-import { ReleasePathCustomService } from 'app/entities/release-path/custom/release-path-custom.service';
 import { Authority } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
+import { ReleasePathCustomService } from 'app/services/release-path-custom.service';
 
 @Injectable({ providedIn: 'root' })
 export class ReleasePathResolve implements Resolve<IReleasePath> {

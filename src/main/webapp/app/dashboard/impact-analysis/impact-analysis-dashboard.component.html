@@ -1,9 +1,24 @@
+<div class="row p-3">
+    <h1>Impact analysis</h1>
+</div>
 <div class="row">
-    <div class="col-8">
-        <h1>Impact analysis</h1>
+    <div class="col-3">
+        <ngb-accordion [closeOthers]="true" [destroyOnHide]="false" activeIds="actions">
+            <ngb-panel title="Actions" id="actions">
+                <ng-template ngbPanelContent>
+                    <div class="p-1">
+                        <button type="submit" (click)="startIntegrationTests()" class="btn btn-block btn-success btn-sm">
+                            Start integration tests
+                        </button>
+                    </div>
+                </ng-template>
+            </ngb-panel>
+        </ngb-accordion>
+    </div>
+    <div class="col-6">
         <jhi-impact-analysis-graph></jhi-impact-analysis-graph>
     </div>
-    <div class="col-4">
+    <div class="col-3">
         <jhi-impact-analysis-legend></jhi-impact-analysis-legend>
     </div>
 </div>

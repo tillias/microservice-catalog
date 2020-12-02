@@ -9,9 +9,9 @@ import { finalize, map } from 'rxjs/operators';
 import { ISelectPayload, SelectPayload } from '../../shared/vis/events/VisEvents';
 import { DeleteDialogService } from './delete-dialog.service';
 import { FilterContext, GraphBuilderService } from './graph-builder.service';
-import { ReleasePathCustomService } from 'app/entities/release-path/custom/release-path-custom.service';
 import { VisNetworkService } from 'app/shared/vis/vis-network.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ReleasePathCustomService } from 'app/services/release-path-custom.service';
 
 @Component({
   selector: 'jhi-dependency-dashboard',

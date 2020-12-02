@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { SERVER_API_URL } from '../../../app.constants';
+import { SERVER_API_URL } from 'app/app.constants';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { IResult } from '../../../shared/model/impact/analysis/result.model';
+import { IResult } from 'app/shared/model/impact/analysis/result.model';
 
 type EntityResponseType = HttpResponse<IResult>;
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { SERVER_API_URL } from '../../../app.constants';
+import { SERVER_API_URL } from 'app/app.constants';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IReleasePath } from '../../../shared/model/release-path.model';
+import { IReleasePath } from 'app/shared/model/release-path.model';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 

@@ -4,7 +4,6 @@ import com.github.microcatalog.domain.custom.impact.analysis.Group;
 import com.github.microcatalog.domain.custom.impact.analysis.Item;
 import com.github.microcatalog.domain.custom.impact.analysis.Result;
 import com.github.microcatalog.service.dto.custom.MicroserviceDto;
-import com.github.microcatalog.service.mapper.MicroserviceMapper;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsSubgraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -26,12 +25,8 @@ public class ImpactAnalysisService extends GraphOperationsService {
 
     private final Logger log = LoggerFactory.getLogger(ImpactAnalysisService.class);
 
-    private final MicroserviceMapper mapper;
-
-    public ImpactAnalysisService(GraphLoaderService graphLoaderService, MicroserviceMapper mapper) {
+    public ImpactAnalysisService(GraphLoaderService graphLoaderService) {
         super(graphLoaderService);
-
-        this.mapper = mapper;
     }
 
     public Optional<Result> calculate(final Long microserviceId) {
