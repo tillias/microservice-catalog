@@ -1,7 +1,6 @@
 package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.config.ApplicationProperties;
-import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.service.dto.custom.JenkinsCrumbDto;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,17 +25,13 @@ public class JenkinsService {
             .build();
     }
 
-    public void invokeJenkins(final Microservice microservice) {
-        if (microservice == null) {
-            throw new IllegalArgumentException("Microservice can't be null");
-        }
-
-        if (StringUtils.isBlank(microservice.getCiUrl())) {
+    public void invokeJenkins(final String ciUrl) {
+        if (StringUtils.isBlank(ciUrl)) {
             throw new IllegalArgumentException("Microservice CI url can't be blank");
         }
 
         try {
-            String microserviceUrl = microservice.getCiUrl();
+            String microserviceUrl = ciUrl;
 
             // See https://stackoverflow.com/questions/48993367/jenkins-is-returning-302-to-bitbucker-webhook
             if (!microserviceUrl.endsWith("/")) {
@@ -58,10 +53,10 @@ public class JenkinsService {
                     .exchange()
                     .block();
             } else {
-                log.error("Error getting jenkins crumb for microservice {}", microservice.getId());
+                log.error("Error getting jenkins crumb for {}", ciUrl);
             }
         } catch (Exception ex) {
-            log.error("Error triggering jenkins build for microservice {}", microservice.getId(), ex);
+            log.error("Error triggering jenkins build for {}", ciUrl, ex);
         }
     }
 }

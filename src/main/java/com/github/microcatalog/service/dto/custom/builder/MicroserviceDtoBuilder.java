@@ -5,6 +5,7 @@ import com.github.microcatalog.service.dto.custom.MicroserviceDto;
 public final class MicroserviceDtoBuilder {
     private Long id;
     private String name;
+    private String ciUrl;
 
     private MicroserviceDtoBuilder() {
     }
@@ -23,10 +24,16 @@ public final class MicroserviceDtoBuilder {
         return this;
     }
 
+    public MicroserviceDtoBuilder withCiUrl(String ciUrl){
+        this.ciUrl = ciUrl;
+        return this;
+    }
+
     public MicroserviceDto build() {
         MicroserviceDto microserviceDto = new MicroserviceDto();
         microserviceDto.setId(id);
         microserviceDto.setName(name);
+        microserviceDto.setCiUrl(ciUrl);
         return microserviceDto;
     }
 }

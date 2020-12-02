@@ -27,7 +27,7 @@ class JenkinsServiceTest {
     @Test
     void invokeJenkins_MicroserviceWithoutCiUrl_ExceptionIsThrown() {
         assertThatIllegalArgumentException().isThrownBy(() ->
-            sut.invokeJenkins(new Microservice().ciUrl(null))
+            sut.invokeJenkins(null)
         );
     }
 
@@ -39,8 +39,7 @@ class JenkinsServiceTest {
                 .withBody("{\"crumb\":\"aabbccddeeff\",\"crumbRequestField\":\"Jenkins-Crumb\"}"))
         );
 
-        final Microservice microservice = new Microservice().ciUrl("http://localhost:9999/job/Service21/");
-        sut.invokeJenkins(microservice);
+        sut.invokeJenkins("http://localhost:9999/job/Service21/");
 
         verify(postRequestedFor(urlEqualTo("/job/Service21/build"))
             .withHeader("Jenkins-Crumb", equalTo("aabbccddeeff"))
