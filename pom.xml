@@ -5,7 +5,7 @@
 
     <groupId>com.github.microcatalog</groupId>
     <artifactId>microcatalog</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>Microcatalog</name>
 
