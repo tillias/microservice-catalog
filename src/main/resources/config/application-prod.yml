@@ -137,3 +137,4 @@ application:
     jenkins:
       user: ${JENKINS_USER:user}
       token: ${JENKINS_TOKEN:changeme}
+      disableSSL: ${JENKINS_DISABLE_SSL:false}
