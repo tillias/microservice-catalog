@@ -120,3 +120,4 @@ application:
       user: admin
       token: 1118eceabc3598beaabe090b2a4128f840
       disableSSL: false
+      crumbIssuer: /crumbIssuer/api/json

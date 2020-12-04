@@ -28,6 +28,7 @@ public class ApplicationProperties {
             private String user;
             private String token;
             private boolean disableSSL;
+            private String crumbIssuer;
 
             public String getUser() {
                 return user;
@@ -51,6 +52,14 @@ public class ApplicationProperties {
 
             public void setDisableSSL(boolean disableSSL) {
                 this.disableSSL = disableSSL;
+            }
+
+            public String getCrumbIssuer() {
+                return crumbIssuer;
+            }
+
+            public void setCrumbIssuer(String crumbIssuer) {
+                this.crumbIssuer = crumbIssuer;
             }
         }
     }
