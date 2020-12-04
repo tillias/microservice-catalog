@@ -27,6 +27,7 @@ public class ApplicationProperties {
         public static class Jenkins {
             private String user;
             private String token;
+            private boolean disableSSL;
 
             public String getUser() {
                 return user;
@@ -42,6 +43,14 @@ public class ApplicationProperties {
 
             public void setToken(String token) {
                 this.token = token;
+            }
+
+            public boolean isDisableSSL() {
+                return disableSSL;
+            }
+
+            public void setDisableSSL(boolean disableSSL) {
+                this.disableSSL = disableSSL;
             }
         }
     }

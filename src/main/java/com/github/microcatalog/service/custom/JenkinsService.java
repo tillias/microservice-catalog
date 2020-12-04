@@ -2,12 +2,19 @@ package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.config.ApplicationProperties;
 import com.github.microcatalog.service.dto.custom.JenkinsCrumbDto;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.tcp.TcpClient;
 
+import javax.net.ssl.SSLException;
 import java.net.URL;
 
 @Service
@@ -16,13 +23,17 @@ public class JenkinsService {
 
     private final WebClient webClient;
 
-    public JenkinsService(ApplicationProperties applicationProperties,
-                          WebClient.Builder webClientBuilder) {
+    public JenkinsService(ApplicationProperties applicationProperties, WebClient.Builder webClientBuilder) throws SSLException {
         final ApplicationProperties.IntegrationTests.Jenkins jenkins
             = applicationProperties.getIntegrationTests().getJenkins();
-        this.webClient = webClientBuilder
-            .defaultHeaders(header -> header.setBasicAuth(jenkins.getUser(), jenkins.getToken()))
-            .build();
+
+        if (jenkins.isDisableSSL()) {
+            this.webClient = initWithoutSsl(jenkins);
+        } else {
+            this.webClient = webClientBuilder
+                .defaultHeaders(header -> header.setBasicAuth(jenkins.getUser(), jenkins.getToken()))
+                .build();
+        }
     }
 
     public void invokeJenkins(final String ciUrl) {
@@ -58,5 +69,18 @@ public class JenkinsService {
         } catch (Exception ex) {
             log.error("Error triggering jenkins build for {}", ciUrl, ex);
         }
+    }
+
+    private WebClient initWithoutSsl(ApplicationProperties.IntegrationTests.Jenkins jenkins) throws SSLException {
+        SslContext sslContext = SslContextBuilder
+            .forClient()
+            .trustManager(InsecureTrustManagerFactory.INSTANCE)
+            .build();
+        TcpClient tcpClient = TcpClient.create().secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
+        HttpClient httpClient = HttpClient.from(tcpClient);
+
+        return WebClient.builder()
+            .defaultHeaders(header -> header.setBasicAuth(jenkins.getUser(), jenkins.getToken()))
+            .clientConnector(new ReactorClientHttpConnector(httpClient)).build();
     }
 }
