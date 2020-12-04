@@ -22,10 +22,17 @@ public class JenkinsService {
     private final Logger log = LoggerFactory.getLogger(JenkinsService.class);
 
     private final WebClient webClient;
+    private final String crumbIssuer;
 
     public JenkinsService(ApplicationProperties applicationProperties, WebClient.Builder webClientBuilder) throws SSLException {
         final ApplicationProperties.IntegrationTests.Jenkins jenkins
             = applicationProperties.getIntegrationTests().getJenkins();
+
+        if (StringUtils.startsWith(jenkins.getCrumbIssuer(), "/")) {
+            this.crumbIssuer = jenkins.getCrumbIssuer();
+        } else {
+            this.crumbIssuer = StringUtils.leftPad(jenkins.getCrumbIssuer(), 1, "/");
+        }
 
         if (jenkins.isDisableSSL()) {
             this.webClient = initWithoutSsl(jenkins);
@@ -50,7 +57,7 @@ public class JenkinsService {
             }
 
             final URL url = new URL(microserviceUrl);
-            final URL crumbIssuerUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), "/crumbIssuer/api/json");
+            final URL crumbIssuerUrl = new URL(url.getProtocol(), url.getHost(), url.getPort(), this.crumbIssuer);
 
             final JenkinsCrumbDto jenkinsCrumb = webClient
                 .get()
