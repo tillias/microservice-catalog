@@ -52,7 +52,7 @@ jobs:
           command: './mvnw -ntp verify -Pprod -DskipTests'
       - when:
           condition:
-            equal: [ master, << pipeline.git.branch >> ]
+            equal: [ dev, << pipeline.git.branch >> ]
           steps:
             - setup_remote_docker:
                 version: 19.03.13
@@ -66,9 +66,6 @@ jobs:
                   docker tag tillias/microcatalog tillias/microcatalog:$DOCKER_TAG
                   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
                   docker push tillias/microcatalog
-            - run:
-                name: Deploy to Heroku
-                command: './mvnw -ntp com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.buildpacks=heroku/jvm -Dheroku.appName=microcatalog'
   cypress:
     docker:
       - image: cypress/browsers:node12.14.1-chrome83-ff77

@@ -1,10 +1,8 @@
 package com.github.microcatalog.service.custom;
 
-import com.github.microcatalog.domain.Microservice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
