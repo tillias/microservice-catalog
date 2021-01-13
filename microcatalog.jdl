@@ -1,18 +1,18 @@
 // Core entities
 
 entity Team {
-	name String required,
+	name String required unique,
     teamLead String required,
     productOwner String required
 }
 
 entity Status {
-    name String required,
+    name String required unique,
     description String
 }
 
 entity Microservice {
-	name String required,
+	name String required unique,
     description TextBlob required,
     imageUrl String required,
     swaggerUrl String required,

@@ -61,8 +61,8 @@ public class DependencyResourceIT {
             .description(DEFAULT_DESCRIPTION);
 
         // Add required entity
-        Microservice source = MicroserviceResourceIT.createEntity(em);
-        Microservice target = MicroserviceResourceIT.createEntity(em);
+        Microservice source = MicroserviceResourceIT.createEntity(em, "FIRST");
+        Microservice target = MicroserviceResourceIT.createEntity(em, "SECOND");
         em.persist(source);
         em.persist(target);
         em.flush();

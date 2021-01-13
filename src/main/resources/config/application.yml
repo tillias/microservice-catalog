@@ -162,4 +162,16 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  imports:
+    defaults:
+      description: Default description because nothing was provided during import
+      imageUrl: IMPORT_IMAGE
+      apiUrl: IMPORT_API_URL
+      gitUrl: IMPORT_GIT_URL
+      ciUrl: IMPORT_CI_URL
+      status: IMPORT_STATUS
+      team:
+        name: IMPORT_TEAM
+        po: IMPORT_PO
+        tl: IMPORT_TL

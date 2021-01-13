@@ -4,6 +4,7 @@ import com.github.microcatalog.MicrocatalogApp;
 import com.github.microcatalog.domain.Team;
 import com.github.microcatalog.repository.TeamRepository;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -49,9 +51,14 @@ public class TeamResourceIT {
 
     private Team team;
 
+    @BeforeAll
+    static void init() {
+
+    }
+
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -62,9 +69,10 @@ public class TeamResourceIT {
             .productOwner(DEFAULT_PRODUCT_OWNER);
         return team;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -192,7 +200,7 @@ public class TeamResourceIT {
             .andExpect(jsonPath("$.[*].teamLead").value(hasItem(DEFAULT_TEAM_LEAD)))
             .andExpect(jsonPath("$.[*].productOwner").value(hasItem(DEFAULT_PRODUCT_OWNER)));
     }
-    
+
     @Test
     @Transactional
     public void getTeam() throws Exception {
@@ -208,6 +216,7 @@ public class TeamResourceIT {
             .andExpect(jsonPath("$.teamLead").value(DEFAULT_TEAM_LEAD))
             .andExpect(jsonPath("$.productOwner").value(DEFAULT_PRODUCT_OWNER));
     }
+
     @Test
     @Transactional
     public void getNonExistingTeam() throws Exception {

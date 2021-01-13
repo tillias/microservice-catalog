@@ -61,15 +61,9 @@ public class MicroserviceResourceIT {
 
     private Microservice microservice;
 
-    /**
-     * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Microservice createEntity(EntityManager em) {
+    public static Microservice createEntity(EntityManager em, String name){
         Microservice microservice = new Microservice()
-            .name(DEFAULT_NAME)
+            .name(name)
             .description(DEFAULT_DESCRIPTION)
             .imageUrl(DEFAULT_IMAGE_URL)
             .swaggerUrl(DEFAULT_SWAGGER_URL)
@@ -96,6 +90,16 @@ public class MicroserviceResourceIT {
         }
         microservice.setStatus(status);
         return microservice;
+    }
+
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Microservice createEntity(EntityManager em) {
+        return createEntity(em, DEFAULT_NAME);
     }
     /**
      * Create an updated entity for this test.
@@ -294,7 +298,7 @@ public class MicroserviceResourceIT {
             .andExpect(jsonPath("$.[*].gitUrl").value(hasItem(DEFAULT_GIT_URL)))
             .andExpect(jsonPath("$.[*].ciUrl").value(hasItem(DEFAULT_CI_URL)));
     }
-    
+
     @Test
     @Transactional
     public void getMicroservice() throws Exception {
