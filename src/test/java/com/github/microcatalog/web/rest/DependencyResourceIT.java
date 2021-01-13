@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MicrocatalogApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
-public class DependencyResourceIT {
+class DependencyResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -104,7 +104,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void createDependency() throws Exception {
+    void createDependency() throws Exception {
         int databaseSizeBeforeCreate = dependencyRepository.findAll().size();
         // Create the Dependency
         restDependencyMockMvc.perform(post("/api/dependencies")
@@ -122,7 +122,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void createDependencyWithExistingId() throws Exception {
+    void createDependencyWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = dependencyRepository.findAll().size();
 
         // Create the Dependency with an existing ID
@@ -142,7 +142,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = dependencyRepository.findAll().size();
         // set the field null
         dependency.setName(null);
@@ -161,7 +161,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void getAllDependencies() throws Exception {
+    void getAllDependencies() throws Exception {
         // Initialize the database
         dependencyRepository.saveAndFlush(dependency);
 
@@ -176,7 +176,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void getDependency() throws Exception {
+    void getDependency() throws Exception {
         // Initialize the database
         dependencyRepository.saveAndFlush(dependency);
 
@@ -191,7 +191,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingDependency() throws Exception {
+    void getNonExistingDependency() throws Exception {
         // Get the dependency
         restDependencyMockMvc.perform(get("/api/dependencies/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
@@ -199,7 +199,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void updateDependency() throws Exception {
+    void updateDependency() throws Exception {
         // Initialize the database
         dependencyRepository.saveAndFlush(dependency);
 
@@ -228,7 +228,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingDependency() throws Exception {
+    void updateNonExistingDependency() throws Exception {
         int databaseSizeBeforeUpdate = dependencyRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -244,7 +244,7 @@ public class DependencyResourceIT {
 
     @Test
     @Transactional
-    public void deleteDependency() throws Exception {
+    void deleteDependency() throws Exception {
         // Initialize the database
         dependencyRepository.saveAndFlush(dependency);
 

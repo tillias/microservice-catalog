@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MicrocatalogApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
-public class MicroserviceResourceIT {
+class MicroserviceResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -145,7 +145,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void createMicroservice() throws Exception {
+    void createMicroservice() throws Exception {
         int databaseSizeBeforeCreate = microserviceRepository.findAll().size();
         // Create the Microservice
         restMicroserviceMockMvc.perform(post("/api/microservices")
@@ -167,7 +167,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void createMicroserviceWithExistingId() throws Exception {
+    void createMicroserviceWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = microserviceRepository.findAll().size();
 
         // Create the Microservice with an existing ID
@@ -187,7 +187,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = microserviceRepository.findAll().size();
         // set the field null
         microservice.setName(null);
@@ -206,7 +206,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void checkImageUrlIsRequired() throws Exception {
+    void checkImageUrlIsRequired() throws Exception {
         int databaseSizeBeforeTest = microserviceRepository.findAll().size();
         // set the field null
         microservice.setImageUrl(null);
@@ -225,7 +225,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void checkSwaggerUrlIsRequired() throws Exception {
+    void checkSwaggerUrlIsRequired() throws Exception {
         int databaseSizeBeforeTest = microserviceRepository.findAll().size();
         // set the field null
         microservice.setSwaggerUrl(null);
@@ -244,7 +244,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void checkGitUrlIsRequired() throws Exception {
+    void checkGitUrlIsRequired() throws Exception {
         int databaseSizeBeforeTest = microserviceRepository.findAll().size();
         // set the field null
         microservice.setGitUrl(null);
@@ -263,7 +263,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void checkCiUrlIsRequired() throws Exception {
+    void checkCiUrlIsRequired() throws Exception {
         int databaseSizeBeforeTest = microserviceRepository.findAll().size();
         // set the field null
         microservice.setCiUrl(null);
@@ -282,7 +282,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void getAllMicroservices() throws Exception {
+    void getAllMicroservices() throws Exception {
         // Initialize the database
         microserviceRepository.saveAndFlush(microservice);
 
@@ -301,7 +301,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void getMicroservice() throws Exception {
+    void getMicroservice() throws Exception {
         // Initialize the database
         microserviceRepository.saveAndFlush(microservice);
 
@@ -319,7 +319,7 @@ public class MicroserviceResourceIT {
     }
     @Test
     @Transactional
-    public void getNonExistingMicroservice() throws Exception {
+    void getNonExistingMicroservice() throws Exception {
         // Get the microservice
         restMicroserviceMockMvc.perform(get("/api/microservices/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
@@ -327,7 +327,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void updateMicroservice() throws Exception {
+    void updateMicroservice() throws Exception {
         // Initialize the database
         microserviceRepository.saveAndFlush(microservice);
 
@@ -364,7 +364,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingMicroservice() throws Exception {
+    void updateNonExistingMicroservice() throws Exception {
         int databaseSizeBeforeUpdate = microserviceRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -380,7 +380,7 @@ public class MicroserviceResourceIT {
 
     @Test
     @Transactional
-    public void deleteMicroservice() throws Exception {
+    void deleteMicroservice() throws Exception {
         // Initialize the database
         microserviceRepository.saveAndFlush(microservice);
 
