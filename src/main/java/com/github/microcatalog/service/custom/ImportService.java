@@ -1,9 +1,11 @@
 package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.config.ApplicationProperties;
+import com.github.microcatalog.domain.Dependency;
 import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.domain.Status;
 import com.github.microcatalog.domain.Team;
+import com.github.microcatalog.repository.DependencyRepository;
 import com.github.microcatalog.repository.MicroserviceRepository;
 import com.github.microcatalog.repository.StatusRepository;
 import com.github.microcatalog.repository.TeamRepository;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +30,7 @@ public class ImportService {
 
     private final ApplicationProperties.Imports.Defaults defaults;
     private final MicroserviceRepository microserviceRepository;
+    private final DependencyRepository dependencyRepository;
     private final StatusRepository statusRepository;
     private final TeamRepository teamRepository;
 
@@ -34,11 +38,12 @@ public class ImportService {
 
     public ImportService(ApplicationProperties applicationProperties,
                          MicroserviceRepository microserviceRepository,
-                         StatusRepository statusRepository,
+                         DependencyRepository dependencyRepository, StatusRepository statusRepository,
                          TeamRepository teamRepository,
                          FullMicroserviceMapper microserviceMapper) {
         this.defaults = applicationProperties.getImports().getDefaults();
         this.microserviceRepository = microserviceRepository;
+        this.dependencyRepository = dependencyRepository;
         this.statusRepository = statusRepository;
         this.teamRepository = teamRepository;
         this.microserviceMapper = microserviceMapper;
@@ -57,7 +62,7 @@ public class ImportService {
             return Optional.empty();
         } else {
             final Microservice microservice = persistMicroservice(descriptorDto);
-            importDependencies(descriptorDto);
+            importDependencies(microservice, descriptorDto.getDependencies());
 
             return Optional.of(microserviceMapper.microserviceToDto(microservice));
         }
@@ -142,15 +147,19 @@ public class ImportService {
         return teamRepository.save(newTeam);
     }
 
-    private boolean importDependencies(final MicroserviceImportDescriptorDto descriptorDto) {
-        try {
-            // TODO
-            return true;
-        } catch (Exception ex) {
-            log.error("Error importing dependencies", ex);
+    private void importDependencies(final Microservice source, final List<MicroserviceImportDescriptorDto> dependencies) {
+        for (MicroserviceImportDescriptorDto d : dependencies) {
+            Microservice target = microserviceRepository.findByName(d.getName());
+            if (target == null) {
+                target = persistMicroservice(d);
+            }
+
+            final Dependency dependency = new Dependency()
+                .name(String.format("%s -> %s", source.getName(), target.getName()))
+                .source(source)
+                .target(target);
+
+            dependencyRepository.save(dependency);
         }
-
-        return false;
     }
-
 }

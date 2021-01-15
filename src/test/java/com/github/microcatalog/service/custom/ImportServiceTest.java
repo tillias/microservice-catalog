@@ -1,6 +1,10 @@
 package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.config.ApplicationProperties;
+import com.github.microcatalog.domain.Dependency;
+import com.github.microcatalog.domain.Microservice;
+import com.github.microcatalog.repository.DependencyRepository;
+import com.github.microcatalog.repository.MicroserviceRepository;
 import com.github.microcatalog.service.custom.exceptions.ImportException;
 import com.github.microcatalog.service.dto.custom.FullMicroserviceDto;
 import com.github.microcatalog.service.dto.custom.MicroserviceImportDescriptorDto;
@@ -10,9 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.github.microcatalog.service.dto.custom.builder.MicroserviceImportDescriptorDtoBuilder.aMicroserviceImportDescriptorDto;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +34,12 @@ class ImportServiceTest {
 
     @Autowired
     private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private DependencyRepository dependencyRepository;
+
+    @Autowired
+    private MicroserviceRepository microserviceRepository;
 
     @Test
     void importFromDescriptor_missingName_Exception() {
@@ -95,4 +110,32 @@ class ImportServiceTest {
         assertEquals(descriptorDto.getTeam(), team.getName());
     }
 
+    @Test
+    void importFromDescriptor_withDependencies_Success() {
+        final MicroserviceImportDescriptorDto descriptorDto =
+            aMicroserviceImportDescriptorDto()
+                .withName("Test Imported Microservice 3")
+                .withDependencies(Arrays.asList(
+                    aMicroserviceImportDescriptorDto().withName("Test Dependent Service1").build(),
+                    aMicroserviceImportDescriptorDto().withName("Test Dependent Service2").build()
+                )).build();
+
+        final Optional<FullMicroserviceDto> maybeDto = sut.importFromDescriptor(descriptorDto);
+        assertTrue(maybeDto.isPresent());
+
+        final List<Dependency> dependenciesForNewMicroservice = getDependenciesFor(maybeDto.get().getId());
+        List<Microservice> dependentMicroservices =
+            dependenciesForNewMicroservice.stream().map(Dependency::getTarget).collect(Collectors.toList());
+
+        assertThat(dependentMicroservices)
+            .extracting(Microservice::getName)
+            .containsExactlyInAnyOrder("Test Dependent Service1", "Test Dependent Service2");
+    }
+
+    private List<Dependency> getDependenciesFor(final Long microserviceId) {
+        final List<Dependency> allDependencies = dependencyRepository.findAll();
+        return allDependencies.stream()
+            .filter(d -> Objects.equals(d.getSource().getId(), microserviceId))
+            .collect(Collectors.toList());
+    }
 }
