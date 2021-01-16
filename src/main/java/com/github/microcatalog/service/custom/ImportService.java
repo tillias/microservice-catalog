@@ -126,7 +126,7 @@ public class ImportService {
     private Status getOrCreateStatus(final String name) {
         final Status persistent = statusRepository.findByName(name);
         if (persistent != null) {
-            log.info("Using existing status {}", name);
+            log.info("Using existing status {}", persistent);
             return persistent;
         }
 
@@ -137,7 +137,7 @@ public class ImportService {
     private Team getOrCreateTeam(final String name) {
         final Team persistent = teamRepository.findByName(name);
         if (persistent != null) {
-            log.info("Using existing team {}", name);
+            log.info("Using existing team {}", persistent);
             return persistent;
         }
 
