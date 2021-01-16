@@ -2,6 +2,7 @@ package com.github.microcatalog.service.custom;
 
 import com.github.microcatalog.domain.Microservice;
 import com.github.microcatalog.repository.MicroserviceRepository;
+import com.github.microcatalog.service.custom.exceptions.ImportException;
 import com.github.microcatalog.service.dto.custom.FullMicroserviceDto;
 import com.github.microcatalog.service.dto.custom.MicroserviceImportDescriptorDto;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.Optional;
 
 import static com.github.microcatalog.service.dto.custom.builder.MicroserviceImportDescriptorDtoBuilder.aMicroserviceImportDescriptorDto;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
@@ -39,8 +41,8 @@ class ImportServiceBorderTest {
                 .withName(name)
                 .build();
 
-        final Optional<FullMicroserviceDto> maybeDto = sut.importFromDescriptor(descriptorDto);
-        assertFalse(maybeDto.isPresent());
+        assertThatThrownBy(() -> sut.importFromDescriptor(descriptorDto))
+            .isInstanceOf(ImportException.class)
+            .hasMessageStartingWith(String.format("Microservice with name (%s) already exists. Stopping import", name));
     }
-
 }

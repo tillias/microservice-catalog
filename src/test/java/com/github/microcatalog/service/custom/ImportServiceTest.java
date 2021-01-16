@@ -47,7 +47,8 @@ class ImportServiceTest {
             .withName(null)
             .build();
 
-        assertThatThrownBy(() -> sut.importFromDescriptor(descriptorDto)).isInstanceOf(ImportException.class)
+        assertThatThrownBy(() -> sut.importFromDescriptor(descriptorDto))
+            .isInstanceOf(ImportException.class)
             .hasMessageStartingWith("Microservice name can't be null");
     }
 
