@@ -218,7 +218,7 @@ class DependencyServiceTest {
     void create_SourceNotExists_Exception() {
         final String sourceName = "TestService1";
 
-        given(microserviceRepository.findByName(sourceName)).willReturn(Collections.emptyList());
+        given(microserviceRepository.findByName(sourceName)).willReturn(null);
 
         assertThatIllegalArgumentException()
             .isThrownBy(() -> service.create("New Dependency", sourceName, "some target"))
@@ -230,8 +230,8 @@ class DependencyServiceTest {
         final String sourceName = "TestService1";
         final String targetName = "TestService2";
 
-        given(microserviceRepository.findByName(sourceName)).willReturn(Collections.singletonList(microservice(1)));
-        given(microserviceRepository.findByName(targetName)).willReturn(Collections.emptyList());
+        given(microserviceRepository.findByName(sourceName)).willReturn(microservice(1));
+        given(microserviceRepository.findByName(targetName)).willReturn(null);
 
         assertThatIllegalArgumentException()
             .isThrownBy(() -> service.create("New Dependency", sourceName, targetName))
@@ -253,8 +253,8 @@ class DependencyServiceTest {
                 )
             )
         );
-        given(microserviceRepository.findByName(sourceName)).willReturn(Collections.singletonList(microservice(1)));
-        given(microserviceRepository.findByName(targetName)).willReturn(Collections.singletonList(microservice(2)));
+        given(microserviceRepository.findByName(sourceName)).willReturn(microservice(1));
+        given(microserviceRepository.findByName(targetName)).willReturn(microservice(2));
         given(repository.save(any())).willReturn(dependency(1, 1, 2));
 
         final DependencyDto actual = service.create(dependencyName, sourceName, targetName);

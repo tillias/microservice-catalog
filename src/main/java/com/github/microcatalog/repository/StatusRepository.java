@@ -1,8 +1,7 @@
 package com.github.microcatalog.repository;
 
 import com.github.microcatalog.domain.Status;
-
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Long> {
+    Status findByName(String name);
 }

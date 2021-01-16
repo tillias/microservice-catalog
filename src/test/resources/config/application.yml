@@ -15,8 +15,8 @@
 
 spring:
   profiles:
-    # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
-    #active: testcontainers
+  # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
+  #active: testcontainers
   application:
     name: microcatalog
   datasource:
@@ -121,3 +121,15 @@ application:
       token: 1118eceabc3598beaabe090b2a4128f840
       disableSSL: false
       crumbIssuer: /crumbIssuer/api/json
+  imports:
+    defaults:
+      description: Default description because nothing was provided during import
+      imageUrl: IMPORT_IMAGE
+      apiUrl: IMPORT_API_URL
+      gitUrl: IMPORT_GIT_URL
+      ciUrl: IMPORT_CI_URL
+      status: IMPORT_STATUS
+      team:
+        name: IMPORT_TEAM
+        po: IMPORT_PO
+        tl: IMPORT_TL

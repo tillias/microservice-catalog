@@ -64,20 +64,20 @@ public class DependencyService {
      * @return created dependency
      */
     public DependencyDto create(final String dependencyName, final String sourceName, final String targetName) {
-        final Optional<Microservice> maybeSource = microserviceRepository.findByName(sourceName).stream().findFirst();
-        final Optional<Microservice> maybeTarget = microserviceRepository.findByName(targetName).stream().findFirst();
+        final Microservice source = microserviceRepository.findByName(sourceName);
+        final Microservice target = microserviceRepository.findByName(targetName);
 
-        if (!maybeSource.isPresent()) {
+        if (source == null) {
             throw new IllegalArgumentException(String.format("Source microservice with name [%s] doesn't exist", sourceName));
         }
 
-        if (!maybeTarget.isPresent()) {
+        if (target == null) {
             throw new IllegalArgumentException(String.format("Target microservice with name [%s] doesn't exist", targetName));
         }
 
         final Dependency dependency = new Dependency().name(dependencyName)
-            .source(maybeSource.get())
-            .target(maybeTarget.get());
+            .source(source)
+            .target(target);
         return dependencyDto(create(dependency));
     }
 

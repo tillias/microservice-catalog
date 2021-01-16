@@ -26,10 +26,10 @@ public class Microservice implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-
+    
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     @Column(name = "description", nullable = false)
@@ -188,11 +188,7 @@ public class Microservice implements Serializable {
 
     @Override
     public int hashCode() {
-        if (id == null) {
-            return 31;
-        }
-
-        return id.intValue();
+        return 31;
     }
 
     // prettier-ignore
