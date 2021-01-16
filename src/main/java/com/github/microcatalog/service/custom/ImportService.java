@@ -58,8 +58,7 @@ public class ImportService {
 
         final Microservice persistent = microserviceRepository.findByName(name);
         if (persistent != null) {
-            log.warn("Microservice with name {} already exists. Stopping import", name);
-            return Optional.empty();
+            throw new ImportException(String.format("Microservice with name (%s) already exists. Stopping import", name));
         } else {
             final Microservice microservice = persistMicroservice(descriptorDto);
             importDependencies(microservice, descriptorDto.getDependencies());
@@ -127,6 +126,7 @@ public class ImportService {
     private Status getOrCreateStatus(final String name) {
         final Status persistent = statusRepository.findByName(name);
         if (persistent != null) {
+            log.info("Using existing status {}", name);
             return persistent;
         }
 
@@ -137,6 +137,7 @@ public class ImportService {
     private Team getOrCreateTeam(final String name) {
         final Team persistent = teamRepository.findByName(name);
         if (persistent != null) {
+            log.info("Using existing team {}", name);
             return persistent;
         }
 
@@ -148,6 +149,11 @@ public class ImportService {
     }
 
     private void importDependencies(final Microservice source, final List<MicroserviceImportDescriptorDto> dependencies) {
+        if (dependencies == null) {
+            log.info("Importing microservice without dependencies {}", source);
+            return;
+        }
+
         for (MicroserviceImportDescriptorDto d : dependencies) {
             Microservice target = microserviceRepository.findByName(d.getName());
             if (target == null) {
