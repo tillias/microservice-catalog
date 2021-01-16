@@ -1,5 +1,11 @@
+"""
+This scraper attempts downloading and importing microservice descriptors into microservice-catalog using urls
+defined in .repos. Each line in this file should contain url for microservice descriptor.
+
+Please adjust base_url pointing to your running microservice-catalog instance
+"""
+
 import requests
-import json
 
 base_url = "http://localhost:8080"
 
@@ -21,11 +27,25 @@ def import_microservice(descriptor, bearer):
     if r.status_code == requests.codes.ok:
         print("Microservice has been imported")
     else:
-        raise RuntimeError("Error importing microservice: " + r.text)
+        print("Error importing microservice: " + r.text)
 
 
-bearer = authenticate()
+def download_microservice_descriptors():
+    descriptors = []
+    with open('.repos') as descriptors_locations:
+        for line in descriptors_locations.read().splitlines():
+            r = requests.get(line)
+            if r.status_code == requests.codes.ok:
+                descriptors.append(r.json())
+            else:
+                print("Error downloading microservice descriptor from: " + line)
+    return descriptors
 
-with open('.microservice') as json_file:
-    data = json.load(json_file)
-    import_microservice(data, bearer)
+
+def import_microservices():
+    bearer = authenticate()
+    for descriptor in download_microservice_descriptors():
+        import_microservice(descriptor, bearer)
+
+
+import_microservices()
