@@ -152,3 +152,4 @@ Desktop.ini
 /src/main/tf/.terraform/
 /src/main/tf/terraform.*
 /src/main/tf/service-account.json
+/venv/

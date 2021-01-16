@@ -1,0 +1,11 @@
+{
+  "name": "Import Service",
+  "dependencies": [
+    {
+        "name": "Dependent Service 1"
+    },
+    {
+        "name": "Dependent Service 2"
+    }
+  ]
+}
