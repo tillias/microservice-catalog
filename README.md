@@ -17,6 +17,10 @@
 
 [![Overview](https://www.dropbox.com/s/orf4xupm0wawvms/2020-11-13%2022_37_19-Microservices%20-%20Personal%20-%20Microsoft%E2%80%8B%20Edge.png?raw=1)](https://www.youtube.com/watch?v=J3PktFVHRw0 "Overview")
 
+> In relation to the recent discussions of the relationship between OO concepts and microservices, think of APIs In terms of OO interfaces - one microservice could implement multiple interfaces, but you could also have multiple microservices implement one interface.
+> (https://twitter.com/samnewman/status/1364520285567938568?s=03) 
+> Sam Newman (@samnewman)
+
 Microservice catalog helps you or your organization to centrally store information about your microservices and share information between developers in a modern, live way. See [original idea](https://tillias.wordpress.com/2020/10/02/microservice-catalog) and [blog posts](https://tillias.wordpress.com/tag/microservice-catalog) for details.
 
 There is sample [Python scraper available](https://github.com/tillias/microservice-catalog/wiki/How-to-import-microservices-using-Python-scraper) or [REST API](https://github.com/tillias/microservice-catalog/wiki/Import-microservices) to automate import of your microservices.
